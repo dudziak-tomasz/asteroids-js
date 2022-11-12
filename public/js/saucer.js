@@ -1,4 +1,10 @@
-class Saucer extends ComplexFlyingObject {
+import { ComplexFlyingObject } from "./complexflyingobject.js"
+import { Spacetime } from "./spacetime.js"
+import { Missile } from "./missile.js"
+import { Shard } from "./shard.js"
+import { getRandomID, getScreenSize, getHDRatio, getRandomInteger, getRandomPlusMinus } from "./utils.js"
+
+export class Saucer extends ComplexFlyingObject {
     constructor(size) {
 
         super()

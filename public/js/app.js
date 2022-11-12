@@ -1,3 +1,5 @@
+import { game } from "./game.js"
+
 const app = () => {
 
     // Start game

@@ -1,4 +1,8 @@
-class Spacetime {
+import { Spaceship } from "./spaceship.js"
+import { Saucer } from "./saucer.js"
+import { Asteroid } from "./asteroid.js"
+
+export class Spacetime {
     static createSpacetime(canvas) {             // Big Bang
 
         this.canvas = canvas

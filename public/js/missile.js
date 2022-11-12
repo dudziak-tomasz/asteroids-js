@@ -1,4 +1,8 @@
-class Missile extends SimpleFlyingObject {
+import { SimpleFlyingObject } from "./simpleflyingobject.js"
+import { Spacetime } from "./spacetime.js"
+import { getRandomID, getHDRatio } from "./utils.js"
+
+export class Missile extends SimpleFlyingObject {
     constructor(x = 0, y = 0, angle = 0, startSpeedX = 0, startSpeedY = 0, idPrefix = 'missile', speedTimeRatio = 1) {
         super()
 

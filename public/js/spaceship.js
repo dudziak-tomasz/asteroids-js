@@ -1,4 +1,10 @@
-class Spaceship extends ComplexFlyingObject {
+import { ComplexFlyingObject } from "./complexflyingobject.js"
+import { Spacetime } from "./spacetime.js"
+import { Missile } from "./missile.js"
+import { PieceOfSpaceship } from "./pieceofspaceship.js"
+import { getRandomID, getScreenSize, getHDRatio, getRandomInteger, getRandomPlusMinus } from "./utils.js"
+
+export class Spaceship extends ComplexFlyingObject {
     constructor(left, top, size = 1, position = undefined, color = undefined) {
 
         super()

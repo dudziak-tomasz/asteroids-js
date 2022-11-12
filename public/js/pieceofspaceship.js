@@ -1,4 +1,8 @@
-class PieceOfSpaceship extends SimpleFlyingObject {
+import { SimpleFlyingObject } from "./simpleflyingobject.js"
+import { Spacetime } from "./spacetime.js"
+import { getRandomID, getRandomPlusMinus, getRandomInteger, getScreenSize } from "./utils.js"
+
+export class PieceOfSpaceship extends SimpleFlyingObject {
     constructor(x = 0, y = 0, startSpeedX = 0, startSpeedY = 0) {
 
         super()

@@ -1,4 +1,9 @@
-class Asteroid extends ComplexFlyingObject {
+import { ComplexFlyingObject } from "./complexflyingobject.js"
+import { Spacetime } from "./spacetime.js"
+import { Shard } from "./shard.js"
+import { getRandomID, getScreenSize, getHDRatio, getRandomInteger, getRandomPlusMinus } from "./utils.js"
+
+export class Asteroid extends ComplexFlyingObject {
     constructor(size = 3, left = 0, top = 0) {
 
         super()

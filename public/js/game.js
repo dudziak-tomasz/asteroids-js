@@ -1,4 +1,8 @@
-const game = {
+import { Spacetime } from "./spacetime.js"
+import { Spaceship } from "./spaceship.js"
+import { getScreenSize } from "./utils.js"
+
+export const game = {
     parentElement: undefined,
     mainDiv: undefined,
     canvasAlert: undefined,
@@ -23,7 +27,7 @@ const game = {
     timeBlikScore: 1000,    // msec
     timeBetweenSaucers: 15, // 15 sec
     probabilityMinCreateSaucer: 0.3,  // 0.3
-    probabilityCreateSaucer: this.probabilityMinCreateSaucer,
+    probabilityCreateSaucer: 0.3,
     typeOfSaucer: [2000, 10000, 40000],   // [2000, 10000, 40000] 0 - no saucer - 2000 - large saucer - 10000 - random saucer - 40000 - small saucer
     startingLevel: false,
     pressFireTo: '',

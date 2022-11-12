@@ -1,4 +1,6 @@
-class FlyingObject {
+import { Spacetime } from "./spacetime.js"
+
+export class FlyingObject {
     constructor() {
 
         this.left = 0
