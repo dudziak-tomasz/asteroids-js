@@ -1,4 +1,4 @@
-import { Spacetime } from "./spacetime.js"
+import { Spacetime } from './spacetime.js'
 
 export class FlyingObject {
     constructor() {

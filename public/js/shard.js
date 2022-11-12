@@ -1,6 +1,6 @@
-import { SimpleFlyingObject } from "./simpleflyingobject.js"
-import { Spacetime } from "./spacetime.js"
-import { getHDRatio, getRandomID, getRandomPlusMinus } from "./utils.js"
+import { SimpleFlyingObject } from './simpleflyingobject.js'
+import { Spacetime } from './spacetime.js'
+import { getHDRatio, getRandomID, getRandomPlusMinus } from './utils.js'
 
 export class Shard extends SimpleFlyingObject {
     constructor(left = 0, top = 0) {

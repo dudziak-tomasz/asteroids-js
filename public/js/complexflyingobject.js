@@ -1,5 +1,5 @@
-import { FlyingObject } from "./flyingobject.js"
-import { isPointInside } from "./utils.js"
+import { FlyingObject } from './flyingobject.js'
+import { isPointInside } from './utils.js'
 
 export class ComplexFlyingObject extends FlyingObject {
     constructor() {

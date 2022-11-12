@@ -1,6 +1,6 @@
-import { SimpleFlyingObject } from "./simpleflyingobject.js"
-import { Spacetime } from "./spacetime.js"
-import { getRandomID, getHDRatio } from "./utils.js"
+import { SimpleFlyingObject } from './simpleflyingobject.js'
+import { Spacetime } from './spacetime.js'
+import { getRandomID, getHDRatio } from './utils.js'
 
 export class Missile extends SimpleFlyingObject {
     constructor(x = 0, y = 0, angle = 0, startSpeedX = 0, startSpeedY = 0, idPrefix = 'missile', speedTimeRatio = 1) {
@@ -20,8 +20,10 @@ export class Missile extends SimpleFlyingObject {
         this.speedX += Math.sin(angleRad) * this.maxSpeed + startSpeedX
         this.speedY -= Math.cos(angleRad) * this.maxSpeed - startSpeedY
 
-        this.audio = new Audio('../audio/fire.mp3')
-        this.audio.volume = 0.1
+        let audioTrack = 'fire.mp3'
+        if (idPrefix.startsWith('alien-')) audioTrack = 'fire_saucer.mp3'
+        this.audio = new Audio(`../audio/${audioTrack}`)
+        this.audio.volume = 0.2
         this.audio.play()
 
         this.draw()

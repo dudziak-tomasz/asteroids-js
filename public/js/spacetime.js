@@ -1,6 +1,6 @@
-import { Spaceship } from "./spaceship.js"
-import { Saucer } from "./saucer.js"
-import { Asteroid } from "./asteroid.js"
+import { Spaceship } from './spaceship.js'
+import { Saucer } from './saucer.js'
+import { Asteroid } from './asteroid.js'
 
 export class Spacetime {
     static createSpacetime(canvas) {             // Big Bang
@@ -108,6 +108,8 @@ export class Spacetime {
         this.intervalId = setInterval(() => {
             this.move()
         }, this.intervalTime)
+
+        if (this.saucer) this.saucer.audioFlying.play()
     }
 
     static stop() {
@@ -116,6 +118,14 @@ export class Spacetime {
         }
         clearInterval(this.intervalId)
         this.intervalId = undefined
+
+        if (this.spaceship) {
+            this.spaceship.stopAccelerate()
+            this.spaceship.stopFire()
+            this.spaceship.stopRotation()    
+        }
+
+        if (this.saucer) this.saucer.audioFlying.pause()
     }
 
     static sendEvent(eventText, eventDetail = {}) {

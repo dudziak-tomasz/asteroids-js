@@ -1,4 +1,4 @@
-import { FlyingObject } from "./flyingobject.js"
+import { FlyingObject } from './flyingobject.js'
 
 export class SimpleFlyingObject extends FlyingObject {
     constructor() {

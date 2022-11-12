@@ -1,7 +1,7 @@
-import { ComplexFlyingObject } from "./complexflyingobject.js"
-import { Spacetime } from "./spacetime.js"
-import { Shard } from "./shard.js"
-import { getRandomID, getScreenSize, getHDRatio, getRandomInteger, getRandomPlusMinus } from "./utils.js"
+import { ComplexFlyingObject } from './complexflyingobject.js'
+import { Spacetime } from './spacetime.js'
+import { Shard } from './shard.js'
+import { getRandomID, getScreenSize, getHDRatio, getRandomInteger, getRandomPlusMinus } from './utils.js'
 
 export class Asteroid extends ComplexFlyingObject {
     constructor(size = 3, left = 0, top = 0) {
@@ -66,7 +66,7 @@ export class Asteroid extends ComplexFlyingObject {
         this.getRandomPoints()
         this.polygon.setAttributeNS(undefined,'points', this.points.toString())
 
-        const audioBangTrack = ['', 'bang_small.wav', 'bang_medium.wav', 'bang_large.wav']
+        const audioBangTrack = ['', 'bang_small.mp3', 'bang_medium.mp3', 'bang_large.mp3']
         this.audioBang = new Audio(`../audio/${audioBangTrack[this.size]}`)
 
         this.draw()

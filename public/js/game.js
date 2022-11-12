@@ -1,6 +1,6 @@
-import { Spacetime } from "./spacetime.js"
-import { Spaceship } from "./spaceship.js"
-import { getScreenSize } from "./utils.js"
+import { Spacetime } from './spacetime.js'
+import { Spaceship } from './spaceship.js'
+import { getScreenSize } from './utils.js'
 
 export const game = {
     parentElement: undefined,
@@ -27,7 +27,7 @@ export const game = {
     timeBlikScore: 1000,    // msec
     timeBetweenSaucers: 15, // 15 sec
     probabilityMinCreateSaucer: 0.3,  // 0.3
-    probabilityCreateSaucer: 0.3,
+    probabilityCreateSaucer: 0.3,     // 0.3
     typeOfSaucer: [2000, 10000, 40000],   // [2000, 10000, 40000] 0 - no saucer - 2000 - large saucer - 10000 - random saucer - 40000 - small saucer
     startingLevel: false,
     pressFireTo: '',
@@ -263,9 +263,9 @@ export const game = {
             this.checkSwitches()
         } else {
             Spacetime.stop()
-            Spacetime.spaceship.stopAccelerate()
-            Spacetime.spaceship.stopFire()
-            Spacetime.spaceship.stopRotation()    
+            // Spacetime.spaceship.stopAccelerate()
+            // Spacetime.spaceship.stopFire()
+            // Spacetime.spaceship.stopRotation()    
         }
         game.pause = !game.pause
     },

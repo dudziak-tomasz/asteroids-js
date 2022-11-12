@@ -1,8 +1,8 @@
-import { ComplexFlyingObject } from "./complexflyingobject.js"
-import { Spacetime } from "./spacetime.js"
-import { Missile } from "./missile.js"
-import { Shard } from "./shard.js"
-import { getRandomID, getScreenSize, getHDRatio, getRandomInteger, getRandomPlusMinus } from "./utils.js"
+import { ComplexFlyingObject } from './complexflyingobject.js'
+import { Spacetime } from './spacetime.js'
+import { Missile } from './missile.js'
+import { Shard } from './shard.js'
+import { getRandomID, getScreenSize, getHDRatio, getRandomInteger, getRandomPlusMinus } from './utils.js'
 
 export class Saucer extends ComplexFlyingObject {
     constructor(size) {
@@ -34,7 +34,7 @@ export class Saucer extends ComplexFlyingObject {
         this.probabilityChangeDirection = 0.4 / ((this.size - 1) * 3 + 1) 
 
         this.counterFire = 0
-        this.counterMaxFire = 200 * this.size 
+        this.counterMaxFire = 150 * this.size 
         this.probabilityFireAccurate = 0.25
         if (this.size === 2) this.probabilityFireAccurate = 0
 
@@ -88,12 +88,13 @@ export class Saucer extends ComplexFlyingObject {
         this.line2.setAttributeNS(undefined, 'stroke-width', this.lineThickness)
         this.canvas.appendChild(this.line2)
 
-        const audioFlyingTrack = ['', 'saucer_small.wav', 'saucer_big.wav']
+        const audioFlyingTrack = ['', 'saucer_small.mp3', 'saucer_big.mp3']
         this.audioFlying = new Audio(`../audio/${audioFlyingTrack[this.size]}`)
         this.audioFlying.loop = true
+        this.audioFlying.volume = 0.1
         this.audioFlying.play()
 
-        const audioBangTrack = ['', 'bang_small.wav', 'bang_large.wav']
+        const audioBangTrack = ['', 'bang_small.mp3', 'bang_medium.mp3']
         this.audioBang = new Audio(`../audio/${audioBangTrack[this.size]}`)
 
         this.draw()
@@ -156,16 +157,6 @@ export class Saucer extends ComplexFlyingObject {
             if (Spacetime.spaceship.top >= this.top) fireAngle = fireAngle + 180  // spaceship bottom saucer
 
         } 
-        // else if (this.size = 1 && Spacetime.asteroids.length > 0) {       // hit first asteroid
-        //     let dx = Spacetime.asteroids[0].left - this.left
-        //     let dy = Spacetime.asteroids[0].top - this.top 
-
-        //     const angleRad = Math.atan(dx / dy)
-
-        //     fireAngle = - 180 * angleRad / Math.PI  // saucer bottom asteroid
-        //     if (Spacetime.asteroids[0].top >= this.top) fireAngle = fireAngle + 180  // asteroid bottom saucer
-
-        // }
 
         Spacetime.addMissile(new Missile(x, y, fireAngle, 0, 0, 'alien-missile', 1 / this.size))
     }

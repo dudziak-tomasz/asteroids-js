@@ -1,8 +1,8 @@
-import { ComplexFlyingObject } from "./complexflyingobject.js"
-import { Spacetime } from "./spacetime.js"
-import { Missile } from "./missile.js"
-import { PieceOfSpaceship } from "./pieceofspaceship.js"
-import { getRandomID, getScreenSize, getHDRatio, getRandomInteger, getRandomPlusMinus } from "./utils.js"
+import { ComplexFlyingObject } from './complexflyingobject.js'
+import { Spacetime } from './spacetime.js'
+import { Missile } from './missile.js'
+import { PieceOfSpaceship } from './pieceofspaceship.js'
+import { getRandomID, getScreenSize, getHDRatio, getRandomInteger, getRandomPlusMinus } from './utils.js'
 
 export class Spaceship extends ComplexFlyingObject {
     constructor(left, top, size = 1, position = undefined, color = undefined) {
@@ -80,7 +80,7 @@ export class Spaceship extends ComplexFlyingObject {
         this.audioEngine.loop = true
         this.audioEngine.volume = 0.2
 
-        this.audioBang =  new Audio('../audio/bang_medium.wav')
+        this.audioBang =  new Audio('../audio/bang_medium.mp3')
 
         this.draw()
 
@@ -205,8 +205,6 @@ export class Spaceship extends ComplexFlyingObject {
     }
 
     startHyperspace() {
-        if (this.hyperspace || game.pause) return
-
         this.hyperspace++
     }
 
