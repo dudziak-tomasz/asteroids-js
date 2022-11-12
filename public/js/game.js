@@ -32,7 +32,7 @@ const game = {
     createGame(parentElement) {
         this.parentElement = parentElement
 
-        this.initializeMianDiv()
+        this.initializeMainDiv()
 
         this.initializeCanvasAlert()
         this.initializeCanvasScore()
@@ -370,7 +370,7 @@ const game = {
     eventMouseUp(event) {
         event.preventDefault()
 
-        if (this.isTouch) return
+        if (this.isTouch) return this.isTouch = false
 
         switch(event.button) {
             case 0:
@@ -471,7 +471,7 @@ const game = {
         
     },
 
-    initializeMianDiv() {
+    initializeMainDiv() {
         this.mainDiv = document.createElement('div')
         this.mainDiv.id = 'spacetime'
         this.mainDiv.style.position = 'fixed'
