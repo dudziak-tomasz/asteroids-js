@@ -91,7 +91,7 @@ export class Asteroid extends ComplexFlyingObject {
         })
     }
 
-    hit() {
+    async hit() {
 
         const newSize = this.size - 1
         const newLeft = this.left + this.width / 4
@@ -99,7 +99,11 @@ export class Asteroid extends ComplexFlyingObject {
         const shardLeft = this.left + this.width / 2
         const shardTop = this.top + this.height / 2
 
-        this.audioBang.play()
+        try {
+            this.audioBang.play()
+        } catch {
+
+        }
 
         if (this.size > 1) {
             Spacetime.addAsteroid(new Asteroid(newSize, newLeft, newTop))

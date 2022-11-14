@@ -78,9 +78,8 @@ export class Spaceship extends ComplexFlyingObject {
 
         this.audioEngine = new Audio('../audio/thrust.mp3')
         this.audioEngine.loop = true
-        this.audioEngine.volume = 0.2
 
-        this.audioBang =  new Audio('../audio/bang_medium.mp3')
+        this.audioBang =  new Audio('../audio/bang_ship.mp3')
 
         this.draw()
 
@@ -145,10 +144,14 @@ export class Spaceship extends ComplexFlyingObject {
         this.rotation = 0
     }
 
-    startAccelerate() {
+    async startAccelerate() {
         if (this.intervalIdAccelerate) return
         
-        this.audioEngine.play()
+        try {
+            this.audioEngine.play()
+        } catch {
+
+        }
 
         this.accelerate()
         this.intervalIdAccelerate = setInterval(() => {
@@ -156,10 +159,14 @@ export class Spaceship extends ComplexFlyingObject {
         }, this.intervalTimeAccelerate)
     }
 
-    stopAccelerate() {
+    async stopAccelerate() {
         if (!this.intervalIdAccelerate) return
 
-        this.audioEngine.pause()
+        try {
+            this.audioEngine.pause()
+        } catch {
+
+        }
 
         clearInterval(this.intervalIdAccelerate)
         this.intervalIdAccelerate = undefined
@@ -215,12 +222,16 @@ export class Spaceship extends ComplexFlyingObject {
 
     }
 
-    hit() {
+    async hit() {
 
         const centerX = this.left + this.width / 2
         const centerY = this.top + this.height / 2
 
-        this.audioBang.play()
+        try {
+            this.audioBang.play()
+        } catch {
+
+        }
 
         for (let i = 0; i < this.amounOfPieces; i++) {
             let x = centerX + getRandomPlusMinus(this.width / 4, this.width / 2)

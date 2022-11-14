@@ -91,14 +91,26 @@ export class Saucer extends ComplexFlyingObject {
         const audioFlyingTrack = ['', 'saucer_small.mp3', 'saucer_big.mp3']
         this.audioFlying = new Audio(`../audio/${audioFlyingTrack[this.size]}`)
         this.audioFlying.loop = true
-        this.audioFlying.volume = 0.1
-        this.audioFlying.play()
+        
+        this.play()
 
-        const audioBangTrack = ['', 'bang_small.mp3', 'bang_medium.mp3']
+        const audioBangTrack = ['', 'bang_saucer_small.mp3', 'bang_saucer_big.mp3']
         this.audioBang = new Audio(`../audio/${audioBangTrack[this.size]}`)
 
         this.draw()
 
+    }
+
+    async play() {
+        try {
+            this.audioFlying.play()
+        } catch {
+
+        }
+    }
+
+    async stopPlay() {
+        this.audioFlying.pause()
     }
 
     getPoints() {
@@ -161,12 +173,16 @@ export class Saucer extends ComplexFlyingObject {
         Spacetime.addMissile(new Missile(x, y, fireAngle, 0, 0, 'alien-missile', 1 / this.size))
     }
 
-    hit() {
+    async hit() {
 
         const centerX = this.left + this.width / 2
         const centerY = this.top + this.height / 2
 
-        this.audioBang.play()
+        try {
+            this.audioBang.play()
+        } catch {
+
+        }
 
         for (let i = 0; i < this.amounOfShards; i++) {
             let x = centerX + getRandomPlusMinus(this.width / 4, this.width / 2)
@@ -178,7 +194,7 @@ export class Saucer extends ComplexFlyingObject {
     }
 
     destroy() {
-        this.audioFlying.pause()
+        this.stopPlay()
         Spacetime.removeSaucer()
     }
 

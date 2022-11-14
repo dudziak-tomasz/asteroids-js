@@ -23,11 +23,19 @@ export class Missile extends SimpleFlyingObject {
         let audioTrack = 'fire.mp3'
         if (idPrefix.startsWith('alien-')) audioTrack = 'fire_saucer.mp3'
         this.audio = new Audio(`../audio/${audioTrack}`)
-        this.audio.volume = 0.2
-        this.audio.play()
+
+        this.play()
 
         this.draw()
 
+    }
+
+    async play() {
+        try {
+            this.audio.play()
+        } catch {
+
+        }
     }
 
     draw() {

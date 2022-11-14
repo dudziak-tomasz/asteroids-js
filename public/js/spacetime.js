@@ -109,7 +109,7 @@ export class Spacetime {
             this.move()
         }, this.intervalTime)
 
-        if (this.saucer) this.saucer.audioFlying.play()
+        if (this.saucer) this.saucer.play()
     }
 
     static stop() {
@@ -125,7 +125,7 @@ export class Spacetime {
             this.spaceship.stopRotation()    
         }
 
-        if (this.saucer) this.saucer.audioFlying.pause()
+        if (this.saucer) this.saucer.stopPlay()
     }
 
     static sendEvent(eventText, eventDetail = {}) {
