@@ -32,6 +32,9 @@ export const game = {
     startingLevel: false,
     pressFireTo: '',
     isTouch: false,
+    audio: undefined,
+    audioTrack: '../audio/background2.mp3?v=20221114',
+    audioVolume: 0.3,
 
     createGame(parentElement) {
         this.parentElement = parentElement
@@ -55,7 +58,27 @@ export const game = {
         Spacetime.createAsteroids(2,2)
         Spacetime.createAsteroids(3,1)
 
+        this.audio = new Audio(this.audioTrack)
+        this.audio.volume = this.audioVolume
+        this.audio.loop = true
+
         this.initializeGame()
+    },
+
+    async playAudio() {
+        try {
+            this.audio.play()
+        } catch {
+
+        }
+    },
+
+    async stopAudio() {
+        try {
+            this.audio.pause()
+        } catch {
+
+        }
     },
 
     pressFireNoSpaceship() {
@@ -93,6 +116,8 @@ export const game = {
         this.highScoreAchieved = false
         this.getHighScore()
         this.refreshHighScore()
+
+        this.playAudio()
 
         Spacetime.removeAllAsteroid()
 
@@ -255,17 +280,16 @@ export const game = {
     },
 
     switchPause() {
-        if (!Spacetime.spaceship) return
+        // if (!Spacetime.spaceship) return
 
         if (game.pause) {
             Spacetime.start()
+            this.playAudio()
 
             this.checkSwitches()
         } else {
             Spacetime.stop()
-            // Spacetime.spaceship.stopAccelerate()
-            // Spacetime.spaceship.stopFire()
-            // Spacetime.spaceship.stopRotation()    
+            this.stopAudio()
         }
         game.pause = !game.pause
     },
