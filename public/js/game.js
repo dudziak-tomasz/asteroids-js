@@ -512,7 +512,7 @@ export const game = {
     },
 
     initializeCanvasAlert() {
-        const fontSize = Math.round(getScreenSize() / 30)    
+        // const fontSize = Math.round(getScreenSize() / 30)    
         this.canvasAlert = document.createElement('div')
         this.canvasAlert.className = 'alert'
         // this.canvasAlert.style.fontSize = fontSize + 'px'
@@ -520,7 +520,7 @@ export const game = {
 },
 
     initializeCanvasScore() {
-        const fontSize = Math.round(getScreenSize() / 40)
+        // const fontSize = Math.round(getScreenSize() / 40)
         this.canvasScore = document.createElement('div')
         this.canvasScore.className = 'score'
         // this.canvasScore.style.fontSize = fontSize + 'px'
@@ -528,7 +528,7 @@ export const game = {
     },
 
     initializeCanvasHighScore() {
-        const fontSize = Math.round(getScreenSize() / 60)
+        // const fontSize = Math.round(getScreenSize() / 60)
         this.canvasHighScore = document.createElement('div')
         this.canvasHighScore.className = 'high-score'
         // this.canvasHighScore.style.fontSize = fontSize + 'px'
