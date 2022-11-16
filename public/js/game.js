@@ -33,7 +33,7 @@ export const game = {
     pressFireTo: '',
     isTouch: false,
     audio: undefined,
-    audioTrack: '../audio/background2.mp3?v=20221114',
+    audioTrack: 'background2.mp3',
     audioVolume: 0.3,
 
     createGame(parentElement) {
@@ -58,14 +58,44 @@ export const game = {
         Spacetime.createAsteroids(2,2)
         Spacetime.createAsteroids(3,1)
 
-        this.audio = new Audio(this.audioTrack)
-        this.audio.volume = this.audioVolume
+        this.audio = new Audio()
         this.audio.loop = true
+        this.getAudioTrack()
+        this.getAudioVolume()
 
         this.initializeGame()
     },
 
+    getAudioTrack() {
+        const track = localStorage.getItem('audioTrack')
+        if (track) this.audioTrack = track
+        else this.setAudioTrack()
+        this.audio.src = `../audio/${this.audioTrack}`
+        return this.audioTrack
+    },
+
+    setAudioTrack(track) {
+        if (track !== undefined) this.audioTrack = track
+        localStorage.setItem('audioTrack', this.audioTrack)
+        this.audio.src = `../audio/${this.audioTrack}`
+    },
+
+    getAudioVolume() {
+        const volume = localStorage.getItem('musicVolume')
+        if (volume) this.audioVolume = parseFloat(volume)
+        else this.setAudioVolume()
+        this.audio.volume = this.audioVolume
+        return this.audioVolume
+    },
+
+    setAudioVolume(volume) {
+        if (volume !== undefined) this.audioVolume = volume
+        localStorage.setItem('musicVolume', this.audioVolume)
+        this.audio.volume = this.audioVolume
+    },
+
     async playAudio() {
+        if (this.audioVolume === 0) return
         try {
             this.audio.play()
         } catch {

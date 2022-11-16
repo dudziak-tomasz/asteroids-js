@@ -67,7 +67,8 @@ export class Asteroid extends ComplexFlyingObject {
         this.polygon.setAttributeNS(undefined,'points', this.points.toString())
 
         const audioBangTrack = ['', 'bang_small.mp3', 'bang_medium.mp3', 'bang_large.mp3']
-        this.audioBang = new Audio(`../audio/${audioBangTrack[this.size]}?v=20221114`)
+        this.audioBang = new Audio(`../audio/${audioBangTrack[this.size]}`)
+        this.setAudioVolume()
 
         this.draw()
 
@@ -89,6 +90,10 @@ export class Asteroid extends ComplexFlyingObject {
             y = Math.trunc(y)
             this.points.push(x,y)
         })
+    }
+
+    setAudioVolume() {
+        this.audioBang.volume = Spacetime.audioVolume
     }
 
     async hit() {

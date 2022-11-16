@@ -1,5 +1,6 @@
 :root {
    --gray: #888888;
+   --light-gray: #CCCCCC;
    --font-game: "Press Start 2P", monospace;
    --mouse-cursor: default;
 }
@@ -19,7 +20,7 @@
    to {color: var(--gray);}
 }
 
-@keyframes menu-show {
+@keyframes box-show {
    from {opacity: 0;}
    to {opacity: 1;}
 }
@@ -31,26 +32,88 @@ body {
    overscroll-behavior: contain;
 }
 
+.slider {
+   -webkit-appearance: none;
+   width: 100%;
+   height: 25px;
+   background: var(--gray);
+   outline: none;
+   /* opacity: 0.7; */
+}
+ 
+.slider::-webkit-slider-thumb {
+   -webkit-appearance: none;
+   appearance: none;
+   width: 25px;
+   height: 25px;
+   background: var(--light-gray);
+   cursor: pointer;
+}
+ 
+.slider::-moz-range-thumb {
+   width: 25px;
+   height: 25px;
+   background: var(--light-gray);
+   cursor: pointer;
+}
+
+.radio {
+   /* remove standard background appearance */
+   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+   /* create custom radiobutton appearance */
+   display: inline-block;
+   width: 25px;
+   height: 25px;
+   padding: 6px;
+   /* background-color only for content */
+   background-clip: content-box;
+   border: 2px solid var(--gray);
+ }
+ 
+ /* appearance for checked radiobutton */
+.radio:checked {
+   background-color: var(--light-gray);
+ }
+
 .box-container {
    position: absolute;
-   top: 10%;
-   left: 10%;
-   width: 80%;
-   height: 80%;
+   width: 60vw;
+   margin-top: 10vh;
+   margin-left: 20vw;
    font-family: var(--font-game);
    color: var(--gray);
    font-size: 100%;
-   background-color: rgba(32, 32, 32, 0.8);
+   background-color: rgba(32, 32, 32, 0.9);
+   animation-name: box-show;
+   animation-duration: 0.3s;
 }
 
 .box-content {
    padding: 40px;
 }
 
+.box-title {
+   font-size: 200%;
+   color: var(--light-gray);
+   padding-bottom: 20px;
+}
+
+.box-title-small {
+   font-size: 125%;
+   color: var(--light-gray);
+   padding-top: 10px;
+}
+
+.box-light-gray {
+   color: var(--light-gray);
+}
+
 .menu-container {
    position: absolute;
-   top: 10px;
-   right: 10px;
+   top: 0px;
+   right: 0px;
    font-family: var(--font-game);
    color: var(--gray);
    font-size: 100%;
@@ -58,7 +121,8 @@ body {
 
 .menu-start {
    position: absolute;
-   right: 0px;
+   top: 10px;
+   right: 10px;
    cursor: pointer;
 }
  
@@ -84,16 +148,16 @@ body {
 
 .menu-content {
    display: none;
-   padding: 36px 10px 10px;
-   background-color: rgba(32, 32, 32, 0.8);
+   padding: 50px 10px 10px;
+   background-color: rgba(32, 32, 32, 0.9);
    max-height: 70vh;
    overflow-y: auto;
 }
 
 .menu-content-show {
-   animation-name: menu-show;
-   animation-duration: 0.3s;
    display: block;
+   animation-name: box-show;
+   animation-duration: 0.3s;
 }
 
 .menu-item {
@@ -104,6 +168,7 @@ body {
 
 .menu-item:hover {
    background-color: rgba(255, 255, 255, 0.1);
+   color: var(--light-gray);
 }
 
 .menu-item-disabled {
@@ -163,8 +228,40 @@ body {
    cursor: var(--mouse-cursor);
 }
 
-@media only screen and (max-width: 1000px) {
-               
+@media only screen and (max-height: 900px) {
+
+   .box-container {
+      margin-top: 5vh;
+   }
+
+}
+
+@media only screen and (max-height: 800px) {
+
+   .box-container {
+      margin-top: 0;
+   }
+
+}
+
+@media only screen and (max-width: 1300px) {
+   .box-container {
+      width: 80vw;
+      margin-left: 10vw;
+   }
+
+}
+
+@media only screen and (max-width: 900px), (max-height: 750px) {
+
+   .box-container {
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+   }
+      
    .alert, .alert-hidden {
       font-size: 150%;
    }
@@ -181,13 +278,6 @@ body {
 
 @media only screen and (max-width: 600px) {
                
-   .box-container {
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-   }
-
    .alert, .alert-hidden {
       font-size: 100%;
    }
@@ -218,13 +308,3 @@ body {
    
 }
 
-@media only screen and (max-height: 600px) {
-
-   .box-container {
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-   }
-      
-}

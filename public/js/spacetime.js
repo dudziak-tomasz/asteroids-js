@@ -19,7 +19,26 @@ export class Spacetime {
         this.oneSecond = 1000 / this.intervalTime
         this.oneSecondCountdown = 0
 
+        this.audioVolume = 1
+        this.getAudioVolume()
+
         this.start()
+    }
+
+    static getAudioVolume() {
+        const volume = localStorage.getItem('soundVolume')
+        if (volume) this.audioVolume = parseFloat(volume)
+        else this.setAudioVolume()
+        return this.audioVolume
+    }
+
+    static setAudioVolume(volume) {
+        if (volume !== undefined) this.audioVolume = volume
+        localStorage.setItem('soundVolume', this.audioVolume)
+
+        this.asteroids.forEach(asteroid => asteroid.setAudioVolume())
+        if (this.spaceship) this.spaceship.setAudioVolume()
+        if (this.saucer) this.saucer.setAudioVolume()
     }
 
     static createSpaceship() {

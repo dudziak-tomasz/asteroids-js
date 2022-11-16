@@ -76,10 +76,12 @@ export class Spaceship extends ComplexFlyingObject {
 
         this.canvas.appendChild(this.polygonEngine)
 
-        this.audioEngine = new Audio('../audio/thrust.mp3?v=20221114')
+        this.audioEngine = new Audio('../audio/thrust.mp3')
         this.audioEngine.loop = true
 
-        this.audioBang =  new Audio('../audio/bang_ship.mp3?v=20221114')
+        this.audioBang =  new Audio('../audio/bang_ship.mp3')
+
+        this.setAudioVolume()
 
         this.draw()
 
@@ -129,6 +131,11 @@ export class Spaceship extends ComplexFlyingObject {
                             witdh2, height75, 
                             witdh58, height85]
 
+    }
+
+    setAudioVolume() {
+        this.audioEngine.volume = Spacetime.audioVolume
+        this.audioBang.volume = Spacetime.audioVolume
     }
 
     startRotation(direction) {

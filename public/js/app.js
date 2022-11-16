@@ -15,13 +15,13 @@ const app = () => {
 
     document.body.addEventListener('mousedown', (event) => {
         const target = event.target.id
-        // console.log(target)
         if (target.startsWith('menu-') || target.startsWith('box-')) return
         game.eventMouseDown(event)
     })
 
     document.body.addEventListener('mouseup', (event) => {
-        if (event.target.id.startsWith('menu-')) return
+        const target = event.target.id
+        if (target.startsWith('menu-') || target.startsWith('box-')) return
         game.eventMouseUp(event)
     })
 

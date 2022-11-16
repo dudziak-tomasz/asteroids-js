@@ -1,4 +1,7 @@
 import { Box} from './box.js'
+import { pages } from './pages.js'
+import { game } from './game.js'
+import { Spacetime } from './spacetime.js'
 
 export class Menu extends Box {
     constructor(parentElement) {
@@ -30,6 +33,8 @@ export class Menu extends Box {
 
         this.box = undefined
 
+        this.audio = new Audio('../audio/fire.mp3')
+
         this.initializeMenuItems()
     }
 
@@ -52,7 +57,6 @@ export class Menu extends Box {
 
     menuItemClick(itemId) {
         this.menuStartClick()
-        // console.log(this.items[itemId])
 
         if (itemId === 0 || itemId === 1) {
             this.items[0].enabled = !this.items[0].enabled
@@ -61,7 +65,49 @@ export class Menu extends Box {
         }
 
         if (this.box) this.box.close()
-        this.box = new Box(this.parentElement, `<h1>${this.items[itemId].text}</h1><p><input type="range" min="0" max="100" value="50" id="menu-slider"></p><p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>`)
+
+        if (pages.has(this.items[itemId].text)) {
+            const innerHTML = pages.get(this.items[itemId].text)
+            this.box = new Box(this.parentElement, innerHTML)
+            this.handlePageElements()
+        } else {
+            this.box = new Box(this.parentElement, `<p class="box-title">${this.items[itemId].text}</p><p>UNDER CONSTRUCTION</p>`)
+        }  
+    }
+
+    handlePageElements() {
+        this.$boxSliderMusic = document.getElementById('box-slider-music')
+        if (this.$boxSliderMusic) {
+            this.$boxSliderMusic.value = game.getAudioVolume()
+            this.$boxSliderMusic.oninput = () => {
+                const volume = parseFloat(this.$boxSliderMusic.value)
+                game.setAudioVolume(volume)
+                game.playAudio()
+            }
+        }
+
+        this.$boxSliderSound = document.getElementById('box-slider-sound')
+        if (this.$boxSliderSound) {
+            this.$boxSliderSound.value = Spacetime.getAudioVolume()
+            this.$boxSliderSound.oninput = () => {
+                const volume = parseFloat(this.$boxSliderSound.value)
+                Spacetime.setAudioVolume(volume)
+                this.audio.volume = Spacetime.audioVolume
+                this.audio.play()
+            }
+        }
+
+        this.$boxRadios = document.querySelectorAll('input[name="box-radio-background"]')
+        if (this.$boxRadios.length > 0) {
+            const track = game.audioTrack
+            this.$boxRadios.forEach((radio) => {
+                if (radio.value === track) radio.checked = true
+                radio.oninput = (e) => {
+                    game.setAudioTrack(e.target.value)
+                    game.playAudio()
+                }
+            })
+        }
     }
 
     initializeEvents() {
