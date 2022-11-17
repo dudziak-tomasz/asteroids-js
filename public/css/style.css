@@ -32,13 +32,25 @@ body {
    overscroll-behavior: contain;
 }
 
+a:link, a:visited {
+   color: var(--gray);
+   text-decoration: none;
+}
+ 
+a:hover, a:active {
+   color: var(--light-gray);
+   text-decoration-line: underline;
+   text-decoration-style: dotted;
+   text-decoration-thickness: 3px; 
+}
+ 
 .slider {
    -webkit-appearance: none;
    width: 100%;
    height: 25px;
    background: var(--gray);
    outline: none;
-   /* opacity: 0.7; */
+   cursor: pointer;
 }
  
 .slider::-webkit-slider-thumb {
@@ -70,6 +82,7 @@ body {
    /* background-color only for content */
    background-clip: content-box;
    border: 2px solid var(--gray);
+   cursor: pointer;
  }
  
  /* appearance for checked radiobutton */
@@ -85,19 +98,20 @@ body {
    font-family: var(--font-game);
    color: var(--gray);
    font-size: 100%;
+   line-height: 1.2;
    background-color: rgba(32, 32, 32, 0.9);
    animation-name: box-show;
    animation-duration: 0.3s;
 }
 
 .box-content {
-   padding: 40px;
+   padding: 20px 40px;
 }
 
 .box-title {
    font-size: 200%;
    color: var(--light-gray);
-   padding-bottom: 20px;
+   padding-bottom: 10px;
 }
 
 .box-title-small {
@@ -150,8 +164,8 @@ body {
    display: none;
    padding: 50px 10px 10px;
    background-color: rgba(32, 32, 32, 0.9);
-   max-height: 70vh;
-   overflow-y: auto;
+   /* max-height: 70vh;
+   overflow-y: auto; */
 }
 
 .menu-content-show {
@@ -228,7 +242,7 @@ body {
    cursor: var(--mouse-cursor);
 }
 
-@media only screen and (max-height: 900px) {
+@media only screen and (max-height: 850px) {
 
    .box-container {
       margin-top: 5vh;
@@ -255,10 +269,12 @@ body {
 @media only screen and (max-width: 900px), (max-height: 750px) {
 
    .box-container {
+      margin: 0;
       top: 0;
       left: 0;
       width: 100%;
-      margin: 0;
+      height: 100%;
+      overflow-y: auto;
    }
       
    .alert, .alert-hidden {
@@ -276,6 +292,22 @@ body {
 }
 
 @media only screen and (max-width: 600px) {
+
+   .box-container {
+      font-size: 75%;
+   }
+   
+   .box-content {
+      padding: 10px 20px;
+   }
+               
+   .box-title {
+      font-size: 150%;
+   }
+   
+   .box-title-small {
+      font-size: 100%;
+   }   
                
    .alert, .alert-hidden {
       font-size: 100%;
@@ -292,7 +324,7 @@ body {
 }
 
 @media only screen and (max-width: 400px) {
-               
+
    .alert, .alert-hidden {
       font-size: 75%;
    }

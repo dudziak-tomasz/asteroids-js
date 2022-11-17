@@ -1,6 +1,5 @@
 import { Spacetime } from './spacetime.js'
 import { Spaceship } from './spaceship.js'
-import { getScreenSize } from './utils.js'
 
 export const game = {
     parentElement: undefined,
@@ -50,6 +49,7 @@ export const game = {
         this.getHighScore()
         this.refreshHighScore()
 
+        this.initializeEvents()
         this.initializeCustomEvents()
 
         Spacetime.createSpacetime(this.mainDiv)
@@ -70,14 +70,14 @@ export const game = {
         const track = localStorage.getItem('audioTrack')
         if (track) this.audioTrack = track
         else this.setAudioTrack()
-        this.audio.src = `../audio/${this.audioTrack}`
+        this.audio.src = `/audio/${this.audioTrack}`
         return this.audioTrack
     },
 
     setAudioTrack(track) {
         if (track !== undefined) this.audioTrack = track
         localStorage.setItem('audioTrack', this.audioTrack)
-        this.audio.src = `../audio/${this.audioTrack}`
+        this.audio.src = `/audio/${this.audioTrack}`
     },
 
     getAudioVolume() {
@@ -188,6 +188,18 @@ export const game = {
     gameOver() {
         this.showAlert('GAME OVER')
         this.pressFireTo = 'initializegame'
+    },
+
+    initializeEvents() {
+        this.parentElement.addEventListener('keydown', (event) => this.eventKeyDown(event))
+        this.parentElement.addEventListener('keyup', (event) => this.eventKeyUp(event))
+    
+        this.mainDiv.addEventListener('mousedown', (event) => this.eventMouseDown(event))
+        this.mainDiv.addEventListener('mouseup', (event) => this.eventMouseUp(event))
+
+        this.mainDiv.addEventListener('touchstart', (event) => this.eventTouchStart(event))
+        this.mainDiv.addEventListener('touchmove', (event) => this.eventTouchMove(event))
+        this.mainDiv.addEventListener('touchend', (event) => this.eventTouchEnd(event))
     },
 
     initializeCustomEvents () {
@@ -310,8 +322,6 @@ export const game = {
     },
 
     switchPause() {
-        // if (!Spacetime.spaceship) return
-
         if (game.pause) {
             Spacetime.start()
             this.playAudio()
@@ -346,9 +356,6 @@ export const game = {
     },
 
     eventKeyDown(event) {
-        // event.preventDefault()
-
-        // console.log(event.code)
 
         switch(event.code) {
             case 'Escape':
@@ -409,7 +416,7 @@ export const game = {
     },
 
     eventMouseDown(event) {
-        event.preventDefault()
+        // event.preventDefault()
 
         if (this.isTouch) return
 
@@ -426,7 +433,7 @@ export const game = {
     },
 
     eventMouseUp(event) {
-        event.preventDefault()
+        // event.preventDefault()
 
         if (this.isTouch) return this.isTouch = false
 
@@ -525,7 +532,7 @@ export const game = {
         if (!this.pause) this.checkSwitches()
     },
 
-    eventOrientationChange() {
+    eventOrientationChange(event) {
         
     },
 
@@ -542,26 +549,20 @@ export const game = {
     },
 
     initializeCanvasAlert() {
-        // const fontSize = Math.round(getScreenSize() / 30)    
         this.canvasAlert = document.createElement('div')
         this.canvasAlert.className = 'alert'
-        // this.canvasAlert.style.fontSize = fontSize + 'px'
         this.mainDiv.appendChild(this.canvasAlert)    
 },
 
     initializeCanvasScore() {
-        // const fontSize = Math.round(getScreenSize() / 40)
         this.canvasScore = document.createElement('div')
         this.canvasScore.className = 'score'
-        // this.canvasScore.style.fontSize = fontSize + 'px'
         this.mainDiv.appendChild(this.canvasScore)    
     },
 
     initializeCanvasHighScore() {
-        // const fontSize = Math.round(getScreenSize() / 60)
         this.canvasHighScore = document.createElement('div')
         this.canvasHighScore.className = 'high-score'
-        // this.canvasHighScore.style.fontSize = fontSize + 'px'
         this.mainDiv.appendChild(this.canvasHighScore)    
     }
 }

@@ -24,8 +24,16 @@ export class Menu extends Box {
             text: 'PREFERENCES',
             enabled: true
         }, {
+        }, {
+            text: 'FULLSCREEN',
+            enabled: true
+        }, {
+            text: 'EXIT FS',
+            enabled: false
+        }, {
             text: 'HOW TO PLAY',
             enabled: true
+        }, {
         }, {
             text: 'ABOUT',
             enabled: true
@@ -33,12 +41,16 @@ export class Menu extends Box {
 
         this.box = undefined
 
-        this.audio = new Audio('../audio/fire.mp3')
+        this.audio = new Audio('/audio/fire.mp3')
 
         this.initializeMenuItems()
     }
 
     initializeMenuItems() {
+        const stateFs = (document.fullscreenElement !== null) 
+        this.items.find(item => item.text === 'FULLSCREEN').enabled = !stateFs
+        this.items.find(item => item.text === 'EXIT FS').enabled = stateFs
+
         this.content.innerHTML = ''
         for (let i = 0; i < this.items.length; i++) {
             const item = document.createElement('div')
@@ -55,14 +67,8 @@ export class Menu extends Box {
         this.content.classList.toggle('menu-content-show')
     }
 
-    menuItemClick(itemId) {
+    async menuItemClick(itemId) {
         this.menuStartClick()
-
-        if (itemId === 0 || itemId === 1) {
-            this.items[0].enabled = !this.items[0].enabled
-            this.items[1].enabled = !this.items[1].enabled
-            this.initializeMenuItems()
-        }
 
         if (this.box) this.box.close()
 
@@ -71,7 +77,17 @@ export class Menu extends Box {
             this.box = new Box(this.parentElement, innerHTML)
             this.handlePageElements()
         } else {
-            this.box = new Box(this.parentElement, `<p class="box-title">${this.items[itemId].text}</p><p>UNDER CONSTRUCTION</p>`)
+            if (this.items[itemId].text === 'FULLSCREEN') {
+                try {
+                    await document.body.requestFullscreen()
+                } catch { }
+            } else if(this.items[itemId].text === 'EXIT FS') {
+                try {
+                    await document.exitFullscreen()
+                } catch { }     
+            } else {
+                this.box = new Box(this.parentElement, `<p class="box-title">${this.items[itemId].text}</p><p>UNDER CONSTRUCTION</p>`)
+            }
         }  
     }
 
@@ -116,6 +132,10 @@ export class Menu extends Box {
         this.content.addEventListener('click', (event) => {
             const target = event.target.id
             if (target.startsWith('menu-item-')) this.menuItemClick(parseInt(target.replace('menu-item-', '')))
+        })
+
+        document.addEventListener('fullscreenchange', () => {
+            this.initializeMenuItems()
         })
     }
 }

@@ -89,13 +89,13 @@ export class Saucer extends ComplexFlyingObject {
         this.canvas.appendChild(this.line2)
 
         const audioFlyingTrack = ['', 'saucer_small.mp3', 'saucer_big.mp3']
-        this.audioFlying = new Audio(`../audio/${audioFlyingTrack[this.size]}`)
+        this.audioFlying = new Audio(`/audio/${audioFlyingTrack[this.size]}`)
         this.audioFlying.loop = true
         
         this.play()
 
         const audioBangTrack = ['', 'bang_saucer_small.mp3', 'bang_saucer_big.mp3']
-        this.audioBang = new Audio(`../audio/${audioBangTrack[this.size]}`)
+        this.audioBang = new Audio(`/audio/${audioBangTrack[this.size]}`)
 
         this.setAudioVolume()
 
