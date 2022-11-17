@@ -15,6 +15,10 @@ pages.set('PREFERENCES', `
         <input type="radio" id="box-radio-background2" name="box-radio-background" value="background2.mp3" class="radio">
         <label for="box-background2" id="box-label-background2">BACKGROUND2</label>
     </p>
+    <p>
+        <input type="radio" id="box-radio-background3" name="box-radio-background" value="background3.mp3" class="radio">
+        <label for="box-background3" id="box-label-background3">BACKGROUND3</label>
+    </p>
 `)
 
 pages.set('HOW TO PLAY', `
