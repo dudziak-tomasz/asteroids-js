@@ -1,3 +1,4 @@
+import { game } from './game.js'
 import { getRandomID } from './utils.js'
 
 export class Box {
@@ -27,6 +28,10 @@ export class Box {
         this.content.id = getRandomID('box-content')
         this.container.appendChild(this.content)
 
+        if (this.constructor.name === 'Box') {
+            game.mainDiv.dispatchEvent(new CustomEvent('boxopen'))
+        }
+
         this.content.innerHTML = innerHTML
 
         this.initializeEvents()
@@ -35,7 +40,9 @@ export class Box {
     close() {
         if (this.container) {
             this.container.remove()
-            this.container = undefined    
+            this.container = undefined
+            
+            game.mainDiv.dispatchEvent(new CustomEvent('boxclose'))
         }
     }
 

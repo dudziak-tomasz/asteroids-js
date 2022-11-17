@@ -100,8 +100,6 @@ export class Spacetime {
         }
 
         if (this.shards.length === 0) {
-            // if (this.asteroids.length === 0) this.sendEvent('noasteroids')   // double lvl bug -> move to removeAsteroid(asteroid)
-
             if (!this.spaceship) this.sendEvent('spaceshiphit')
         }
 

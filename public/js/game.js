@@ -34,6 +34,7 @@ export const game = {
     audio: undefined,
     audioTrack: 'background2.mp3',
     audioVolume: 0.3,
+    openBoxes: 0,
 
     createGame(parentElement) {
         this.parentElement = parentElement
@@ -121,7 +122,7 @@ export const game = {
                 this.startGame()
                 break
             case 'startspaceship':
-                this.startSpaceship()
+                if (this.openBoxes === 0) this.startSpaceship()
                 break
         }
     },
@@ -223,6 +224,16 @@ export const game = {
             this.seconds++
             if (this.seconds % this.timeBetweenSaucers === 0) this.generateSaucer()
         })
+
+        this.mainDiv.addEventListener('boxopen', () => {
+            this.openBoxes++
+            if (!game.pause && Spacetime.spaceship) this.switchPause()
+        })
+
+        this.mainDiv.addEventListener('boxclose', () => {
+            this.openBoxes--
+            if (this.openBoxes === 0 && game.pause) this.switchPause()
+        })
     },
 
     generateSaucer() {
@@ -323,15 +334,18 @@ export const game = {
 
     switchPause() {
         if (game.pause) {
-            Spacetime.start()
-            this.playAudio()
-
-            this.checkSwitches()
+            if (this.openBoxes === 0 || !Spacetime.spaceship) {
+                Spacetime.start()
+                this.playAudio()
+    
+                this.checkSwitches()    
+                game.pause = !game.pause
+            }
         } else {
             Spacetime.stop()
             this.stopAudio()
+            game.pause = !game.pause
         }
-        game.pause = !game.pause
     },
 
     checkSwitches() {
@@ -358,7 +372,6 @@ export const game = {
     eventKeyDown(event) {
 
         switch(event.code) {
-            case 'Escape':
             case 'KeyP':
                 this.switchPause()
                 break
@@ -530,10 +543,6 @@ export const game = {
         this.hyperspace = []
 
         if (!this.pause) this.checkSwitches()
-    },
-
-    eventOrientationChange(event) {
-        
     },
 
     initializeMainDiv() {

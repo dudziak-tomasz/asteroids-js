@@ -65,15 +65,20 @@ export class Menu extends Box {
     menuStartClick() {
         this.menuStart.classList.toggle('menu-x')
         this.content.classList.toggle('menu-content-show')
+        
+        if (this.content.classList.length === 2) {
+            game.mainDiv.dispatchEvent(new CustomEvent('boxopen'))
+        } else {
+            game.mainDiv.dispatchEvent(new CustomEvent('boxclose'))
+        }
     }
 
     async menuItemClick(itemId) {
         this.menuStartClick()
 
-        if (this.box) this.box.close()
-
         if (pages.has(this.items[itemId].text)) {
             const innerHTML = pages.get(this.items[itemId].text)
+            if (this.box) this.box.close()
             this.box = new Box(this.parentElement, innerHTML)
             this.handlePageElements()
         } else {
@@ -86,6 +91,7 @@ export class Menu extends Box {
                     await document.exitFullscreen()
                 } catch { }     
             } else {
+                if (this.box) this.box.close()
                 this.box = new Box(this.parentElement, `<p class="box-title">${this.items[itemId].text}</p><p>UNDER CONSTRUCTION</p>`)
             }
         }  

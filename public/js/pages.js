@@ -27,7 +27,7 @@ pages.set('HOW TO PLAY', `
     <p class="box-title-small">KEYBOARD</p>
     <p><span class="box-light-gray">SPACE</span> - FIRE</p>
     <p><span class="box-light-gray">H</span> - HYPERSPACE</p>
-    <p><span class="box-light-gray">ESCAPE</span> / <span class="box-light-gray">P</span> - PAUSE / UNPAUSE</p>
+    <p><span class="box-light-gray">P</span> - PAUSE / UNPAUSE</p>
     <p class="box-title-small">TOUCH GESTURES</p>
     <p><span class="box-light-gray">SWIPE LEFT</span> / <span class="box-light-gray">RIGHT</span> - ROTATE LEFT / RIGHT</p>
     <p><span class="box-light-gray">SWIPE UP</span> - ACCELERATE</p>
