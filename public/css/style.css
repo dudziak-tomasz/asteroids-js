@@ -46,6 +46,8 @@ a:hover, a:active {
  
 .slider {
    -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
    width: 100%;
    height: 25px;
    background: var(--gray);
@@ -55,6 +57,7 @@ a:hover, a:active {
  
 .slider::-webkit-slider-thumb {
    -webkit-appearance: none;
+   -moz-appearance: none;
    appearance: none;
    width: 25px;
    height: 25px;
@@ -141,7 +144,7 @@ a:hover, a:active {
    height: 5px;
    background-color: var(--gray);
    margin: 6px 0;
-   transition: 0.4s;
+   transition: 0.3s;
 }
 
 .menu-x .menu-bar1 {
