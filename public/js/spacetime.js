@@ -19,7 +19,7 @@ export class Spacetime {
         this.oneSecond = 1000 / this.intervalTime
         this.oneSecondCountdown = 0
 
-        this.audioVolume = 1
+        this.audioVolume = 0.9
         this.getAudioVolume()
 
         this.start()

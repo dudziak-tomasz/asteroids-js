@@ -23,10 +23,6 @@ export class Asteroid extends ComplexFlyingObject {
             this.size = size 
         }
 
-        // this.minSpeed = 0.1     // px / intervalTime
-        // this.maxSpeed = 2.2       // px / intervalTime
-        // this.minSpeed = 0.5 / this.size    // px / intervalTime
-        // this.maxSpeed = 2.5 / this.size       // px / intervalTime
         this.minSpeed = 0.3      // px / intervalTime
         this.maxSpeed = 2.4 * getHDRatio()       // px / intervalTime
 

@@ -113,7 +113,6 @@ export const game = {
     },
 
     pressFireNoSpaceship() {
-
         switch (this.pressFireTo) {
             case 'initializegame':
                 this.initializeGame()
@@ -429,7 +428,6 @@ export const game = {
     },
 
     eventMouseDown(event) {
-        // event.preventDefault()
 
         if (this.isTouch) return
 
@@ -446,7 +444,6 @@ export const game = {
     },
 
     eventMouseUp(event) {
-        // event.preventDefault()
 
         if (this.isTouch) return this.isTouch = false
 
@@ -526,17 +523,7 @@ export const game = {
         if (!this.pause) this.checkSwitches()
     },
 
-    async eventTouchEnd(event) {
-
-        // fullscreen
-        if (this.touchStart.length > 1 && this.touchEnd.length > 1 && 
-            this.touchStart[0].x !== this.touchEnd[0].x && this.touchStart[0].y !== this.touchEnd[0].y &&
-            this.touchStart[1].x !== this.touchEnd[1].x && this.touchStart[1].y !== this.touchEnd[1].y) {
-            try {
-                await document.body.requestFullscreen()
-            } catch {
-            }    
-        }
+    eventTouchEnd() {
 
         this.accelerate = false
         this.fire = []
