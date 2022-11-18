@@ -70,22 +70,18 @@ a:hover, a:active {
 }
 
 .radio {
-   /* remove standard background appearance */
    -webkit-appearance: none;
    -moz-appearance: none;
    appearance: none;
-   /* create custom radiobutton appearance */
    display: inline-block;
    width: 25px;
    height: 25px;
    padding: 6px;
-   /* background-color only for content */
    background-clip: content-box;
    border: 2px solid var(--gray);
    cursor: pointer;
  }
  
- /* appearance for checked radiobutton */
 .radio:checked {
    background-color: var(--light-gray);
  }
@@ -164,8 +160,6 @@ a:hover, a:active {
    display: none;
    padding: 50px 10px 10px;
    background-color: rgba(32, 32, 32, 0.9);
-   /* max-height: 70vh;
-   overflow-y: auto; */
 }
 
 .menu-content-show {
@@ -242,7 +236,7 @@ a:hover, a:active {
    cursor: var(--mouse-cursor);
 }
 
-@media only screen and (max-height: 850px) {
+@media screen and (max-height: 850px) {
 
    .box-container {
       margin-top: 5vh;
@@ -250,7 +244,7 @@ a:hover, a:active {
 
 }
 
-@media only screen and (max-height: 800px) {
+@media screen and (max-height: 800px) {
 
    .box-container {
       margin-top: 0;
@@ -258,7 +252,7 @@ a:hover, a:active {
 
 }
 
-@media only screen and (max-width: 1300px) {
+@media screen and (max-width: 1300px) {
    .box-container {
       width: 80vw;
       margin-left: 10vw;
@@ -266,7 +260,7 @@ a:hover, a:active {
 
 }
 
-@media only screen and (max-width: 900px), (max-height: 750px) {
+@media screen and (max-width: 900px), (max-height: 750px) {
 
    .box-container {
       margin: 0;
@@ -291,7 +285,7 @@ a:hover, a:active {
    
 }
 
-@media only screen and (max-width: 600px) {
+@media screen and (max-width: 600px) {
 
    .box-container {
       font-size: 75%;
@@ -323,7 +317,7 @@ a:hover, a:active {
    
 }
 
-@media only screen and (max-width: 400px) {
+@media screen and (max-width: 400px) {
 
    .alert, .alert-hidden {
       font-size: 75%;
