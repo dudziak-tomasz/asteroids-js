@@ -52,9 +52,13 @@ Client side: Web browser
 
 ## DIRECTORY STRUCTURE
 
-/public - front-end
+Front-end:
 
-/src - back-end
+    /public
+
+Back-end:
+
+    /src
 
 ---
 
