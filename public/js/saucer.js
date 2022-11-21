@@ -110,18 +110,12 @@ export class Saucer extends ComplexFlyingObject {
 
     async play() {
         try {
-            this.audioFlying.play()
-        } catch {
-
-        }
+            await this.audioFlying.play()
+        } catch { }
     }
 
-    async stopPlay() {
-        try {
-            this.audioFlying.pause()
-        } catch {
-
-        }
+    stopPlay() {
+        this.audioFlying.pause()
     }
 
     getPoints() {

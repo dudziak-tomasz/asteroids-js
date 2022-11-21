@@ -121,11 +121,13 @@ export class Menu extends Box {
         this.$boxSliderSound = document.getElementById('box-slider-sound')
         if (this.$boxSliderSound) {
             this.$boxSliderSound.value = Spacetime.getAudioVolume()
-            this.$boxSliderSound.oninput = () => {
+            this.$boxSliderSound.oninput = async () => {
                 const volume = parseFloat(this.$boxSliderSound.value)
                 Spacetime.setAudioVolume(volume)
                 this.audio.volume = Spacetime.audioVolume
-                this.audio.play()
+                try {
+                    await this.audio.play()
+                } catch { }
             }
         }
 

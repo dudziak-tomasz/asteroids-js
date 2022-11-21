@@ -98,19 +98,15 @@ export const game = {
     async playAudio() {
         if (this.audioVolume === 0) return
         try {
-            this.audio.play()
+            await this.audio.play()
         } catch {
-
+            // todo: solve: 'DOMException: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD'
         }
     },
 
-    async stopAudio() {
-        try {
-            this.audio.pause()
-        } catch {
-
-        }
-    },
+    stopAudio() {
+        this.audio.pause()
+   },
 
     pressFireNoSpaceship() {
         switch (this.pressFireTo) {

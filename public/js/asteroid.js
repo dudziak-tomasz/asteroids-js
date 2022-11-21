@@ -101,7 +101,7 @@ export class Asteroid extends ComplexFlyingObject {
         const shardTop = this.top + this.height / 2
 
         try {
-            this.audioBang.play()
+            await this.audioBang.play()
         } catch {
 
         }
