@@ -23,7 +23,7 @@
     "sizes": "512x512",
     "type": "image/png"
   }],
-  "name": "Asteroids",
-  "short_name": "Asteroids",
+  "name": "ASTEROIDS JS",
+  "short_name": "ASTEROIDS JS",
   "start_url": "/index.html"
 }
