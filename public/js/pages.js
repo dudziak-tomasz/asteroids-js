@@ -8,16 +8,22 @@ pages.set('PREFERENCES', `
     <p><input type="range" min="0" max="1" step="0.01" id="box-slider-music" class="slider"></p>
     <p class="box-title-small">BACKGROUND MUSIC TRACK</p>
     <p>
-        <input type="radio" id="box-radio-background1" name="box-radio-background" value="background1.mp3" class="radio">
-        <label for="box-background1" id="box-label-background1">BACKGROUND1</label>
-    </p>
+        <label class="radio-label">
+            <input type="radio" id="box-radio-background1" name="box-radio-background" value="background1.mp3" class="radio">
+            BACKGROUND1
+        </label>
     <p>
-        <input type="radio" id="box-radio-background2" name="box-radio-background" value="background2.mp3" class="radio">
-        <label for="box-background2" id="box-label-background2">BACKGROUND2</label>
     </p>
-    <p>
-        <input type="radio" id="box-radio-background3" name="box-radio-background" value="background3.mp3" class="radio">
-        <label for="box-background3" id="box-label-background3">BACKGROUND3</label>
+        <label class="radio-label">
+            <input type="radio" id="box-radio-background2" name="box-radio-background" value="background2.mp3" class="radio">
+            BACKGROUND2
+        </label>
+        <p>
+        </p>
+            <label class="radio-label">
+            <input type="radio" id="box-radio-background3" name="box-radio-background" value="background3.mp3" class="radio">
+            BACKGROUND3
+        </label>
     </p>
 `)
 

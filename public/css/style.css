@@ -89,6 +89,10 @@ a:hover, a:active {
    background-color: var(--light-gray);
  }
 
+.radio-label {
+   cursor: pointer;
+}
+
 .box-container {
    position: absolute;
    width: 60vw;
