@@ -225,12 +225,14 @@ export class Spaceship extends ComplexFlyingObject {
 
     async hit() {
 
-        const centerX = this.left + this.width / 2
-        const centerY = this.top + this.height / 2
+        this.destroy()
 
         try {
             await this.audioBang.play()
         } catch { }
+
+        const centerX = this.left + this.width / 2
+        const centerY = this.top + this.height / 2
 
         for (let i = 0; i < this.amounOfPieces; i++) {
             let x = centerX + getRandomPlusMinus(this.width / 4, this.width / 2)
@@ -238,7 +240,6 @@ export class Spaceship extends ComplexFlyingObject {
             Spacetime.addShard(new PieceOfSpaceship(x, y, this.speedX, this.speedY))
         }    
 
-        this.destroy()
     }
 
     destroy() {
