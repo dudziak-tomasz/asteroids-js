@@ -52,14 +52,24 @@ export class Menu extends Box {
         this.items.find(item => item.text === 'EXIT FS').enabled = stateFs
 
         this.content.innerHTML = ''
-        for (let i = 0; i < this.items.length; i++) {
-            const item = document.createElement('div')
-            item.className = 'menu-item'
-            item.id = 'menu-item-' + i
-            item.innerHTML = this.items[i].text
-            if (!this.items[i].enabled) item.classList.toggle('menu-item-disabled')
-            this.content.appendChild(item)
-        }
+
+        this.items.forEach((item, i) => {
+            const menuItem = document.createElement('div')
+            menuItem.className = 'menu-item'
+            menuItem.id = 'menu-item-' + i
+            menuItem.innerHTML = item.text
+            if (!item.enabled) menuItem.classList.toggle('menu-item-disabled')
+            this.content.appendChild(menuItem)
+        })
+        
+        // for (let i = 0; i < this.items.length; i++) {
+        //     const item = document.createElement('div')
+        //     item.className = 'menu-item'
+        //     item.id = 'menu-item-' + i
+        //     item.innerHTML = this.items[i].text
+        //     if (!this.items[i].enabled) item.classList.toggle('menu-item-disabled')
+        //     this.content.appendChild(item)
+        // }
     }
 
     menuStartClick() {
