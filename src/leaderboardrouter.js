@@ -8,7 +8,7 @@ leaderboardRouter.get('/leaderboard', async (req, res) => {
     try {
         // setTimeout(async () => {
         //     res.send(await db.getLeaderboard()) 
-        // }, 3000)
+        // }, 2000)
         res.send(await db.getLeaderboard())
     } catch (e) {
         res.status(500).send()

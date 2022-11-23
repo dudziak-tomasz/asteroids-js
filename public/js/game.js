@@ -1,5 +1,6 @@
 import { Spacetime } from './spacetime.js'
 import { Spaceship } from './spaceship.js'
+import { api } from './api.js'
 
 export const game = {
     parentElement: undefined,
@@ -7,6 +8,8 @@ export const game = {
     canvasAlert: undefined,
     canvasScore: undefined,
     canvasHighScore: undefined,
+    canvasLeaderboard: undefined,
+    leaderboard: undefined,
     level: 0,
     score: 0,
     highScore: 0,
@@ -44,6 +47,7 @@ export const game = {
         this.initializeCanvasAlert()
         this.initializeCanvasScore()
         this.initializeCanvasHighScore()
+        this.initializeCanvasLeaderboard()
 
         this.refreshScore()
 
@@ -106,7 +110,28 @@ export const game = {
 
     stopAudio() {
         this.audio.pause()
-   },
+    },
+
+    async showLeaderboard() {
+        this.leaderboard = await api.getLeaderboard()
+
+        if (this.leaderboard) {
+            if (this.pressFireTo === 'startgame' || this.pressFireTo === 'initializegame') this.canvasLeaderboard.className = 'leaderboard'
+
+            let innerHTML = '<p CLASS="box-light-gray">LEADERBOARD</p><table class="leaderboard-table">'
+
+            this.leaderboard.forEach((leader) => {
+                innerHTML += `<tr><td class="leader-score">${leader.highscore}</td><td class="leader-name">${leader.username.toUpperCase()}</td></tr>`
+            })
+
+            innerHTML += '</table>'
+            this.canvasLeaderboard.innerHTML = innerHTML
+        }    
+    },
+
+    hideLeaderBoard() {
+        this.canvasLeaderboard.className = 'leaderboard-hidden'
+    },
 
     pressFireNoSpaceship() {
         switch (this.pressFireTo) {
@@ -125,11 +150,13 @@ export const game = {
     initializeGame() {
         this.pressFireTo = 'startgame'
         this.showAlert('PRESS FIRE TO START GAME')
+        this.showLeaderboard()
     },
 
     startGame() {
         this.pressFireTo = ''
         this.hideAlert()
+        this.hideLeaderBoard()
 
         this.level = 0
         this.score = 0
@@ -544,7 +571,13 @@ export const game = {
         this.canvasAlert = document.createElement('div')
         this.canvasAlert.className = 'alert'
         this.mainDiv.appendChild(this.canvasAlert)    
-},
+    },
+
+    initializeCanvasLeaderboard() {
+        this.canvasLeaderboard = document.createElement('div')
+        this.canvasLeaderboard.className = 'leaderboard-hidden'
+        this.mainDiv.appendChild(this.canvasLeaderboard)    
+    },
 
     initializeCanvasScore() {
         this.canvasScore = document.createElement('div')

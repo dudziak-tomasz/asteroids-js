@@ -192,7 +192,7 @@ a:hover, a:active {
 
 .alert, .alert-hidden {
    position: absolute;
-   top: 40%;
+   top: 35%;
    width: 100%;
    color: var(--gray);
    text-align: center;
@@ -213,6 +213,45 @@ a:hover, a:active {
    cursor: var(--mouse-cursor);
    animation-name: alert-fading;
    animation-duration: 0.3s;
+}
+
+.leaderboard, .leaderboard-hidden {
+   position: absolute;
+   top: 45%;
+   width: 100%;
+   color: var(--gray);
+   text-align: center;
+   font-family: var(--font-game);
+   font-size: 150%;
+   cursor: var(--mouse-cursor);
+}
+
+.leaderboard {
+   animation-name: box-show;
+   animation-duration: 0.3s;
+}
+
+.leaderboard-hidden {
+   opacity: 0;
+   cursor: var(--mouse-cursor);
+   animation-name: alert-fading;
+   animation-duration: 0.3s;
+}
+
+.leaderboard-table {
+   width: 100%;
+}
+
+.leader-score {
+   width: 50%;
+   padding: 10px 20px 0px 0px;
+   text-align: right;
+}
+
+.leader-name {
+   width: 50%;
+   padding: 10px 0px 0px 20px;
+   text-align: left;
 }
 
 .score, .score-blink {
@@ -251,14 +290,6 @@ a:hover, a:active {
 
 }
 
-@media screen and (max-height: 800px) {
-
-   .box-container {
-      margin-top: 0;
-   }
-
-}
-
 @media screen and (max-width: 1300px) {
    .box-container {
       width: 80vw;
@@ -267,7 +298,7 @@ a:hover, a:active {
 
 }
 
-@media screen and (max-width: 900px), (max-height: 750px) {
+@media screen and (max-width: 900px), (max-height: 800px) {
 
    .box-container {
       margin: 0;
@@ -282,6 +313,11 @@ a:hover, a:active {
       font-size: 150%;
    }
 
+   .leaderboard, .leaderboard-hidden {
+      top: 40%;
+      font-size: 125%;
+   }
+
    .score, .score-blink {
       font-size: 125%;
    }
@@ -290,6 +326,30 @@ a:hover, a:active {
       font-size: 100%;
    }
    
+}
+
+@media screen and (max-height: 650px) {
+
+   .alert, .alert-hidden {
+      top: 30%;
+   }
+
+   .leaderboard, .leaderboard-hidden {
+      font-size: 75%;
+   }
+
+   .leader-score {
+      width: 50%;
+      padding: 5px 20px 0px 0px;
+      text-align: right;
+   }
+   
+   .leader-name {
+      width: 50%;
+      padding: 5px 0px 0px 20px;
+      text-align: left;
+   }
+      
 }
 
 @media screen and (max-width: 600px) {
