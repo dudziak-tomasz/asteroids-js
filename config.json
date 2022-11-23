@@ -1,0 +1,14 @@
+{
+  "development": {
+    "host": "localhost",
+    "user": "root",
+    "password": "",
+    "database": "asteroids"
+  },
+  "production": {
+    "host": "",
+    "user": "",
+    "password": "",
+    "database": ""
+  }
+}
