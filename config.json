@@ -3,12 +3,18 @@
     "host": "localhost",
     "user": "root",
     "password": "",
-    "database": "asteroids"
-  },
+    "database": "asteroids",
+    "dbDropCreate": true,
+    "tokenKey": "secret_key",
+    "https": false
+},
   "production": {
     "host": "",
     "user": "",
     "password": "",
-    "database": ""
+    "database": "",
+    "dbDropCreate": false,
+    "tokenKey": "",
+    "https": true
   }
 }

@@ -48,6 +48,8 @@ Copy the asteroids-js/config.json file to the configuration directory and set th
 
     asteroids-js/config/config.json
 
+More information about the config.json file: [CONFIG.md](CONFIG.md)
+
 Initialize developer database:
 
     npm run dbinitdev
