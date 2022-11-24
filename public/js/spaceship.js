@@ -153,24 +153,24 @@ export class Spaceship extends ComplexFlyingObject {
 
     async startAccelerate() {
         if (this.intervalIdAccelerate) return
-        
-        try {
-            await this.audioEngine.play()
-        } catch { }
 
         this.accelerate()
         this.intervalIdAccelerate = setInterval(() => {
             this.accelerate()
         }, this.intervalTimeAccelerate)
+        
+        try {
+            await this.audioEngine.play()
+        } catch { }
     }
 
-    async stopAccelerate() {
+    stopAccelerate() {
         if (!this.intervalIdAccelerate) return
-
-        this.audioEngine.pause()
 
         clearInterval(this.intervalIdAccelerate)
         this.intervalIdAccelerate = undefined
+
+        this.audioEngine.pause()
     }
 
     accelerate() {

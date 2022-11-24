@@ -290,7 +290,21 @@ a:hover, a:active {
 
 }
 
+@media screen and (max-height: 800px) {
+
+   .box-container {
+      margin-top: 0px;
+   }
+   
+   .leaderboard, .leaderboard-hidden {
+      top: 40%;
+      font-size: 125%;
+   }
+
+}
+
 @media screen and (max-width: 1300px) {
+
    .box-container {
       width: 80vw;
       margin-left: 10vw;
@@ -298,7 +312,7 @@ a:hover, a:active {
 
 }
 
-@media screen and (max-width: 900px), (max-height: 800px) {
+@media screen and (max-width: 900px), (max-height: 750px) {
 
    .box-container {
       margin: 0;
@@ -311,11 +325,6 @@ a:hover, a:active {
       
    .alert, .alert-hidden {
       font-size: 150%;
-   }
-
-   .leaderboard, .leaderboard-hidden {
-      top: 40%;
-      font-size: 125%;
    }
 
    .score, .score-blink {
