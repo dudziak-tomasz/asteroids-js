@@ -2,4 +2,6 @@ import { db } from './db.js'
 
 db.connect()
 
-db.initializeDB()
+await db.initializeDB()
+
+db.disconnect()

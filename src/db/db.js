@@ -23,6 +23,10 @@ export const db = {
         })
     },
 
+    disconnect() {
+        this.pool.end()
+    },
+
     async initializeDB() {
 
         if (this.dbDropCreate) {
@@ -59,16 +63,17 @@ export const db = {
             )
         `)
         
-        await this.pool.end()
     },
 
     async addUser( user = {}) {
         if (!user.highscore) user.highscore = 0
         if (!user.email) user.email = ''
-        await this.pool.execute(`
+        const [rows] = await this.pool.execute(`
             INSERT INTO ${this.database}.users (username, password, email, highscore)
             VALUES ('${user.username}', '${user.password}', '${user.email}', '${user.highscore}')
         `)
+
+        return rows.insertId
     },
 
     async findUserByUsername(username) {
@@ -121,7 +126,7 @@ export const db = {
         `)
     },
 
-    async deleteTokenByUserId(userId) {
+    async deleteTokensByUserId(userId) {
         await this.pool.execute(`
             DELETE
             FROM ${this.database}.tokens

@@ -121,7 +121,7 @@ export const game = {
                 let innerHTML = '<table class="leaderboard-table">'
 
                 this.leaderboard.forEach((leader) => {
-                    innerHTML += `<tr><td class="leader-score">${leader.highscore}</td><td class="leader-name">${leader.username.toUpperCase()}</td></tr>`
+                    innerHTML += `<tr><td class="leader-score box-light-gray">${leader.highscore}</td><td class="leader-name">${leader.username.toUpperCase()}</td></tr>`
                 })
     
                 innerHTML += '</table>'
