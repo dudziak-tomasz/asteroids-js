@@ -85,7 +85,7 @@ export const db = {
         `)
 
         if (rows.length > 0) return rows[0]
-        else return null
+        else return undefined
     },
 
     async findUserById(id) {
@@ -97,7 +97,27 @@ export const db = {
         `)
 
         if (rows.length > 0) return rows[0]
-        else return null
+        else return undefined
+    },
+
+    async updateUser( user = {}) {
+        if (!user.highscore) user.highscore = 0
+        if (!user.email) user.email = ''
+        const [rows] = await this.pool.execute(`
+            UPDATE ${this.database}.users 
+            SET username = '${user.username}', password = '${user.password}', email = '${user.email}', highscore = '${user.highscore}'
+            WHERE id = ${user.id}
+        `)
+
+        return rows
+    },
+
+    async deleteUserById(id) {
+        await this.pool.execute(`
+            DELETE
+            FROM ${this.database}.users
+            WHERE id = '${id}'
+        `)
     },
 
     async addToken(userId, token) {
@@ -115,7 +135,7 @@ export const db = {
         `)
 
         if (rows.length > 0) return rows[0]
-        else return null
+        else return undefined
     },
 
     async deleteTokenById(id) {
