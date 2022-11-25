@@ -117,7 +117,8 @@ export const game = {
 
         if (this.leaderboard) {
             if (this.pressFireTo === 'startgame' || this.pressFireTo === 'initializegame') {
-                let innerHTML = '<p CLASS="box-light-gray">LEADERBOARD</p><table class="leaderboard-table">'
+                // let innerHTML = '<p CLASS="box-light-gray">LEADERBOARD</p><table class="leaderboard-table">'
+                let innerHTML = '<table class="leaderboard-table">'
 
                 this.leaderboard.forEach((leader) => {
                     innerHTML += `<tr><td class="leader-score">${leader.highscore}</td><td class="leader-name">${leader.username.toUpperCase()}</td></tr>`

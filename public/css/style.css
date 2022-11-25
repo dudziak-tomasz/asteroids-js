@@ -192,7 +192,7 @@ a:hover, a:active {
 
 .alert, .alert-hidden {
    position: absolute;
-   top: 35%;
+   top: 40%;
    width: 100%;
    color: var(--gray);
    text-align: center;
@@ -217,7 +217,7 @@ a:hover, a:active {
 
 .leaderboard, .leaderboard-hidden {
    position: absolute;
-   top: 45%;
+   top: 50%;
    width: 100%;
    color: var(--gray);
    text-align: center;
@@ -296,7 +296,6 @@ a:hover, a:active {
    }
    
    .leaderboard, .leaderboard-hidden {
-      top: 40%;
       font-size: 125%;
    }
 
@@ -326,6 +325,10 @@ a:hover, a:active {
       font-size: 150%;
    }
 
+   .leaderboard, .leaderboard-hidden {
+      font-size: 100%;
+   }
+  
    .score, .score-blink {
       font-size: 125%;
    }
@@ -333,23 +336,17 @@ a:hover, a:active {
    .high-score {
       font-size: 100%;
    }
-   
+      
 }
 
 @media screen and (max-height: 650px) {
-
-   .alert, .alert-hidden {
-      top: 30%;
-   }
 
    .leaderboard, .leaderboard-hidden {
       font-size: 75%;
    }
 
    .leader-score {
-      width: 50%;
       padding: 5px 20px 0px 0px;
-      text-align: right;
    }
    
    .leader-name {
@@ -384,6 +381,10 @@ a:hover, a:active {
 
    .leaderboard, .leaderboard-hidden {
       font-size: 75%;
+   }
+
+   .leader-score {
+      width: auto;
    }
 
    .score, .score-blink {
