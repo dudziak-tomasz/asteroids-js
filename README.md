@@ -36,7 +36,7 @@ Client side: Web browser
 
 ## INSTALL
 
-Install packages:
+Install the dependencies:
 
     npm install
 
@@ -68,7 +68,7 @@ Developer mode:
 
 Production mode:
 
-    npm run start
+    npm start
     
 ---
 
