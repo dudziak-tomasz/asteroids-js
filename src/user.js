@@ -1,17 +1,58 @@
 import express from 'express'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+import validator from 'validator'
 import { config } from './config.js'
 import { db } from './db/db.js'
 
 export class User {
     constructor(user = {}) {
 
-        if (user.id) this.id = user.id
-        if (user.username || user.username === '') this.username = user.username.trim().toLowerCase()
-        if (user.password || user.password === '') this.password = user.password.trim()
-        if (user.email || user.email === '') this.email = user.email.trim()
-        if (user.highscore || user.highscore === 0) this.highscore = user.highscore    
+        this.id = undefined
+        this.username = undefined
+        this.password = undefined
+        this.email = undefined
+        this.highscore = undefined
+
+        if (typeof user.id === 'number') this.id = user.id
+        if (typeof user.username === 'string') this.username = user.username.trim().toLowerCase()
+        if (typeof user.password === 'string') this.password = user.password.trim()
+        if (typeof user.email === 'string') this.email = user.email.trim()
+        if (typeof user.highscore === 'number') this.highscore = user.highscore
+    }
+
+    async save() {
+
+        if (!this.username || !this.password) throw new Error()
+        if (this.email === undefined) this.email = ''
+        if (this.highscore === undefined) this.highscore = 0
+
+        if (this.id === undefined) this.id = await db.addUser(this)
+        else await db.updateUser(this)
+    }
+
+    async delete() {
+
+        await this.deleteAllTokens()
+        await db.deleteUserById(this.id)
+
+    }
+
+    async deleteAllTokens() {
+
+        await db.deleteTokensByUserId(this.id)
+
+    }
+
+    async hashPassword() {
+
+        this.password = await bcrypt.hash(this.password, 8)
+
+    }
+
+    async comparePassword(password) {
+
+        return await bcrypt.compare(password, this.password)
 
     }
 
@@ -28,6 +69,8 @@ export class User {
 
         if (!this.username) return false
         if (this.username.length < 3) return false
+        if (this.username.length > 20) return false
+        if (!validator.isAlphanumeric(this.username)) return false
 
         return true
     }
@@ -35,11 +78,19 @@ export class User {
     validatePassword() {
 
         if (!this.password) return false
-        if (this.password.toLowerCase().includes('password')) return false
-        if (this.password.toLowerCase().includes('qwerty')) return false
-        if (this.password.length < 6) return false
+        if (this.password.toLowerCase().includes(this.username)) return false
+        if (!validator.isStrongPassword(this.password,{ minSymbols: 0 })) return false
 
         return true
+    }
+
+    validateEmail() {
+
+        if (this.email === undefined || this.email === '') return true
+        if (!validator.isEmail(this.email)) return false
+
+        return true
+
     }
 
     async generateToken() {
@@ -84,15 +135,16 @@ export class User {
     
             if (dbUser) return res.status(400).send({ error: 'username taken' })
 
-            if (!newUser.validateUsername()) return res.status(400).send({ error: 'username too short' })
+            if (!newUser.validateUsername()) return res.status(400).send({ error: 'username is invalid' })
             if (!newUser.validatePassword()) return res.status(400).send({ error: 'password too weak' })
+            if (!newUser.validateEmail()) return res.status(400).send({ error: 'email is invalid' })
 
-            newUser.password = await bcrypt.hash(newUser.password, 8)
+            await newUser.hashPassword()
 
-            // Todo: how to send highscore
+            // Todo: highscore only by update endpoint
             newUser.highscore = 0
 
-            newUser.id = await db.addUser(newUser)
+            await newUser.save()
 
             const token = await newUser.generateToken()
     
@@ -116,28 +168,31 @@ export class User {
             const newUser = new User(req.body)
             newUser.id = req.user.id
 
-            if (newUser.username) {
+            if (newUser.username !== undefined) {
                 const dbUser = await db.findUserByUsername(newUser.username)
-                if (dbUser && newUser.username === dbUser.username && newUser.id !== dbUser.id) return res.status(400).send({ error: 'username taken' })
-                if (!newUser.validateUsername()) return res.status(400).send({ error: 'username too short' })
+                if (dbUser && newUser.id !== dbUser.id) return res.status(400).send({ error: 'username taken' })
+                if (!newUser.validateUsername()) return res.status(400).send({ error: 'username is invalid' })
             } else {
                 newUser.username = req.user.username
             }
 
-            if (newUser.password) {
+            if (newUser.password !== undefined) {
                 if (!newUser.validatePassword()) return res.status(400).send({ error: 'password too weak' })
-                newUser.password = await bcrypt.hash(newUser.password, 8)
+                await newUser.hashPassword()
             } else {
                 newUser.password = req.user.password
             }
             
-            if (!newUser.email) newUser.email = req.user.email
+            if (newUser.email !== undefined) {
+                if (!newUser.validateEmail()) return res.status(400).send({ error: 'email is invalid' })
+            } else {
+                newUser.email = req.user.email
+            }
 
-            // Todo: how to send highscore
-            // newUser.highscore = 0
-            if (!(newUser.highscore > req.user.highscore)) newUser.highscore = req.user.highscore
+            // Todo: send highscore with more control the game
+            if (newUser.highscore === undefined || newUser.highscore < req.user.highscore) newUser.highscore = req.user.highscore
 
-            await db.updateUser(newUser)
+            await newUser.save()
 
             return res.send(newUser)
 
@@ -153,11 +208,9 @@ export class User {
             const dbUser = await db.findUserByUsername(req.body.username)
     
             if (!dbUser) return res.status(403).send()
-            const user = new User(dbUser)
 
-            const isMatch = await bcrypt.compare(req.body.password, user.password)
-            if (!isMatch) return res.status(403).send()
-    
+            const user = new User(dbUser)
+            if (!await user.comparePassword(req.body.password)) return res.status(403).send()
             const token = await user.generateToken()
     
             return res
@@ -177,7 +230,6 @@ export class User {
 
         try {
             await db.deleteTokenById(req.token.id)
-    
             return res
                     .clearCookie('access_token')
                     .send()
@@ -191,8 +243,7 @@ export class User {
     static async apiLogoutAll(req, res) {
 
         try {
-            await db.deleteTokensByUserId(req.user.id)
-    
+            await req.user.deleteAllTokens()
             return res
                     .clearCookie('access_token')
                     .send()
@@ -212,9 +263,7 @@ export class User {
     static async apiDeleteUser(req, res) {
 
         try {
-            db.deleteTokensByUserId(req.user.id)
-            db.deleteUserById(req.user.id)
-    
+            await req.user.delete()
             return res
                     .clearCookie('access_token')
                     .send()

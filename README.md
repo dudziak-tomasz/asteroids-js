@@ -22,7 +22,7 @@ Project start date: October 25, 2022
 
 Working front-end (playable game): November 18, 2022
 
-Start of work on REST API: November 22, 2022
+REST API server side ready: November 28, 2022
 
 ---
 
@@ -84,6 +84,18 @@ Back-end:
 
 ---
 
+## REST API AUTHENTICATION
+
+When logging in or creating a new user, the server creates a token that is saved in the database and sent to the client cookies. A separate token is created for each session of a user, so a user can have several tokens stored in the database.
+
+During logout, the server removes the session token from the database and from the client cookies.
+
+A logged-in user can send a request to log off all sessions. Then the server removes all tokens of a user from the database.
+
+During a request that requires authentication, the server compares the token sent by the client from the cookies with the token stored in the database. If the tokens match, the request is processed and if not, the server sends an authentication error.
+
+---
+
 ## LINKS
 
 Background music:
@@ -98,6 +110,7 @@ Background music:
 
 ## TODOS
 
-- Server side: REST API for users and highscores endpoints
+- Client side: using REST API endpoints
 - Server side / client side: socket.io for in-game chat
 - Improve support for mobile devices
+- Some new ideas for the game: more saucers after reaching 100,000 points; the ability to play with two people

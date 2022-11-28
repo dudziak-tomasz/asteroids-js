@@ -25,7 +25,7 @@
 
 ## DEVELOPMENT / PRODUCTION
 
-Project startup scripts can be run with or without --dev parameter. If they are started with the --dev parameter, data from the "development" section will be used. If without a parameter, then from the "production".
+Project startup scripts can be run with or without --dev parameter. If they are started with the --dev parameter, data from the "development" section will be used. If without --dev parameter, then from the "production".
 
 ---
 
@@ -35,7 +35,7 @@ Project startup scripts can be run with or without --dev parameter. If they are 
 
 "user" - username for database connection
 
-"password" - password of user "user"
+"password" - password of user
 
 "database" - database name
 
@@ -51,4 +51,4 @@ Project startup scripts can be run with or without --dev parameter. If they are 
 
 "tokenKey" - a string for signing security tokens; a complex string should be set. Tokens are used for user authorization.
 
-"https" - if set to true then server queries will require https
+"https" - if set to true, requests to the server will require https

@@ -66,8 +66,6 @@ export const db = {
     },
 
     async addUser( user = {}) {
-        if (!user.highscore) user.highscore = 0
-        if (!user.email) user.email = ''
         const [rows] = await this.pool.execute(`
             INSERT INTO ${this.database}.users (username, password, email, highscore)
             VALUES ('${user.username}', '${user.password}', '${user.email}', '${user.highscore}')
@@ -101,8 +99,6 @@ export const db = {
     },
 
     async updateUser( user = {}) {
-        if (!user.highscore) user.highscore = 0
-        if (!user.email) user.email = ''
         const [rows] = await this.pool.execute(`
             UPDATE ${this.database}.users 
             SET username = '${user.username}', password = '${user.password}', email = '${user.email}', highscore = '${user.highscore}'
