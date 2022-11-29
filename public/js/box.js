@@ -2,7 +2,7 @@ import { game } from './game.js'
 import { getRandomID } from './utils.js'
 
 export class Box {
-    constructor (parentElement, innerHTML = '') {
+    constructor (parentElement, innerHTML = '', name = '') {
         this.parentElement = parentElement
 
         this.container = document.createElement('div')
@@ -28,11 +28,11 @@ export class Box {
         this.content.id = getRandomID('box-content')
         this.container.appendChild(this.content)
 
-        if (this.constructor.name === 'Box') {
-            game.mainDiv.dispatchEvent(new CustomEvent('boxopen'))
-        }
-
         this.content.innerHTML = innerHTML
+
+        if (this.constructor.name === 'Box') {
+            game.mainDiv.dispatchEvent(new CustomEvent('boxopen', { detail: { name: name } }))
+        }
 
         this.initializeEvents()
     }

@@ -113,4 +113,4 @@ Background music:
 - Client side: using REST API endpoints
 - Server side / client side: socket.io for in-game chat
 - Improve support for mobile devices
-- Some new ideas for the game: more saucers after reaching 100,000 points; the ability to play with two people
+- Some new ideas for the game: more saucers after reaching 100,000 points; the ability to play with two players

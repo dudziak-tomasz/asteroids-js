@@ -1,6 +1,9 @@
 :root {
    --gray: #888888;
    --light-gray: #CCCCCC;
+   --dark-gray: #444444;
+   --gray-bg: rgba(32, 32, 32, 0.9);
+   --light-gray-bg: rgba(255, 255, 255, 0.1);
    --font-game: "Press Start 2P", monospace;
    --mouse-cursor: default;
 }
@@ -93,6 +96,41 @@ a:hover, a:active {
    cursor: pointer;
 }
 
+input[type=text], input[type=password] {
+   font-family: var(--font-game);
+   font-size: 100%;
+   color: var(--dark-gray);
+   background-color: var(--light-gray);
+   padding: 20px;
+   border: none;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+   outline: none;
+   background-color: white;
+}
+
+button {
+   font-family: var(--font-game);
+   font-size: 100%;
+   color: var(--light-gray);
+   background-color: var(--dark-gray);
+   padding: 20px;
+   border: none;
+   cursor: pointer;
+}
+
+button:hover {
+   color: white;
+   background-color: var(--gray);
+}
+
+button:disabled {
+   color: var(--gray);
+   background-color: var(--dark-gray);
+   cursor: var(--mouse-cursor);
+}
+
 .box-container {
    position: absolute;
    width: 60vw;
@@ -102,7 +140,7 @@ a:hover, a:active {
    color: var(--gray);
    font-size: 100%;
    line-height: 1.2;
-   background-color: rgba(32, 32, 32, 0.9);
+   background-color: var(--gray-bg);
    animation-name: box-show;
    animation-duration: 0.3s;
 }
@@ -166,7 +204,7 @@ a:hover, a:active {
 .menu-content {
    display: none;
    padding: 50px 10px 10px;
-   background-color: rgba(32, 32, 32, 0.9);
+   background-color: var(--gray-bg);
 }
 
 .menu-content-show {
@@ -182,7 +220,7 @@ a:hover, a:active {
 }
 
 .menu-item:hover {
-   background-color: rgba(255, 255, 255, 0.1);
+   background-color: var(--light-gray-bg);
    color: var(--light-gray);
 }
 

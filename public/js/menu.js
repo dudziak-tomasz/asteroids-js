@@ -2,6 +2,7 @@ import { Box} from './box.js'
 import { pages } from './pages.js'
 import { game } from './game.js'
 import { Spacetime } from './spacetime.js'
+import { api } from './api.js'
 
 export class Menu extends Box {
     constructor(parentElement) {
@@ -19,7 +20,7 @@ export class Menu extends Box {
             enabled: true
         }, {
             text: 'PROFILE',
-            enabled: false
+            enabled: true
         }, {
             text: 'PREFERENCES',
             enabled: true
@@ -62,14 +63,6 @@ export class Menu extends Box {
             this.content.appendChild(menuItem)
         })
         
-        // for (let i = 0; i < this.items.length; i++) {
-        //     const item = document.createElement('div')
-        //     item.className = 'menu-item'
-        //     item.id = 'menu-item-' + i
-        //     item.innerHTML = this.items[i].text
-        //     if (!this.items[i].enabled) item.classList.toggle('menu-item-disabled')
-        //     this.content.appendChild(item)
-        // }
     }
 
     menuStartClick() {
@@ -89,8 +82,7 @@ export class Menu extends Box {
         if (pages.has(this.items[itemId].text)) {
             const innerHTML = pages.get(this.items[itemId].text)
             if (this.box) this.box.close()
-            this.box = new Box(this.parentElement, innerHTML)
-            this.handlePageElements()
+            this.box = new Box(this.parentElement, innerHTML, this.items[itemId].text)
         } else {
             if (this.items[itemId].text === 'FULLSCREEN') {
                 try {
@@ -107,7 +99,7 @@ export class Menu extends Box {
         }  
     }
 
-    handlePageElements() {
+    handlePreferences() {
         this.$boxSliderMusic = document.getElementById('box-slider-music')
         if (this.$boxSliderMusic) {
             this.$boxSliderMusic.value = game.getAudioVolume()
@@ -144,6 +136,78 @@ export class Menu extends Box {
         }
     }
 
+    handleLogin() {
+        this.$loginForm = document.getElementById('login-form')
+        if (this.$loginForm) {
+            this.$loginForm.onsubmit = async (e) => {
+                e.preventDefault()
+
+                this.$loginForm.submit.setAttribute('disabled', 'disabled')
+                this.$loginForm.username.setAttribute('disabled', 'disabled')
+                this.$loginForm.password.setAttribute('disabled', 'disabled')
+
+                const user = {
+                    username: this.$loginForm.username.value,
+                    password: this.$loginForm.password.value
+                }
+
+                const resUser = await api.login(user)
+
+                console.log(resUser)
+            }
+        }
+    }
+
+    async handleProfile() {
+        this.$userProfile = document.getElementById('user-profile')
+        if (this.$userProfile) {
+
+            const resUser = await api.profile()
+            if (resUser) {
+                this.$userProfile.innerHTML = `
+                    ${resUser.id}<br>
+                    ${resUser.username}<br>
+                    ${resUser.email}<br>
+                    ${resUser.highscore}
+                `
+            } else {
+                this.$userProfile.innerHTML = `CAN'T GET PROFILE. PLEASE LOGIN.`
+            }
+            
+        }
+
+        this.$logoutButton = document.getElementById('logout-button')
+        if (this.$logoutButton) {
+            this.$logoutButton.onclick = async () => {
+                const res = await api.logout()
+                if (res) {
+                    this.$userProfile.innerHTML = 'LOG OUT OK'
+                } else {
+                    this.$userProfile.innerHTML = `CAN'T LOG OUT`
+                }
+            }
+        }
+
+        this.$logoutAllButton = document.getElementById('logoutall-button')
+        if (this.$logoutAllButton) {
+            this.$logoutAllButton.onclick = async () => {
+                const res = await api.logoutAll()
+                if (res) {
+                    this.$userProfile.innerHTML = 'LOG OUT ALL OK'
+                } else {
+                    this.$userProfile.innerHTML = `CAN'T LOG OUT ALL`
+                }
+            }
+        }
+
+    }
+
+    handlePageElements(name = '') {
+        if (name === 'PREFERENCES') this.handlePreferences()
+        else if (name === 'LOGIN') this.handleLogin()
+        else if (name === 'PROFILE') this.handleProfile()
+    }
+
     initializeEvents() {
         this.menuStart.addEventListener('click', () => this.menuStartClick())
 
@@ -155,5 +219,12 @@ export class Menu extends Box {
         document.addEventListener('fullscreenchange', () => {
             this.initializeMenuItems()
         })
+
+        game.mainDiv.addEventListener('boxopen', (e) => {
+            if (e.detail) {
+                this.handlePageElements(e.detail.name)
+            }
+        })
+
     }
 }

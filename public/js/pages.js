@@ -1,5 +1,23 @@
 export const pages = new Map()
 
+pages.set('LOGIN', `
+    <p class="box-title">LOGIN</p>
+    <form id="login-form">
+        <p class="box-title-small">USERNAME</p>
+        <p><input type="text" name="username" maxlength="20" autocomplete="off"></p>
+        <p class="box-title-small">PASSWORD</p>
+        <p><input type="password" name="password"></p>
+        <p><button name="submit">LOGIN</button></p>
+    </form>
+`)
+
+pages.set('PROFILE', `
+    <p class="box-title">PROFILE</p>
+    <div id="user-profile"></div>
+    <p><button id="logout-button">LOG OUT</button></p>
+    <p><button id="logoutall-button">LOG OUT ALL DEVICES</button></p>
+`)
+
 pages.set('PREFERENCES', `
     <p class="box-title">PREFERENCES</p>
     <p class="box-title-small">SOUND VOLUME</p>
