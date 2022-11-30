@@ -2,20 +2,34 @@ export const pages = new Map()
 
 pages.set('LOGIN', `
     <p class="box-title">LOGIN</p>
-    <form id="login-form">
+    <form id="box-login-form">
         <p class="box-title-small">USERNAME</p>
         <p><input type="text" name="username" maxlength="20" autocomplete="off"></p>
         <p class="box-title-small">PASSWORD</p>
         <p><input type="password" name="password"></p>
+        <p id="box-error-message"></p>
         <p><button name="submit">LOGIN</button></p>
     </form>
 `)
 
 pages.set('PROFILE', `
     <p class="box-title">PROFILE</p>
-    <div id="user-profile"></div>
-    <p><button id="logout-button">LOG OUT</button></p>
-    <p><button id="logoutall-button">LOG OUT ALL DEVICES</button></p>
+    <p id="box-profile-error-message"></p>
+    <div id="box-profile-div" style="display: none">
+        <form id="box-profile-form">
+            <p><span class="profile-label">USERNAME:</span><span><input type="text" name="username" maxlength="20" autocomplete="off"></span></p>
+            <p><span class="profile-label">EMAIL:</span><span><input type="text" name="email" autocomplete="off"></span></p>
+            <p><span class="profile-label">HIGSCORE:</span><span><input type="text" name="highscore" disabled></span></p>
+            <p id="box-error-message"></p>
+            <p><button type="submit" name="submit">SAVE</button> <button id="box-logout-button">LOGOUT</button></p>
+        </form>
+        <p class="box-title-small">SECURITY</p>
+        <p>IF YOU SUSPECT YOUR ACCOUNT HAS BEEN COMPROMISED, CHANGE YOUR PASSWORD AND LOG OUT ON ALL DEVICES.</p>
+        <p><a id="box-change-password-button">CHANGE PASSWORD</a> <a id="box-logoutall-button">LOG OUT ON ALL DEVICES</a></p>
+        <p class="box-title-small">MANAGE ACCOUT</p>
+        <p><a id="box-close-account-button">CLOSE MY ACCOUNT</a></p>
+        <p id="box-close-error-message" style="display: none">ARE YOU SURE? <a id="box-close-yes">YES</a> <a id="box-close-no">NO</a></p>
+    </div>
 `)
 
 pages.set('PREFERENCES', `

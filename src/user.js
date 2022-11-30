@@ -17,7 +17,7 @@ export class User {
         if (typeof user.id === 'number') this.id = user.id
         if (typeof user.username === 'string') this.username = user.username.trim().toLowerCase()
         if (typeof user.password === 'string') this.password = user.password.trim()
-        if (typeof user.email === 'string') this.email = user.email.trim()
+        if (typeof user.email === 'string') this.email = user.email.trim().toLowerCase()
         if (typeof user.highscore === 'number') this.highscore = user.highscore
     }
 

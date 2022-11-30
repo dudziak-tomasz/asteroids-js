@@ -1,4 +1,9 @@
+import { game } from './game.js'
+
 export const api = {
+
+    user: undefined,
+    parseError: { status: 499 },
 
     async getLeaderboard() {
 
@@ -29,17 +34,14 @@ export const api = {
                                 })
 
             if (response.ok) {
-                return await response.json()
-            } else {
-                // return {
-                //     error: "",
-                //     status: response.status
-                // }
-                return undefined
-            }
+                this.user = await response.json()
+                game.mainDiv.dispatchEvent(new CustomEvent('login'))
+            } 
+
+            return { status: response.status }
     
         } catch {
-            return undefined
+            return this.parseError
         }
         
     },
@@ -54,14 +56,15 @@ export const api = {
                                     }
                                 })
 
-            if (response.ok) {
-                return response.status
-            } else {
-                return undefined
-            }
+            if (response.ok || response.status === 403) {
+                this.user = undefined
+                game.mainDiv.dispatchEvent(new CustomEvent('logout'))
+            } 
+
+            return { status: response.status }
     
         } catch {
-            return undefined
+            return this.parseError
         }
         
     },
@@ -76,14 +79,15 @@ export const api = {
                                     }
                                 })
 
-            if (response.ok) {
-                return response.status
-            } else {
-                return undefined
-            }
+            if (response.ok || response.status === 403) {
+                this.user = undefined
+                game.mainDiv.dispatchEvent(new CustomEvent('logout'))
+            } 
+
+            return { status: response.status }
     
         } catch {
-            return undefined
+            return this.parseError
         }
         
     },
@@ -94,13 +98,65 @@ export const api = {
             const response = await fetch('/users/me')
 
             if (response.ok) {
-                return await response.json()
+                this.user = await response.json()
+                game.mainDiv.dispatchEvent(new CustomEvent('login'))
             } else {
-                return undefined
+                this.user = undefined
+                game.mainDiv.dispatchEvent(new CustomEvent('logout'))
             }
+
+            return { status: response.status }
     
         } catch {
-            return undefined
+            return this.parseError
+        }
+
+    },
+
+    async updateUser(user = undefined) {
+
+        try {
+            if (!user) user = { highscore: this.user.highscore }
+
+            const response = await fetch('/users/me', {
+                                    method: 'PATCH',
+                                    headers: {
+                                        'Content-type': 'application/json'
+                                    },
+                                    body: JSON.stringify(user)
+                                })
+                        
+            if (response.ok) {
+                this.user = await response.json()
+            } 
+
+            return { status: response.status }
+    
+        } catch {
+            return this.parseError
+        }
+
+    },
+
+    async deleteUser() {
+
+        try {
+            const response = await fetch('/users/me', {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-type': 'application/json'
+                                    }
+                                })
+
+            if (response.ok || response.status === 403) {
+                this.user = undefined
+                game.mainDiv.dispatchEvent(new CustomEvent('logout'))
+            } 
+
+            return { status: response.status }
+    
+        } catch {
+            return this.parseError
         }
 
     }

@@ -214,6 +214,8 @@ export const game = {
     gameOver() {
         this.showAlert('GAME OVER')
         this.pressFireTo = 'initializegame'
+
+        if (api.user) api.updateUser()
     },
 
     initializeEvents() {
@@ -259,6 +261,17 @@ export const game = {
             this.openBoxes--
             if (this.openBoxes === 0 && game.pause) this.switchPause()
         })
+
+        this.mainDiv.addEventListener('login', () => {
+            this.getHighScore()
+            this.refreshHighScore()
+        })
+
+        this.mainDiv.addEventListener('logout', () => {
+            this.getHighScore()
+            this.refreshHighScore()
+        })
+
     },
 
     generateSaucer() {
@@ -335,17 +348,26 @@ export const game = {
     },
 
     refreshHighScore() {
-        this.canvasHighScore.innerHTML = `${this.highScore}`
+        // this.canvasHighScore.innerHTML = `${this.highScore}`
+        this.canvasHighScore.innerHTML = `${this.highScore} ${api.user ? api.user.username.toUpperCase() : ''}`
     },
 
     getHighScore() {
-        const hs = localStorage.getItem('highScore')
-        if (hs) this.highScore = parseInt(hs)
-        else this.setHighScore()
+        if (api.user) {
+            this.highScore = api.user.highscore
+        } else {
+            const hs = localStorage.getItem('highScore')
+            if (hs) this.highScore = parseInt(hs)
+            else this.setHighScore()    
+        }
     },
 
     setHighScore() {
-        localStorage.setItem('highScore', this.highScore)
+        if (api.user) {
+            api.user.highscore = this.highScore
+        } else {
+            localStorage.setItem('highScore', this.highScore)
+        }
     },
 
     showAlert(alertHTML) {
