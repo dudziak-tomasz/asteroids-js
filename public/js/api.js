@@ -126,11 +126,20 @@ export const api = {
                                     body: JSON.stringify(user)
                                 })
                         
+            let res = {}
+
             if (response.ok) {
                 this.user = await response.json()
-            } 
+            } else if (response.status === 400) {
+                res = await response.json()
+            } else if (response.status === 403) {
+                this.user = undefined
+                game.mainDiv.dispatchEvent(new CustomEvent('logout'))
+            }
 
-            return { status: response.status }
+            res.status = response.status
+            
+            return res
     
         } catch {
             return this.parseError

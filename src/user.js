@@ -211,14 +211,21 @@ export class User {
 
             const user = new User(dbUser)
             if (!await user.comparePassword(req.body.password)) return res.status(403).send()
-            const token = await user.generateToken()
+
+            if (!req.body.test) {
+
+                const token = await user.generateToken()
     
-            return res
-                    .cookie('access_token', token, {
-                        httpOnly: true,
-                        secure: config.getItem('https')
-                    })
-                    .send(user)
+                return res
+                        .cookie('access_token', token, {
+                            httpOnly: true,
+                            secure: config.getItem('https')
+                        })
+                        .send(user)    
+
+            } else {
+                return res.send(user) 
+            }
                 
         } catch {
             return res.status(500).send()

@@ -15,6 +15,12 @@ export class Menu extends Box {
 
         this.content.className = 'menu-content'
 
+        this.errorNotLogged = `YOU'RE NOT LOGGED IN... PLEASE LOG IN.`
+        this.errorConnectionProblem = 'CONNECTION PROBLEM... PLEASE TRY AGAIN LATER.'
+        this.errorUsernameInvalid = 'ONLY LETTERS AND NUMBERS, MINIMUM 3 CHARACTERS.'
+        this.errorPasswordInvalid = 'MINIMUM 8 CHARACTERS, 1 CAPITAL LETTER, 1 SMALL LETTER, 1 NUMBER'
+        this.errorCapsLock = 'CAPS LOCK IS ON!'
+
         this.items = [{
             text: 'LOGIN',
             enabled: true
@@ -80,13 +86,17 @@ export class Menu extends Box {
         }
     }
 
+    openBox(pageName) {
+        const innerHTML = pages.get(pageName)
+        if (this.box) this.box.close()
+        this.box = new Box(this.parentElement, innerHTML, pageName)
+    }
+
     async menuItemClick(itemId) {
         this.menuStartClick()
 
         if (pages.has(this.items[itemId].text)) {
-            const innerHTML = pages.get(this.items[itemId].text)
-            if (this.box) this.box.close()
-            this.box = new Box(this.parentElement, innerHTML, this.items[itemId].text)
+            this.openBox(this.items[itemId].text)
         } else {
             if (this.items[itemId].text === 'FULLSCREEN') {
                 try {
@@ -160,8 +170,8 @@ export class Menu extends Box {
             if (res.status === 200) {
                 this.box.close()
             } else {
-                if (res.status === 403) this.$boxErrorMessage.innerHTML = 'YOUR USERNAME OR PASSWORD IS INCORECT.<br>PLEASE TRY AGAIN.'
-                else this.$boxErrorMessage.innerHTML = 'CONNECTION PROBLEM...<br>PLEASE TRY AGAIN LATER.'
+                if (res.status === 403) this.$boxErrorMessage.innerHTML = 'YOUR USERNAME OR PASSWORD IS INCORECT. PLEASE TRY AGAIN.'
+                else this.$boxErrorMessage.innerHTML = this.errorConnectionProblem
             }
         }
 
@@ -170,103 +180,241 @@ export class Menu extends Box {
         }
 
         this.$loginForm.password.addEventListener('keydown', (e) => {
-            if (e.getModifierState("CapsLock")) this.$boxErrorMessage.innerHTML = 'CAPS LOCK IS ON!'
+            if (e.getModifierState("CapsLock")) this.$boxErrorMessage.innerHTML = this.errorCapsLock
             else this.$boxErrorMessage.innerHTML = ''
         })
 
     }
 
+    handleChangePassword() {
+
+        this.$changePasswordForm = document.getElementById('box-change-password-form')
+        this.$boxErrorMessage = document.getElementById('box-error-message')
+
+        this.$changePasswordForm.currentPassword.focus()
+
+        this.$changePasswordForm.onsubmit = async (e) => {
+            e.preventDefault()
+
+            let user = {}
+
+            const currentPassword = this.$changePasswordForm.currentPassword.value
+            const newPassword = this.$changePasswordForm.newPassword.value
+            const retypeNewPassword = this.$changePasswordForm.retypeNewPassword.value
+
+            if (newPassword !== retypeNewPassword) return this.$boxErrorMessage.innerHTML = 'NEW PASSWORD DOES NOT MATCH RETYPED PASSWORD'
+            if (newPassword === currentPassword) return this.$boxErrorMessage.innerHTML = 'NEW PASSWORD SHOULD BE DIFFERENT FROM CURRENT PASSWORD'
+
+            this.$boxErrorMessage.innerHTML = 'CHANGING PASSWORD...'
+            this.$changePasswordForm.submit.disabled = true
+
+            // is logged?
+            let res = await api.profile() 
+
+            if (res.status === 200) {
+
+                    user.username = api.user.username
+                    user.password = currentPassword
+                    user.test = true
+
+                    // is currentPassword matches?
+                    res = await api.login(user)
+
+                    if (res.status === 200) {
+        
+                            delete user.username
+                            user.password = newPassword
+
+                            // change password
+                            res = await api.updateUser(user)
+            
+                            if (res.status === 200) {
+                                this.$boxErrorMessage.innerHTML = 'PASSWORD CHANGED'
+                            } else if (res.status === 400) {
+                                this.$boxErrorMessage.innerHTML = res.error.toUpperCase() + `: ${this.errorPasswordInvalid}`
+                            } else {
+                                this.$boxErrorMessage.innerHTML = this.errorConnectionProblem   
+                            }
+
+                    // 200 api.login(user)
+                    } else if (res.status === 403) {
+                        this.$boxErrorMessage.innerHTML = 'INCORRECT CURRENT PASSWORD...'
+                    } else {
+                        this.$boxErrorMessage.innerHTML = this.errorConnectionProblem
+                    }
+
+            // 200 api.profile()
+            } else if (res.status === 403) {
+                this.$boxErrorMessage.innerHTML = this.errorNotLogged
+            } else {
+                this.$boxErrorMessage.innerHTML = this.errorConnectionProblem
+            }
+
+            this.$changePasswordForm.submit.disabled = false
+
+        }
+
+        const capsLock = (e) => {
+            if (e.getModifierState("CapsLock")) this.$boxErrorMessage.innerHTML = this.errorCapsLock
+            else this.$boxErrorMessage.innerHTML = ''
+        }
+
+        this.$changePasswordForm.currentPassword.addEventListener('keydown', (e) => {
+            capsLock(e)
+        })
+        this.$changePasswordForm.newPassword.addEventListener('keydown', (e) => {
+            capsLock(e)
+        })
+        this.$changePasswordForm.retypeNewPassword.addEventListener('keydown', (e) => {
+            capsLock(e)
+        })
+    }
+
     async handleProfile() {
+
         this.$boxProfileErrorMessage = document.getElementById('box-profile-error-message')
         this.$boxProfileDiv = document.getElementById('box-profile-div')
 
         this.$boxProfileForm = document.getElementById('box-profile-form')
         this.$boxErrorMessage = document.getElementById('box-error-message')
         this.$logoutButton = document.getElementById('box-logout-button')
-        this.$logoutAllButton = document.getElementById('box-logoutall-button')
         this.$changePasswordButton = document.getElementById('box-change-password-button')
+        this.$logoutAllButton = document.getElementById('box-logoutall-button')
+        this.$boxLogoutAllErrorMessage = document.getElementById('box-logoutall-error-message')
         this.$closeAccountButton = document.getElementById('box-close-account-button')
+        this.$boxCloseMessage = document.getElementById('box-close-message')
+        this.$boxCloseYes = document.getElementById('box-close-yes')
+        this.$boxCloseNo = document.getElementById('box-close-no')
+        this.$boxCloseErrorMessage = document.getElementById('box-close-error-message')
+
+        const closeMessages = () => {
+            this.$boxProfileErrorMessage.innerHTML = ''
+            this.$boxErrorMessage.innerHTML = ''
+            this.$boxLogoutAllErrorMessage.innerHTML = ''
+            this.$boxCloseErrorMessage.innerHTML = ''
+            this.$boxCloseMessage.style.display = 'none'
+        }
 
         this.$boxProfileErrorMessage.innerHTML = 'LOADING PROFILE...'
         await api.updateUser()
         const res = await api.profile()
 
         if (res.status === 200) {
-            this.$boxProfileErrorMessage.innerHTML = ''
+
+            closeMessages()
             this.$boxProfileDiv.style.display = 'block'
 
-            this.$boxProfileForm.username.value = api.user.username.toUpperCase()
-            this.$boxProfileForm.email.value = api.user.email.toUpperCase()
+            this.$boxProfileForm.username.value = api.user.username
+            this.$boxProfileForm.email.value = api.user.email
             this.$boxProfileForm.highscore.value = api.user.highscore
 
+        } else if (res.status === 403) {
+            this.$boxProfileErrorMessage.innerHTML = this.errorNotLogged
         } else {
-            if (res.status === 403) this.$boxProfileErrorMessage.innerHTML = `YOU'RE NOT LOGGED IN... PLEASE LOG IN.`
-            else this.$boxProfileErrorMessage.innerHTML = 'CONNECTION PROBLEM... PLEASE TRY AGAIN LATER.'
+            this.$boxProfileErrorMessage.innerHTML = this.errorConnectionProblem
         }
         
         this.$boxProfileForm.onsubmit = async (e) => {
             e.preventDefault()
 
-            console.log('submit box-profile-form (SAVE)')
+            const user = {}
+            const username = this.$boxProfileForm.username.value.toLowerCase()
+            const email = this.$boxProfileForm.email.value.toLowerCase()
+
+            if (username !== api.user.username) user.username = username
+            else if (email !== api.user.email) user.email = email
+            else return this.$boxErrorMessage.innerHTML = 'NO CHANGE, NO SAVE'
+
+            closeMessages()
+            this.$boxErrorMessage.innerHTML = 'SAVING... '
+            this.$boxProfileForm.submit.disabled = true
+
+            const res = await api.updateUser(user)
+
+            this.$boxProfileForm.submit.disabled = false
+            
+            if (res.status === 200) {
+                this.$boxErrorMessage.innerHTML = 'SAVED'
+            } else if (res.status === 400) {
+                this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
+                if (res.error === 'username is invalid') this.$boxErrorMessage.innerHTML += `: ${this.errorUsernameInvalid}`
+            } else if (res.status === 403) {
+                this.$boxErrorMessage.innerHTML = this.errorNotLogged
+            } else {
+                this.$boxErrorMessage.innerHTML = this.errorConnectionProblem    
+            }
         }
 
         this.$logoutButton.onclick = async (e) => {
             e.preventDefault()
 
+            closeMessages()
             this.$boxErrorMessage.innerHTML = 'LOGOUT...'
+            this.$logoutButton.disabled = true
+
             const res = await api.logout()
+
+            this.$logoutButton.disabled = false
             
             if (res.status === 200 || res.status === 403) {
                 this.box.close()
             } else {
-                this.$boxErrorMessage.innerHTML = 'CONNECTION PROBLEM... PLEASE TRY AGAIN LATER.'    
+                this.$boxErrorMessage.innerHTML = this.errorConnectionProblem    
             }
         }
 
         this.$logoutAllButton.onclick = async (e) => {
             e.preventDefault()
 
-            this.$boxErrorMessage.innerHTML = 'LOGOUT...'
+            if (this.$logoutAllButton.disabled === true) return
+
+            closeMessages()
+            this.$boxLogoutAllErrorMessage.innerHTML = 'LOGOUT...'
+            this.$logoutAllButton.disabled = true
+
             const res = await api.logoutAll()
+
+            this.$logoutAllButton.disabled = false
             
             if (res.status === 200 || res.status === 403) {
                 this.box.close()
             } else {
-                this.$boxErrorMessage.innerHTML = 'CONNECTION PROBLEM... PLEASE TRY AGAIN LATER.'
+                this.$boxLogoutAllErrorMessage.innerHTML = this.errorConnectionProblem
             }
         }
 
         this.$changePasswordButton.onclick = (e) => {
             e.preventDefault()
 
-            console.log('box-change-password-button')
+            closeMessages()
+
+            this.openBox('CHANGE PASSWORD')
         }
 
         this.$closeAccountButton.onclick = (e) => {
             e.preventDefault()
 
-            this.$boxCloseErrorMessage = document.getElementById('box-close-error-message')
-            this.$boxCloseYes = document.getElementById('box-close-yes')
-            this.$boxCloseNo = document.getElementById('box-close-no')
-
-            this.$boxCloseErrorMessage.style.display = 'block'
+            closeMessages()
+            this.$boxCloseMessage.style.display = 'block'
 
             this.$boxCloseNo.onclick = (e) => {
                 e.preventDefault()
-                this.$boxCloseErrorMessage.style.display = 'none'
+                closeMessages()
             }
 
             this.$boxCloseYes.onclick = async (e) => {
                 e.preventDefault()
+
+                closeMessages()
                 this.$boxCloseErrorMessage.innerHTML = 'CLOSING ACCOUNT...'
 
                 const res = await api.deleteUser()
-            
+
                 if (res.status === 200) {
                     this.box.close()
                 } else {
-                    if (res.status === 403) this.$boxCloseErrorMessage.innerHTML = `YOU'RE NOT LOGGED IN... PLEASE LOG IN.`
-                    else this.$boxCloseErrorMessage.innerHTML = 'CONNECTION PROBLEM... PLEASE TRY AGAIN LATER.'
+                    if (res.status === 403) this.$boxCloseErrorMessage.innerHTML = this.errorNotLogged
+                    else this.$boxCloseErrorMessage.innerHTML = this.errorConnectionProblem
                 }    
             }
         }
@@ -276,6 +424,7 @@ export class Menu extends Box {
     handlePageElements(name = '') {
         if (name === 'PREFERENCES') this.handlePreferences()
         else if (name === 'LOGIN') this.handleLogin()
+        else if (name === 'CHANGE PASSWORD') this.handleChangePassword()
         else if (name === 'PROFILE') this.handleProfile()
     }
 

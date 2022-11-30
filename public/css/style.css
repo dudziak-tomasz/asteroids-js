@@ -45,9 +45,8 @@ a, a:link, a:visited {
  
 a:hover, a:active {
    color: var(--light-gray);
-
 }
- 
+
 .slider {
    -webkit-appearance: none;
    -moz-appearance: none;
@@ -106,9 +105,10 @@ input[type=text], input[type=password], input[type=email] {
    font-family: var(--font-game);
    font-size: 100%;
    color: var(--dark-gray);
+   text-transform: uppercase;
    caret-color: var(--gray);
    background-color: var(--light-gray);
-   padding: 20px;
+   padding: 16px;
    border: none;
 }
 
@@ -122,20 +122,21 @@ button {
    font-size: 100%;
    color: var(--light-gray);
    background-color: var(--dark-gray);
-   padding: 20px;
+   padding: 16px;
    border: none;
    cursor: pointer;
 }
 
-button:hover {
+button:hover, button:focus {
    color: white;
    background-color: var(--gray);
+   outline: none;
 }
 
 button:disabled {
    color: var(--gray);
    background-color: var(--dark-gray);
-   cursor: var(--mouse-cursor);
+   cursor: wait;
 }
 
 .box-container {
