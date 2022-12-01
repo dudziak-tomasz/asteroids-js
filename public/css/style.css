@@ -169,6 +169,16 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus {
    background-color: white;
 }
 
+::selection {
+   color: white;
+   background: var(--dark-gray);
+}
+
+::-moz-selection {
+   color: white;
+   background: var(--dark-gray);
+}
+
 button {
    font-family: var(--font-game);
    font-size: 100%;
