@@ -3,11 +3,37 @@ export const pages = new Map()
 pages.set('LOGIN', `
     <p class="box-title">LOGIN</p>
     <form id="box-login-form">
-        <p>USERNAME<br>
-            <input type="text" name="username" maxlength="20" autocomplete="off"></p>
-        <p>PASSWORD<br>
-            <input type="password" name="password"></p>
-        <p><button name="submit">LOGIN</button></p>
+        <p>
+            USERNAME<br>
+            <input type="text" name="username" maxlength="20" autocomplete="off">
+        </p>
+        <p>
+            PASSWORD<br>
+            <input type="password" name="password">
+        </p>
+        <p class="top-10"><button name="submit">LOGIN</button></p>
+        <p id="box-error-message"></p>
+        <p class="top-30"><a id="box-register-button">REGISTER</a> <a id="box-password-reset-button">PASSWORD RESET</a></p>
+    </form>
+`)
+
+pages.set('REGISTER', `
+    <p class="box-title">REGISTER</p>
+    <form id="box-register-form">
+        <p>
+            USERNAME<br>
+            <input type="text" name="username" maxlength="20" autocomplete="off">
+        </p>
+        <p>
+            PASSWORD<br>
+            <input type="password" name="password">
+        </p>
+        <p>
+            EMAIL (OPTIONAL)<br>
+            <input type="text" name="email" autocomplete="off"><br>
+            <span class="font-75">FOR PASSWORD RESET ONLY</span>
+        </p>
+        <p class="top-10"><button name="submit">REGISTER</button></p>
         <p id="box-error-message"></p>
     </form>
 `)
@@ -15,13 +41,19 @@ pages.set('LOGIN', `
 pages.set('CHANGE PASSWORD', `
     <p class="box-title">CHANGE PASSWORD</p>
     <form id="box-change-password-form">
-        <p>CURRENT PASSWORD<br>
-            <input type="password" name="currentPassword"></p>
-        <p>NEW PASSWORD<br>
-            <input type="password" name="newPassword"></p>
-        <p>RETYPE NEW PASSWORD<br>
-            <input type="password" name="retypeNewPassword"></p>
-        <p><button name="submit">CHANGE PASSWORD</button></p>
+        <p>
+            CURRENT PASSWORD<br>
+            <input type="password" name="currentPassword">
+        </p>
+        <p>
+            NEW PASSWORD<br>
+            <input type="password" name="newPassword">
+        </p>
+        <p>
+            RETYPE NEW PASSWORD<br>
+            <input type="password" name="retypeNewPassword">
+        </p>
+        <p class="top-10"><button name="submit">CHANGE PASSWORD</button></p>
         <p id="box-error-message"></p>
     </form>
 `)
@@ -43,7 +75,7 @@ pages.set('PROFILE', `
         <p id="box-logoutall-error-message"></p>
         <p class="box-title-small">MANAGE ACCOUT</p>
         <p><a id="box-close-account-button">CLOSE MY ACCOUNT</a></p>
-        <p id="box-close-message" style="display: none">ARE YOU SURE? <a id="box-close-yes">YES</a> <a id="box-close-no">NO</a></p>
+        <p id="box-close-message" style="display: none" class="left-20 font-75">ARE YOU SURE? <a id="box-close-yes">YES</a> <a id="box-close-no">NO</a></p>
         <p id="box-close-error-message"></p>
     </div>
 `)

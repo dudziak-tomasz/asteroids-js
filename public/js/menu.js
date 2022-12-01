@@ -17,7 +17,7 @@ export class Menu extends Box {
 
         this.errorNotLogged = `YOU'RE NOT LOGGED IN... PLEASE LOG IN.`
         this.errorConnectionProblem = 'CONNECTION PROBLEM... PLEASE TRY AGAIN LATER.'
-        this.errorUsernameInvalid = 'ONLY LETTERS AND NUMBERS, MINIMUM 3 CHARACTERS.'
+        this.errorUsernameInvalid = 'MINIMUM 3 CHARACTERS, ONLY LETTERS AND NUMBERS.'
         this.errorPasswordInvalid = 'MINIMUM 8 CHARACTERS, 1 CAPITAL LETTER, 1 SMALL LETTER, 1 NUMBER'
         this.errorCapsLock = 'CAPS LOCK IS ON!'
 
@@ -149,6 +149,8 @@ export class Menu extends Box {
     handleLogin() {
         this.$loginForm = document.getElementById('box-login-form')
         this.$boxErrorMessage = document.getElementById('box-error-message')
+        this.$boxRegisterButton = document.getElementById('box-register-button')
+        this.$boxPasswordResetButton = document.getElementById('box-password-reset-button')
 
         this.$loginForm.username.focus()
 
@@ -161,17 +163,18 @@ export class Menu extends Box {
             }
 
             this.$boxErrorMessage.innerHTML = 'LOGIN...'
-            this.$loginForm.submit.setAttribute('disabled', 'disabled')
+            this.$loginForm.submit.disabled = true
 
             const res = await api.login(user)
 
-            this.$loginForm.submit.removeAttribute('disabled')
+            this.$loginForm.submit.disabled = false
 
             if (res.status === 200) {
                 this.box.close()
+            } else if (res.status === 403) {
+                this.$boxErrorMessage.innerHTML = 'USERNAME OR PASSWORD IS INCORECT. PLEASE TRY AGAIN.'
             } else {
-                if (res.status === 403) this.$boxErrorMessage.innerHTML = 'YOUR USERNAME OR PASSWORD IS INCORECT. PLEASE TRY AGAIN.'
-                else this.$boxErrorMessage.innerHTML = this.errorConnectionProblem
+                this.$boxErrorMessage.innerHTML = this.errorConnectionProblem
             }
         }
 
@@ -183,6 +186,60 @@ export class Menu extends Box {
             if (e.getModifierState("CapsLock")) this.$boxErrorMessage.innerHTML = this.errorCapsLock
             else this.$boxErrorMessage.innerHTML = ''
         })
+
+        this.$boxRegisterButton.onclick = (e) => {
+            e.preventDefault()
+            this.openBox('REGISTER')
+        }
+
+    }
+
+    handleRegister() {
+        this.$registerForm = document.getElementById('box-register-form')
+        this.$boxErrorMessage = document.getElementById('box-error-message')
+
+        this.$registerForm.username.focus()
+
+        this.$registerForm.onsubmit = async (e) => {
+            e.preventDefault()
+
+            const user = {
+                username: this.$registerForm.username.value,
+                password: this.$registerForm.password.value,
+                email: this.$registerForm.email.value
+            }
+
+            this.$boxErrorMessage.innerHTML = 'LOGIN...'
+            this.$registerForm.submit.disabled = true
+
+            const res = await api.newUser(user)
+
+            this.$registerForm.submit.disabled = false
+
+            if (res.status === 201) {
+                this.box.close()
+            } else if (res.status === 400) {
+                this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
+                if (res.error === 'username is invalid') this.$boxErrorMessage.innerHTML += `: ${this.errorUsernameInvalid}`
+                else if (res.error === 'password too weak') this.$boxErrorMessage.innerHTML += `: ${this.errorPasswordInvalid}`
+            } else {
+                this.$boxErrorMessage.innerHTML = this.errorConnectionProblem
+            }
+
+        }
+
+        this.$registerForm.username.oninput = () => {
+            this.$boxErrorMessage.innerHTML = ''
+        }
+
+        this.$registerForm.password.addEventListener('keydown', (e) => {
+            if (e.getModifierState("CapsLock")) this.$boxErrorMessage.innerHTML = this.errorCapsLock
+            else this.$boxErrorMessage.innerHTML = ''
+        })
+
+        this.$registerForm.email.oninput = () => {
+            this.$boxErrorMessage.innerHTML = ''
+        }
 
     }
 
@@ -416,6 +473,7 @@ export class Menu extends Box {
         else if (name === 'LOGIN') this.handleLogin()
         else if (name === 'CHANGE PASSWORD') this.handleChangePassword()
         else if (name === 'PROFILE') this.handleProfile()
+        else if (name === 'REGISTER') this.handleRegister()
     }
 
     initializeEvents() {

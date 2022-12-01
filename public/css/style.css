@@ -47,6 +47,58 @@ a:hover, a:active {
    color: var(--light-gray);
 }
 
+.top-10 {
+   padding-top: 10px;
+}
+
+.top-20 {
+   padding-top: 20px;
+}
+
+.top-30 {
+   padding-top: 30px;
+}
+
+.top-40 {
+   padding-top: 40px;
+}
+
+.left-10 {
+   padding-left: 10px;
+}
+
+.left-20 {
+   padding-left: 20px;
+}
+
+.left-30 {
+   padding-left: 30px;
+}
+
+.left-40 {
+   padding-left: 40px;
+}
+
+.font-50 {
+   font-size: 50%;
+}
+
+.font-75 {
+   font-size: 75%;
+}
+
+.font-100 {
+   font-size: 100%;
+}
+
+.font-125 {
+   font-size: 125%;
+}
+
+.font-150 {
+   font-size: 150%;
+}
+
 .slider {
    -webkit-appearance: none;
    -moz-appearance: none;

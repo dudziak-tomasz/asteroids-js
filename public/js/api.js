@@ -22,6 +22,37 @@ export const api = {
         
     },
 
+    async newUser(user = undefined) {
+
+        try {
+            
+            const response = await fetch('/users/new', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-type': 'application/json'
+                                    },
+                                    body: JSON.stringify(user)
+                                })
+                        
+            let res = {}
+
+            if (response.ok) {
+                this.user = await response.json()
+                game.mainDiv.dispatchEvent(new CustomEvent('login'))
+            } else if (response.status === 400) {
+                res = await response.json()
+            }
+
+            res.status = response.status
+            
+            return res
+    
+        } catch {
+            return this.parseError
+        }
+
+    },
+
     async login(user) {
 
         try {
