@@ -86,6 +86,18 @@ export const db = {
         else return undefined
     },
 
+    async findUserByEmail(email) {
+
+        const [rows] = await this.pool.execute(`
+            SELECT * 
+            FROM ${this.database}.users
+            WHERE email = '${email}'
+        `)
+
+        if (rows.length > 0) return rows[0]
+        else return undefined
+    },
+
     async findUserById(id) {
 
         const [rows] = await this.pool.execute(`

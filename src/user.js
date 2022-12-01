@@ -131,14 +131,18 @@ export class User {
         try {
             const newUser = new User(req.body)
 
-            const dbUser = await db.findUserByUsername(newUser.username)
-    
+            let dbUser = await db.findUserByUsername(newUser.username)
             if (dbUser) return res.status(400).send({ error: 'username taken' })
 
             if (!newUser.validateUsername()) return res.status(400).send({ error: 'username is invalid' })
             if (!newUser.validatePassword()) return res.status(400).send({ error: 'password too weak' })
             if (!newUser.validateEmail()) return res.status(400).send({ error: 'email is invalid' })
 
+            if (newUser.email) {
+                dbUser = await db.findUserByEmail(newUser.email)
+                if (dbUser) return res.status(400).send({ error: 'email taken' })
+            }
+            
             await newUser.hashPassword()
 
             // Todo: highscore only by update endpoint
@@ -185,6 +189,10 @@ export class User {
             
             if (newUser.email !== undefined) {
                 if (!newUser.validateEmail()) return res.status(400).send({ error: 'email is invalid' })
+                if (newUser.email !== '') {
+                    const dbUser = await db.findUserByEmail(newUser.email)
+                    if (dbUser && newUser.id !== dbUser.id) return res.status(400).send({ error: 'email taken' })
+                }
             } else {
                 newUser.email = req.user.email
             }
