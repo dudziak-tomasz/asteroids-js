@@ -208,44 +208,34 @@ export class Menu extends Box {
             this.$boxErrorMessage.innerHTML = 'CHANGING PASSWORD...'
             this.$changePasswordForm.submit.disabled = true
 
-            // is logged?
-            let res = await api.profile() 
+            user.username = api.user.username
+            user.password = currentPassword
+            user.test = true
+
+            // is currentPassword matches?
+            let res = await api.login(user)
 
             if (res.status === 200) {
 
-                    user.username = api.user.username
-                    user.password = currentPassword
-                    user.test = true
+                    delete user.username
+                    user.password = newPassword
 
-                    // is currentPassword matches?
-                    res = await api.login(user)
-
+                    // change password
+                    res = await api.updateUser(user)
+    
                     if (res.status === 200) {
-        
-                            delete user.username
-                            user.password = newPassword
-
-                            // change password
-                            res = await api.updateUser(user)
-            
-                            if (res.status === 200) {
-                                this.$boxErrorMessage.innerHTML = 'PASSWORD CHANGED'
-                            } else if (res.status === 400) {
-                                this.$boxErrorMessage.innerHTML = res.error.toUpperCase() + `: ${this.errorPasswordInvalid}`
-                            } else {
-                                this.$boxErrorMessage.innerHTML = this.errorConnectionProblem   
-                            }
-
-                    // 200 api.login(user)
+                        this.$boxErrorMessage.innerHTML = 'PASSWORD CHANGED'
+                    } else if (res.status === 400) {
+                        this.$boxErrorMessage.innerHTML = res.error.toUpperCase() + `: ${this.errorPasswordInvalid}`
                     } else if (res.status === 403) {
-                        this.$boxErrorMessage.innerHTML = 'INCORRECT CURRENT PASSWORD...'
-                    } else {
-                        this.$boxErrorMessage.innerHTML = this.errorConnectionProblem
+                        this.$boxErrorMessage.innerHTML = this.errorNotLogged
+                    } 
+                    else {
+                        this.$boxErrorMessage.innerHTML = this.errorConnectionProblem   
                     }
 
-            // 200 api.profile()
             } else if (res.status === 403) {
-                this.$boxErrorMessage.innerHTML = this.errorNotLogged
+                this.$boxErrorMessage.innerHTML = 'INCORRECT CURRENT PASSWORD...'
             } else {
                 this.$boxErrorMessage.innerHTML = this.errorConnectionProblem
             }

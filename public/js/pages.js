@@ -38,8 +38,8 @@ pages.set('PROFILE', `
             <p id="box-error-message"></p>
         </form>
         <p class="box-title-small">SECURITY</p>
-        <p>IF YOU SUSPECT YOUR ACCOUNT HAS BEEN COMPROMISED, CHANGE YOUR PASSWORD AND LOGOUT ON ALL DEVICES.</p>
-        <p><a id="box-change-password-button">CHANGE PASSWORD</a> <a id="box-logoutall-button">LOGOUT ON ALL DEVICES</a></p>
+        <p>IF YOU SUSPECT YOUR ACCOUNT HAS BEEN COMPROMISED, CHANGE YOUR PASSWORD AND LOGOUT ALL DEVICES.</p>
+        <p><a id="box-change-password-button">CHANGE PASSWORD</a> <a id="box-logoutall-button">LOGOUT ALL DEVICES</a></p>
         <p id="box-logoutall-error-message"></p>
         <p class="box-title-small">MANAGE ACCOUT</p>
         <p><a id="box-close-account-button">CLOSE MY ACCOUNT</a></p>
