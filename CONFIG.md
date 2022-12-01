@@ -8,7 +8,8 @@
             "database": "asteroids",
             "dbDropCreate": true,
             "tokenKey": "secret_key",
-            "https": false
+            "https": false,
+            "publicDirectory": true
         },
         "production": {
             "host": "",
@@ -17,7 +18,8 @@
             "database": "",
             "dbDropCreate": false,
             "tokenKey": "secret_key",
-            "https": true
+            "https": true,
+            "publicDirectory": true
         }
     }
 
@@ -52,3 +54,9 @@ Project startup scripts can be run with or without --dev parameter. If they are 
 "tokenKey" - a string for signing security tokens; a complex string should be set. Tokens are used for user authorization.
 
 "https" - if set to true, requests to the server will require https
+
+---
+
+## PUBLIC DIRECTORY
+
+"publicDirectory" - if set to true, express serve static files from asteroids-js/public as /

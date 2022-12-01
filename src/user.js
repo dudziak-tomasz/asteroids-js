@@ -292,6 +292,7 @@ export class User {
     static async apiLeaderboard(req, res) {
 
         try {
+            // res.setHeader('Access-Control-Allow-Origin', '*').send(await db.getLeaderboard())
             res.send(await db.getLeaderboard())
         } catch (e) {
             res.status(500).send()

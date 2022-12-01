@@ -6,7 +6,8 @@
     "database": "asteroids",
     "dbDropCreate": true,
     "tokenKey": "secret_key",
-    "https": false
+    "https": false,
+    "publicDirectory": true
 },
   "production": {
     "host": "",
@@ -15,6 +16,7 @@
     "database": "",
     "dbDropCreate": false,
     "tokenKey": "",
-    "https": true
+    "https": true,
+    "publicDirectory": true
   }
 }

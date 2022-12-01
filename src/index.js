@@ -3,15 +3,17 @@ import cookieParser from 'cookie-parser'
 import { db } from './db/db.js'
 import { getFullPath } from './utils.js'
 import { User } from './user.js'
+import { config } from './config.js'
 
 const app = express()
 const port = process.env.PORT || 3000
 
-const publicDirectoryPath =  getFullPath('../public')
-
 db.connect()
 
-app.use(express.static(publicDirectoryPath))
+if (config.getItem('publicDirectory')) {
+    const publicDirectoryPath =  getFullPath('../public')
+    app.use(express.static(publicDirectoryPath))
+}
 
 app.use(express.json())
 

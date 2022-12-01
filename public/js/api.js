@@ -4,11 +4,14 @@ export const api = {
 
     user: undefined,
     parseError: { status: 499 },
+    prefix: '',
+    // prefix: 'http://localhost:3000',
+    // prefix: 'https://asteroids.doitjs.eu',
 
     async getLeaderboard() {
 
         try {
-            const response = await fetch('/leaderboard')
+            const response = await fetch(this.prefix + '/leaderboard')
 
             if (response.ok) {
                 return await response.json()
@@ -26,7 +29,7 @@ export const api = {
 
         try {
             
-            const response = await fetch('/users/new', {
+            const response = await fetch(this.prefix + '/users/new', {
                                     method: 'POST',
                                     headers: {
                                         'Content-type': 'application/json'
@@ -56,7 +59,7 @@ export const api = {
     async login(user) {
 
         try {
-            const response = await fetch('/users/login', {
+            const response = await fetch(this.prefix + '/users/login', {
                                     method: 'POST',
                                     headers: {
                                         'Content-type': 'application/json'
@@ -80,7 +83,7 @@ export const api = {
     async logout() {
 
         try {
-            const response = await fetch('/users/logout', {
+            const response = await fetch(this.prefix + '/users/logout', {
                                     method: 'POST',
                                     headers: {
                                         'Content-type': 'application/json'
@@ -103,7 +106,7 @@ export const api = {
     async logoutAll() {
 
         try {
-            const response = await fetch('/users/logoutall', {
+            const response = await fetch(this.prefix + '/users/logoutall', {
                                     method: 'POST',
                                     headers: {
                                         'Content-type': 'application/json'
@@ -126,7 +129,7 @@ export const api = {
     async profile() {
 
         try {
-            const response = await fetch('/users/me')
+            const response = await fetch(this.prefix + '/users/me')
 
             if (response.ok) {
                 this.user = await response.json()
@@ -149,7 +152,7 @@ export const api = {
         try {
             if (!user) user = { highscore: this.user.highscore }
 
-            const response = await fetch('/users/me', {
+            const response = await fetch(this.prefix + '/users/me', {
                                     method: 'PATCH',
                                     headers: {
                                         'Content-type': 'application/json'
@@ -181,7 +184,7 @@ export const api = {
     async deleteUser() {
 
         try {
-            const response = await fetch('/users/me', {
+            const response = await fetch(this.prefix + '/users/me', {
                                     method: 'DELETE',
                                     headers: {
                                         'Content-type': 'application/json'
