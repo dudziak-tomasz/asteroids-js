@@ -112,5 +112,7 @@ Background music:
 
 - Client side: using REST API endpoints
 - Server side / client side: socket.io for in-game chat
+- Use UUID in getRandomID()
+- Develop separate servers for front-end and back-end
 - Improve support for mobile devices
 - Some new ideas for the game: more saucers after reaching 100,000 points; the ability to play with two players
