@@ -396,6 +396,9 @@ export const game = {
     },
 
     checkSwitches() {
+
+        if (this.openBoxes !== 0) return
+        
         if (!Spacetime.spaceship) {
             
             if (this.fire.length > 0) this.pressFireNoSpaceship()
