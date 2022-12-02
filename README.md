@@ -24,6 +24,8 @@ Working front-end (playable game): November 18, 2022
 
 REST API server side ready: November 28, 2022
 
+Client side requests for REST API endpoints: December 2, 2022
+
 ---
 
 ## REQUIRMENTS
@@ -44,7 +46,7 @@ Create a configuration directory:
 
     asteroids-js/config
 
-Copy the asteroids-js/config.json file to the configuration directory and set the database parameters:
+Copy the asteroids-js/config.json file to the configuration directory and set parameters:
 
     asteroids-js/config/config.json
 
@@ -110,9 +112,6 @@ Background music:
 
 ## TODOS
 
-- Client side: using REST API endpoints
 - Server side / client side: socket.io for in-game chat
-- Use UUID in getRandomID()
-- Develop separate servers for front-end and back-end
 - Improve support for mobile devices
 - Some new ideas for the game: more saucers after reaching 100,000 points; the ability to play with two players
