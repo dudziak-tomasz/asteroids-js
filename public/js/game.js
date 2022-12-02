@@ -380,8 +380,11 @@ export const game = {
     },
 
     switchPause() {
+
+        if (!Spacetime.spaceship) return
+
         if (game.pause) {
-            if (this.openBoxes === 0 || !Spacetime.spaceship) {
+            if (this.openBoxes === 0) {
                 Spacetime.start()
                 this.playAudio()
     

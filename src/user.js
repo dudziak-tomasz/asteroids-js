@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs'
 import validator from 'validator'
 import { config } from './config.js'
 import { db } from './db/db.js'
+import { sendMail } from './utils.js'
 
 export class User {
     constructor(user = {}) {
@@ -93,10 +94,10 @@ export class User {
 
     }
 
-    async generateToken() {
+    async generateToken(reason = '') {
 
         const token = jwt.sign({ id: this.id }, config.getItem('tokenKey'))
-        await db.addToken(this.id, token)
+        await db.addToken(this.id, token, reason)
 
         return token
     }
@@ -241,6 +242,83 @@ export class User {
 
     }
 
+    static async apiPasswordReset(req, res) {
+        
+        try {
+
+            if (!req.body.email) return res.status(400).send({ error: 'email is invalid' })
+
+            const dbUser = await db.findUserByEmail(req.body.email)
+
+            if (!dbUser) return res.status(403).send()
+
+            const user = new User(dbUser)
+            
+            await db.deleteTokensByUserIdAndReason(user.id, 'passwordreset')
+            const token = await user.generateToken('passwordreset')
+
+            const protocol = req.protocol
+            const host = req.hostname
+            const port = process.env.PORT || 3000
+
+            let fullURL = `${protocol}://${host}`
+
+            if (port !== 80 && port !== 443) fullURL += `:${port}`
+
+            fullURL += `/?q=${token}`
+
+            const emailHTML = `
+                <p>Hello ${user.username.toUpperCase()}!</p>
+                <p>We received a request to reset the password for your account.</p>
+                <p>If you made this request, click the link below. If not, you can ignore this email.</p>
+                <p><a href="${fullURL}">${fullURL}</a></p>
+                <p>Clicking not working? Try pasting it into your browser.</p>
+            `
+            const isSent = await sendMail(user.email, 'Password reset', emailHTML)
+
+            if (!isSent) return res.status(403).send()
+
+            return res.send()
+                
+        } catch {
+            return res.status(500).send()
+        }
+
+    }
+
+    static async apiPasswordUpdate(req, res) {
+
+        try {
+
+            const token = req.body.token
+
+            if (!token) return res.status(403).send()
+
+            const data = jwt.verify(token, config.getItem('tokenKey'))
+
+            const dbUser = await db.findUserById(data.id)
+            if (!dbUser) return res.status(403).send()
+    
+            const dbToken = await db.findToken(dbUser.id, token)
+            if (!dbToken || dbToken.reason !== 'passwordreset') return res.status(403).send()
+    
+            const newUser = new User(dbUser)
+            newUser.password = req.body.password
+
+            if (!newUser.validatePassword()) return res.status(400).send({ error: 'password too weak' })
+
+            await newUser.hashPassword()
+            await newUser.save()
+            db.deleteTokensByUserIdAndReason(dbUser.id, 'passwordreset')
+
+            return res.send()
+                
+        } catch {
+            return res.status(500).send()
+        }
+        
+    }
+
     static async apiLogout(req, res) {
 
         try {
@@ -306,6 +384,8 @@ export class User {
         
         this.router.post('/users/new', this.apiNewUser)
         this.router.post('/users/login', this.apiLogin)
+        this.router.post('/users/passwordreset', this.apiPasswordReset)
+        this.router.patch('/users/passwordreset', this.apiPasswordUpdate)
         this.router.post('/users/logout', this.authorization , this.apiLogout)
         this.router.post('/users/logoutall', this.authorization , this.apiLogoutAll)
         this.router.get('/users/me', this.authorization, this.apiProfile)

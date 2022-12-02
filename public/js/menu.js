@@ -51,6 +51,12 @@ export class Menu extends Box {
         this.audio = new Audio('/audio/fire.mp3')
 
         this.initializeMenuItems()
+
+        const urlParams = new URLSearchParams(window.location.search)
+        if (urlParams.has('q')) {
+            this.handlePasswordResetChangePassword(urlParams.get('q'))
+        }
+
     }
 
     initializeMenuItems() {
@@ -192,6 +198,11 @@ export class Menu extends Box {
             this.openBox('REGISTER')
         }
 
+        this.$boxPasswordResetButton.onclick = (e) => {
+            e.preventDefault()
+            this.openBox('PASSWORD RESET')
+        }
+
     }
 
     handleRegister() {
@@ -217,7 +228,7 @@ export class Menu extends Box {
             this.$registerForm.submit.disabled = false
 
             if (res.status === 201) {
-                this.box.close()
+                this.openBox('REGISTER OK')
             } else if (res.status === 400) {
                 this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
                 if (res.error === 'username is invalid') this.$boxErrorMessage.innerHTML += `: ${this.errorUsernameInvalid}`
@@ -240,6 +251,95 @@ export class Menu extends Box {
         this.$registerForm.email.oninput = () => {
             this.$boxErrorMessage.innerHTML = ''
         }
+
+    }
+
+    handlePasswordReset() {
+
+        this.$passwordResetForm = document.getElementById('box-password-reset-form')
+        this.$boxErrorMessage = document.getElementById('box-error-message')
+
+        this.$passwordResetForm.email.focus()
+
+        this.$passwordResetForm.onsubmit = async (e) => {
+            e.preventDefault()
+
+            const user = {
+                email: this.$passwordResetForm.email.value
+            }
+
+            this.$boxErrorMessage.innerHTML = 'SENDING...'
+            this.$passwordResetForm.submit.disabled = true
+
+            const res = await api.passwordReset(user)
+
+            this.$passwordResetForm.submit.disabled = false
+
+            if (res.status === 200) {
+                this.openBox('PASSWORD RESET INFO')
+            } else if (res.status === 400) {
+                this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
+            } else if (res.status === 403) {
+                this.$boxErrorMessage.innerHTML = 'PASSWORD RESET FAILED. PLEASE TRY AGAIN LATER.'
+            } else {
+                this.$boxErrorMessage.innerHTML = this.errorConnectionProblem
+            }
+
+        }
+
+    }
+
+    handlePasswordResetChangePassword(token) {
+
+        this.openBox('PASSWORD RESET CHANGE PASSWORD')
+
+        this.$changePasswordForm = document.getElementById('box-change-password-form')
+        this.$boxErrorMessage = document.getElementById('box-error-message')
+
+        this.$changePasswordForm.newPassword.focus()
+
+        this.$changePasswordForm.onsubmit = async (e) => {
+            e.preventDefault()
+
+            const newPassword = this.$changePasswordForm.newPassword.value
+            const retypeNewPassword = this.$changePasswordForm.retypeNewPassword.value
+
+            if (newPassword !== retypeNewPassword) return this.$boxErrorMessage.innerHTML = 'NEW PASSWORD DOES NOT MATCH RETYPED PASSWORD'
+
+            const user = {
+                password: newPassword,
+                token
+            }
+
+            this.$boxErrorMessage.innerHTML = 'CHANGING PASSWORD...'
+            this.$changePasswordForm.submit.disabled = true
+
+            const res = await api.passwordUpdate(user)
+
+            this.$changePasswordForm.submit.disabled = false
+
+            if (res.status === 200) {
+                this.$boxErrorMessage.innerHTML = 'PASSWORD CHANGED. YOU CAN LOG IN.'
+            } else if (res.status === 400) {
+                this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
+            } else if (res.status === 403) {
+                this.$boxErrorMessage.innerHTML = 'PASSWORD RESET FAILED. PLEASE TRY AGAIN LATER.'
+            } else {
+                this.$boxErrorMessage.innerHTML = this.errorConnectionProblem
+            }
+        }
+
+        const capsLock = (e) => {
+            if (e.getModifierState("CapsLock")) this.$boxErrorMessage.innerHTML = this.errorCapsLock
+            else this.$boxErrorMessage.innerHTML = ''
+        }
+
+        this.$changePasswordForm.newPassword.addEventListener('keydown', (e) => {
+            capsLock(e)
+        })
+        this.$changePasswordForm.retypeNewPassword.addEventListener('keydown', (e) => {
+            capsLock(e)
+        })
 
     }
 
@@ -474,6 +574,7 @@ export class Menu extends Box {
         else if (name === 'CHANGE PASSWORD') this.handleChangePassword()
         else if (name === 'PROFILE') this.handleProfile()
         else if (name === 'REGISTER') this.handleRegister()
+        else if (name === 'PASSWORD RESET') this.handlePasswordReset()
     }
 
     initializeEvents() {

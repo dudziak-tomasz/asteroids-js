@@ -17,6 +17,41 @@ pages.set('LOGIN', `
     </form>
 `)
 
+pages.set('PASSWORD RESET', `
+    <p class="box-title">PASSWORD RESET</p>
+    <form id="box-password-reset-form">
+        <p>
+            EMAIL<br>
+            <input type="text" name="email" autocomplete="off">
+        </p>
+        <p class="top-10"><button name="submit">SEND EMAIL</button></p>
+        <p id="box-error-message"></p>
+    </form>
+`)
+
+pages.set('PASSWORD RESET INFO', `
+    <p class="box-title">CHECK YOUR INBOX</p>
+    <p>WE HAVE SENT YOU AN E-MAIL.</p>
+    <p>CLICK THE LINK IN THE EMAIL TO RESET YOUR PASSWORD.</p>
+    <p>IF YOU DON'T SEE THE EMAIL, CHECK OTHER PLACES IT MIGHT BE, LIKE YOUR JUNK, SPAM, SOCIAL, OR OTHER FOLDERS.</p>
+`)
+
+pages.set('PASSWORD RESET CHANGE PASSWORD', `
+    <p class="box-title">CHANGE PASSWORD</p>
+    <form id="box-change-password-form">
+        <p>
+            NEW PASSWORD<br>
+            <input type="password" name="newPassword">
+        </p>
+        <p>
+            RETYPE NEW PASSWORD<br>
+            <input type="password" name="retypeNewPassword">
+        </p>
+        <p class="top-10"><button name="submit">CHANGE PASSWORD</button></p>
+        <p id="box-error-message"></p>
+    </form>
+`)
+
 pages.set('REGISTER', `
     <p class="box-title">REGISTER</p>
     <form id="box-register-form">
@@ -36,6 +71,13 @@ pages.set('REGISTER', `
         <p class="top-10"><button name="submit">REGISTER</button></p>
         <p id="box-error-message"></p>
     </form>
+`)
+
+pages.set('REGISTER OK', `
+    <p class="box-title">REGISTER</p>
+    <p>THANKS FOR SIGNING UP!</p> 
+    <p>WELCOME TO OUR COMMUNITY!</p> 
+    <p>WE ARE HAPPY TO HAVE YOU ON BOARD!</p>
 `)
 
 pages.set('CHANGE PASSWORD', `

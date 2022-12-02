@@ -58,6 +58,7 @@ export const db = {
                 id int NOT NULL AUTO_INCREMENT,
                 userid int NOT NULL,
                 token varchar(255) NOT NULL,
+                reason varchar(255),
                 PRIMARY KEY (id),
                 FOREIGN KEY (userid) REFERENCES users(id)
             )
@@ -128,10 +129,10 @@ export const db = {
         `)
     },
 
-    async addToken(userId, token) {
+    async addToken(userId, token, reason = '') {
         await this.pool.execute(`
-            INSERT INTO ${this.database}.tokens (userid, token)
-            VALUES ('${userId}', '${token}')
+            INSERT INTO ${this.database}.tokens (userid, token, reason)
+            VALUES ('${userId}', '${token}', '${reason}')
         `)
     },
 
@@ -159,6 +160,14 @@ export const db = {
             DELETE
             FROM ${this.database}.tokens
             WHERE userid = '${userId}'
+        `)
+    },
+
+    async deleteTokensByUserIdAndReason(userId, reason) {
+        await this.pool.execute(`
+            DELETE
+            FROM ${this.database}.tokens
+            WHERE userid = '${userId}' AND reason = '${reason}'
         `)
     },
 

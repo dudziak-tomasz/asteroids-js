@@ -56,6 +56,62 @@ export const api = {
 
     },
 
+    async passwordReset(user) {
+
+        try {
+            
+            const response = await fetch(this.prefix + '/users/passwordreset', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-type': 'application/json'
+                                    },
+                                    body: JSON.stringify(user)
+                                })
+                        
+            let res = {}
+
+            if (response.status === 400) {
+                res = await response.json()
+            }
+
+            res.status = response.status
+            
+            return res
+    
+        } catch {
+            return this.parseError
+        }
+
+    },
+
+    async passwordUpdate(user) {
+
+        try {
+            
+            const response = await fetch(this.prefix + '/users/passwordreset', {
+                                    method: 'PATCH',
+                                    headers: {
+                                        'Content-type': 'application/json'
+                                    },
+                                    body: JSON.stringify(user)
+                                })
+                        
+            let res = {}
+
+            if (response.status === 400) {
+                res = await response.json()
+            }
+
+            res.status = response.status
+            
+            return res
+    
+        } catch {
+            return this.parseError
+        }
+
+    },
+
     async login(user) {
 
         try {
