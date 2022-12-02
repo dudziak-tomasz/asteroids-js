@@ -7,7 +7,13 @@
     "dbDropCreate": true,
     "tokenKey": "secret_key",
     "https": false,
-    "publicDirectory": true
+    "publicDirectory": true,
+    "emailSender": "",
+    "emailHost": "",
+    "emailPort": 465,
+    "emailSSL": true,
+    "emailUser": "",
+    "emailPassword": ""
 },
   "production": {
     "host": "",
@@ -17,6 +23,12 @@
     "dbDropCreate": false,
     "tokenKey": "",
     "https": true,
-    "publicDirectory": true
+    "publicDirectory": true,
+    "emailSender": "",
+    "emailHost": "",
+    "emailPort": 465,
+    "emailSSL": true,
+    "emailUser": "",
+    "emailPassword": ""
   }
 }

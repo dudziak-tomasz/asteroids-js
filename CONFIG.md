@@ -9,7 +9,13 @@
             "dbDropCreate": true,
             "tokenKey": "secret_key",
             "https": false,
-            "publicDirectory": true
+            "publicDirectory": true,
+            "emailSender": "",
+            "emailHost": "",
+            "emailPort": 465,
+            "emailSSL": true,
+            "emailUser": "",
+            "emailPassword": ""
         },
         "production": {
             "host": "",
@@ -19,7 +25,13 @@
             "dbDropCreate": false,
             "tokenKey": "secret_key",
             "https": true,
-            "publicDirectory": true
+            "publicDirectory": true,
+            "emailSender": "",
+            "emailHost": "",
+            "emailPort": 465,
+            "emailSSL": true,
+            "emailUser": "",
+            "emailPassword": ""
         }
     }
 
@@ -59,4 +71,20 @@ Project startup scripts can be run with or without --dev parameter. If they are 
 
 ## PUBLIC DIRECTORY
 
-"publicDirectory" - if set to true, express serve static files from asteroids-js/public as /
+"publicDirectory" - if set to true, express serve static files from asteroids-js/public as "/". You can disable the public directory when the front-end is running on another server. Then change the request path in public/js/api.js.
+
+## SENDING EMAILS
+
+The application sends an e-mail when the user loses access to the account and tries to change the password using his e-mail address.
+
+"emailSender" - email address from which the email will be sent
+
+"emailHost" - SMTP server address
+
+"emailPort" - SMTP server port
+
+"emailSSL" - set to true if the connection uses SSL
+
+"emailUser" - SMTP server username
+
+"emailPassword" - SMTP server password
