@@ -1,5 +1,9 @@
-export const getRandomID = (prefix, length = 1000000) => {
-    return prefix + Math.round(length * Math.random() + length)
+import { v4 as uuidv4 } from 'https://jspm.dev/uuid'
+
+export const getRandomID = (prefix) => {
+    // const id = prefix + Math.round(length * Math.random() + length)
+    const id = prefix + uuidv4()
+    return id
 }
 
 export const getRandomPlusMinus = (min = 0, max = 1) => {
