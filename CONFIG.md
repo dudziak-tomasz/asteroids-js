@@ -10,6 +10,8 @@
             "tokenKey": "secret_key",
             "https": false,
             "publicDirectory": true,
+            "httpPort": 3000,
+            "httpsPort": 3443,
             "emailSender": "",
             "emailHost": "",
             "emailPort": 465,
@@ -26,6 +28,8 @@
             "tokenKey": "secret_key",
             "https": true,
             "publicDirectory": true,
+            "httpPort": 80,
+            "httpsPort": 443,
             "emailSender": "",
             "emailHost": "",
             "emailPort": 465,
@@ -72,6 +76,10 @@ Project startup scripts can be run with or without --dev parameter. If they are 
 ## PUBLIC DIRECTORY
 
 "publicDirectory" - if set to true, express serve static files from asteroids-js/public as "/". You can disable the public directory when the front-end is running on another server. Then change the request path in public/js/api.js.
+
+## EXPRESS PORTS
+
+"httpPort", "httpsPort" - ports on which express provides API endpoints
 
 ## SENDING EMAILS
 

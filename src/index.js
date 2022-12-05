@@ -6,7 +6,7 @@ import { User } from './user.js'
 import { config } from './config.js'
 
 const app = express()
-const port = process.env.PORT || 3000
+const httpPort = process.env.PORT || config.getItem('httpPort')
 
 db.connect()
 
@@ -21,6 +21,6 @@ app.use(cookieParser())
 
 app.use(User.getRouter())
 
-app.listen(port, () => {
-    console.log(`Server is up on port ${port}`)
+app.listen(httpPort, () => {
+    console.log(`Server is up on port ${httpPort}`)
 })
