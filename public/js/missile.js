@@ -31,10 +31,8 @@ export class Missile extends SimpleFlyingObject {
 
     }
 
-    async play() {
-        try {
-            await this.audio.play()
-        } catch { }
+    play() {
+        this.audio.play()
     }
 
     draw() {

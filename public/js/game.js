@@ -99,13 +99,10 @@ export const game = {
         this.audio.volume = this.audioVolume
     },
 
-    async playAudio() {
+    playAudio() {
         if (this.audioVolume === 0) return
-        try {
-            await this.audio.play()
-        } catch {
-            // todo: solve: 'DOMException: play() failed because the user didn't interact with the document first. https://goo.gl/xX8pDD'
-        }
+        
+        this.audio.play()
     },
 
     stopAudio() {
@@ -182,7 +179,7 @@ export const game = {
 
     startLevel() {
         game.level++
-        this.showAlert(`LEVEL ${this.level}`)    
+        if (this.lives.length > 0 || Spacetime.spaceship) this.showAlert(`LEVEL ${this.level}`)    
         this.startingLevel = true
         setTimeout(() => {
             this.hideAlert()

@@ -59,6 +59,8 @@ export class Spacetime {
     static removeSaucer() {
         this.saucer.canvas.remove()
         this.saucer = undefined
+
+        if (this.asteroids.length === 0 && this.shards.length === 0) this.sendEvent('noasteroids')
     }
 
     static createAsteroids(amount = 2, size = 3) {
@@ -79,7 +81,7 @@ export class Spacetime {
             this.asteroids.splice(asteroidIndex, 1)
         }
 
-        if (this.asteroids.length === 0) this.sendEvent('noasteroids')
+        // if (this.asteroids.length === 0) this.sendEvent('noasteroids')
     }
 
     static removeAllAsteroid() {
@@ -101,6 +103,8 @@ export class Spacetime {
 
         if (this.shards.length === 0) {
             if (!this.spaceship) this.sendEvent('spaceshiphit')
+
+            if (this.asteroids.length === 0 && !this.saucer) this.sendEvent('noasteroids')
         }
 
     }
@@ -217,6 +221,7 @@ export class Spacetime {
         })
 
         this.shards.forEach(shard => shard.move())
+
     }
 
     static getWidth() {

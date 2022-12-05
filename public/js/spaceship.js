@@ -151,7 +151,7 @@ export class Spaceship extends ComplexFlyingObject {
         this.rotation = 0
     }
 
-    async startAccelerate() {
+    startAccelerate() {
         if (this.intervalIdAccelerate) return
 
         this.accelerate()
@@ -159,9 +159,7 @@ export class Spaceship extends ComplexFlyingObject {
             this.accelerate()
         }, this.intervalTimeAccelerate)
         
-        try {
-            await this.audioEngine.play()
-        } catch { }
+        this.audioEngine.play()
     }
 
     stopAccelerate() {
@@ -223,22 +221,20 @@ export class Spaceship extends ComplexFlyingObject {
 
     }
 
-    async hit() {
-
-        this.destroy()
-
-        try {
-            await this.audioBang.play()
-        } catch { }
+    hit() {
 
         const centerX = this.left + this.width / 2
         const centerY = this.top + this.height / 2
+
+        this.destroy()
 
         for (let i = 0; i < this.amounOfPieces; i++) {
             let x = centerX + getRandomPlusMinus(this.width / 4, this.width / 2)
             let y = centerY + getRandomPlusMinus(this.width / 4, this.width / 2)
             Spacetime.addShard(new PieceOfSpaceship(x, y, this.speedX, this.speedY))
         }    
+
+        this.audioBang.play()
 
     }
 

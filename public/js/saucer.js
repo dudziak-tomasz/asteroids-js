@@ -108,10 +108,8 @@ export class Saucer extends ComplexFlyingObject {
         this.audioBang.volume = Spacetime.audioVolume
     }
 
-    async play() {
-        try {
-            await this.audioFlying.play()
-        } catch { }
+    play() {
+        this.audioFlying.play()
     }
 
     stopPlay() {
@@ -178,21 +176,19 @@ export class Saucer extends ComplexFlyingObject {
         Spacetime.addMissile(new Missile(x, y, fireAngle, 0, 0, 'alien-missile', 1 / this.size))
     }
 
-    async hit() {
-        this.destroy()   
-
-        try {
-            await this.audioBang.play()
-        } catch { }
-
+    hit() {
         const centerX = this.left + this.width / 2
         const centerY = this.top + this.height / 2
+
+        this.destroy()   
 
         for (let i = 0; i < this.amounOfShards; i++) {
             let x = centerX + getRandomPlusMinus(this.width / 4, this.width / 2)
             let y = centerY + getRandomPlusMinus(this.width / 4, this.width / 2)
             Spacetime.addShard(new Shard(x, y, this.speedX, this.speedY))
         }    
+
+        this.audioBang.play()
     }
 
     destroy() {
