@@ -272,6 +272,12 @@ export const game = {
             this.refreshHighScore()
         })
 
+        this.mainDiv.addEventListener('username', () => {
+            this.getHighScore()
+            this.refreshHighScore()
+            if (this.pressFireTo === 'startgame') this.showLeaderboard()
+        })
+
     },
 
     generateSaucer() {

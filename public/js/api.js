@@ -208,6 +208,8 @@ export const api = {
         try {
             if (!user) user = { highscore: this.user.highscore }
 
+            const oldUsername = this.user.username
+
             const response = await fetch(this.prefix + '/users/me', {
                                     method: 'PATCH',
                                     headers: {
@@ -220,6 +222,9 @@ export const api = {
 
             if (response.ok) {
                 this.user = await response.json()
+                if (oldUsername !== this.user.username) {
+                    game.mainDiv.dispatchEvent(new CustomEvent('username'))
+                }
             } else if (response.status === 400) {
                 res = await response.json()
             } else if (response.status === 403) {
