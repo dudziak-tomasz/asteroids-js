@@ -178,8 +178,9 @@ export const game = {
     },
 
     startLevel() {
+        if (this.lives.length === 0 && !Spacetime.spaceship) return
         game.level++
-        if (this.lives.length > 0 || Spacetime.spaceship) this.showAlert(`LEVEL ${this.level}`)    
+        this.showAlert(`LEVEL ${this.level}`)    
         this.startingLevel = true
         setTimeout(() => {
             this.hideAlert()
