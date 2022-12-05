@@ -71,7 +71,7 @@ export class User {
         if (!this.username) return false
         if (this.username.length < 3) return false
         if (this.username.length > 20) return false
-        if (!validator.isAlphanumeric(this.username)) return false
+        if (!validator.isAlphanumeric(this.username.replace('_', ''))) return false
 
         return true
     }

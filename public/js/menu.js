@@ -17,7 +17,7 @@ export class Menu extends Box {
 
         this.errorNotLogged = `YOU'RE NOT LOGGED IN... PLEASE LOG IN.`
         this.errorConnectionProblem = 'CONNECTION PROBLEM... PLEASE TRY AGAIN LATER.'
-        this.errorUsernameInvalid = 'MINIMUM 3 CHARACTERS, ONLY LETTERS AND NUMBERS.'
+        this.errorUsernameInvalid = 'MINIMUM 3 CHARACTERS, ONLY LETTERS, NUMBERS AND UNDERSCORES.'
         this.errorPasswordInvalid = 'MINIMUM 8 CHARACTERS, 1 CAPITAL LETTER, 1 SMALL LETTER, 1 NUMBER'
         this.errorCapsLock = 'CAPS LOCK IS ON!'
 
