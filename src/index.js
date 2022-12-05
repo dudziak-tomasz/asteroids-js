@@ -6,7 +6,7 @@ import { User } from './user.js'
 import { config } from './config.js'
 
 const app = express()
-const httpPort = process.env.PORT || config.getItem('httpPort')
+const httpPort = config.getItem('httpPort')
 
 db.connect()
 
