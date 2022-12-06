@@ -8,10 +8,10 @@
             "database": "asteroids",
             "dbDropCreate": true,
             "tokenKey": "secret_key",
-            "https": false,
             "publicDirectory": true,
             "httpPort": 3000,
             "httpsPort": 3443,
+            "corsOrigin": "*",
             "emailSender": "",
             "emailHost": "",
             "emailPort": 465,
@@ -26,10 +26,10 @@
             "database": "",
             "dbDropCreate": false,
             "tokenKey": "secret_key",
-            "https": true,
             "publicDirectory": true,
-            "httpPort": 80,
+            "httpPort": false,
             "httpsPort": 443,
+            "corsOrigin": ["http://asteroids.doitjs.eu","https://asteroids.doitjs.eu"],
             "emailSender": "",
             "emailHost": "",
             "emailPort": 465,
@@ -69,8 +69,6 @@ Project startup scripts can be run with or without --dev parameter. If they are 
 
 "tokenKey" - a string for signing security tokens; a complex string should be set. Tokens are used for user authorization.
 
-"https" - if set to true, requests to the server will require https
-
 ---
 
 ## PUBLIC DIRECTORY
@@ -80,6 +78,10 @@ Project startup scripts can be run with or without --dev parameter. If they are 
 ## EXPRESS PORTS
 
 "httpPort", "httpsPort" - ports on which express provides API endpoints
+
+## CORS
+
+"corsOrigin" - list of clients that have access to endpoints
 
 ## SENDING EMAILS
 
