@@ -1,3 +1,6 @@
+import fs from 'fs'
+import http from 'http'
+import https from 'https'
 import express from 'express'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -8,6 +11,7 @@ import { config } from './config.js'
 
 const app = express()
 const httpPort = config.getItem('httpPort')
+const httpsPort = config.getItem('httpsPort')
 
 db.connect()
 
@@ -27,7 +31,26 @@ app.use(cors({
 app.use(User.getRouter())
 
 if (httpPort) {
-    app.listen(httpPort, () => {
-        console.log(`Server is up on port ${httpPort}`)
+
+    const httpServer = http.createServer(app);
+
+    httpServer.listen(httpPort, () => {
+        console.log(`http server is up on port ${httpPort}`)
     })
+
+}
+
+if (httpsPort) {
+
+    const credentials = {
+        key: fs.readFileSync('config/server.key'), 
+        cert: fs.readFileSync('config/server.cert')
+    }
+
+    const httpsServer = https.createServer(credentials, app)
+
+    httpsServer.listen(httpsPort, () => {
+        console.log(`https server is up on port ${httpsPort}`)
+    })
+
 }
