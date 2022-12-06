@@ -1,12 +1,27 @@
+import { config } from './config.js'
 import { game } from './game.js'
 
 export const api = {
 
     user: undefined,
+    // token: undefined,
     parseError: { status: 499 },
-    prefix: '',
+    // prefix: '',
     // prefix: 'http://localhost:3000',
-    // prefix: 'https://asteroids.doitjs.eu',
+    // prefix: 'http://asteroids.doitjs.eu:8080',
+    prefix: config.getItem('apiPrefix'),
+
+    setToken(token) {
+        localStorage.setItem('token', token)
+    },
+
+    getToken() {
+        return localStorage.getItem('token')
+    },
+
+    removeToken() {
+        localStorage.removeItem('token')
+    },
 
     async getLeaderboard() {
 
@@ -41,6 +56,7 @@ export const api = {
 
             if (response.ok) {
                 this.user = await response.json()
+                this.setToken(this.user.token)
                 game.mainDiv.dispatchEvent(new CustomEvent('login'))
             } else if (response.status === 400) {
                 res = await response.json()
@@ -123,8 +139,9 @@ export const api = {
                                     body: JSON.stringify(user)
                                 })
 
-            if (response.ok) {
+            if (response.ok && !user.test) {
                 this.user = await response.json()
+                this.setToken(this.user.token)
                 game.mainDiv.dispatchEvent(new CustomEvent('login'))
             } 
 
@@ -142,12 +159,14 @@ export const api = {
             const response = await fetch(this.prefix + '/users/logout', {
                                     method: 'POST',
                                     headers: {
-                                        'Content-type': 'application/json'
+                                        'Content-type': 'application/json',
+                                        'Authorization': 'Bearer ' + this.getToken()
                                     }
                                 })
 
             if (response.ok || response.status === 403) {
                 this.user = undefined
+                this.removeToken()
                 game.mainDiv.dispatchEvent(new CustomEvent('logout'))
             } 
 
@@ -165,12 +184,14 @@ export const api = {
             const response = await fetch(this.prefix + '/users/logoutall', {
                                     method: 'POST',
                                     headers: {
-                                        'Content-type': 'application/json'
+                                        'Content-type': 'application/json',
+                                        'Authorization': 'Bearer ' + this.getToken()
                                     }
                                 })
 
             if (response.ok || response.status === 403) {
                 this.user = undefined
+                this.removeToken()
                 game.mainDiv.dispatchEvent(new CustomEvent('logout'))
             } 
 
@@ -185,7 +206,13 @@ export const api = {
     async profile() {
 
         try {
-            const response = await fetch(this.prefix + '/users/me')
+            const response = await fetch(this.prefix + '/users/me', {
+                                    method: 'GET',
+                                    headers: {
+                                        'Content-type': 'application/json',
+                                        'Authorization': 'Bearer ' + this.getToken()
+                                    }
+                                })
 
             if (response.ok) {
                 this.user = await response.json()
@@ -213,7 +240,8 @@ export const api = {
             const response = await fetch(this.prefix + '/users/me', {
                                     method: 'PATCH',
                                     headers: {
-                                        'Content-type': 'application/json'
+                                        'Content-type': 'application/json',
+                                        'Authorization': 'Bearer ' + this.getToken()
                                     },
                                     body: JSON.stringify(user)
                                 })
@@ -248,7 +276,8 @@ export const api = {
             const response = await fetch(this.prefix + '/users/me', {
                                     method: 'DELETE',
                                     headers: {
-                                        'Content-type': 'application/json'
+                                        'Content-type': 'application/json',
+                                        'Authorization': 'Bearer ' + this.getToken()
                                     }
                                 })
 

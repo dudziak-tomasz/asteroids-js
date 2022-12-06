@@ -14,12 +14,14 @@ export class User {
         this.password = undefined
         this.email = undefined
         this.highscore = undefined
+        this.token = undefined
 
         if (typeof user.id === 'number') this.id = user.id
         if (typeof user.username === 'string') this.username = user.username.trim().toLowerCase()
         if (typeof user.password === 'string') this.password = user.password.trim()
         if (typeof user.email === 'string') this.email = user.email.trim().toLowerCase()
         if (typeof user.highscore === 'number') this.highscore = user.highscore
+        if (typeof user.token === 'string') this.token = user.token
     }
 
     async save() {
@@ -71,7 +73,7 @@ export class User {
         if (!this.username) return false
         if (this.username.length < 3) return false
         if (this.username.length > 20) return false
-        if (!validator.isAlphanumeric(this.username.replace('_', ''))) return false
+        if (!validator.isAlphanumeric(this.username.replaceAll('_', ''))) return false
 
         return true
     }
@@ -98,13 +100,18 @@ export class User {
 
         const token = jwt.sign({ id: this.id }, config.getItem('tokenKey'))
         await db.addToken(this.id, token, reason)
+        this.token = token
 
         return token
     }
 
     static async authorization (req, res, next) {
 
-        const token = req.cookies.access_token
+        const headerAuth = req.header('Authorization')
+
+        let token = undefined
+
+        if (headerAuth) token = headerAuth.replace('Bearer ', '')
 
         if (!token) return res.status(403).send()
 
@@ -146,19 +153,14 @@ export class User {
             
             await newUser.hashPassword()
 
-            // Todo: highscore only by update endpoint
+            // highscore only by update endpoint
             newUser.highscore = 0
 
             await newUser.save()
 
-            const token = await newUser.generateToken()
+            await newUser.generateToken()
     
-            return res
-                    .cookie('access_token', token, {
-                        httpOnly: true,
-                        secure: config.getItem('https')
-                    })
-                    .status(201)
+            return res.status(201)
                     .send(newUser)
                 
         } catch {
@@ -221,20 +223,9 @@ export class User {
             const user = new User(dbUser)
             if (!await user.comparePassword(req.body.password)) return res.status(403).send()
 
-            if (!req.body.test) {
+            if (!req.body.test) await user.generateToken()
 
-                const token = await user.generateToken()
-    
-                return res
-                        .cookie('access_token', token, {
-                            httpOnly: true,
-                            secure: config.getItem('https')
-                        })
-                        .send(user)    
-
-            } else {
-                return res.send(user) 
-            }
+            return res.send(user) 
                 
         } catch {
             return res.status(500).send()
@@ -257,21 +248,13 @@ export class User {
             await db.deleteTokensByUserIdAndReason(user.id, 'passwordreset')
             const token = await user.generateToken('passwordreset')
 
-            const protocol = req.protocol
-            const host = req.hostname
-            const port = process.env.PORT || 3000
-
-            let fullURL = `${protocol}://${host}`
-
-            if (port !== 80 && port !== 443) fullURL += `:${port}`
-
-            fullURL += `/?q=${token}`
+            const tokenURL = `${req.get('referer')}?q=${token}`
 
             const emailHTML = `
                 <p>Hello ${user.username.toUpperCase()}!</p>
                 <p>We received a request to reset the password for your account.</p>
                 <p>If you made this request, click the link below. If not, you can ignore this email.</p>
-                <p><a href="${fullURL}">${fullURL}</a></p>
+                <p><a href="${tokenURL}">${tokenURL}</a></p>
                 <p>Clicking not working? Try pasting it into your browser.</p>
             `
             const isSent = await sendMail(user.email, 'Password reset', emailHTML)
@@ -323,9 +306,7 @@ export class User {
 
         try {
             await db.deleteTokenById(req.token.id)
-            return res
-                    .clearCookie('access_token')
-                    .send()
+            return res.send()
     
         } catch {
             return res.status(500).send()
@@ -337,9 +318,7 @@ export class User {
 
         try {
             await req.user.deleteAllTokens()
-            return res
-                    .clearCookie('access_token')
-                    .send()
+            return res.send()
     
         } catch {
             return res.status(500).send()
@@ -357,9 +336,7 @@ export class User {
 
         try {
             await req.user.delete()
-            return res
-                    .clearCookie('access_token')
-                    .send()
+            return res.send()
     
         } catch {
             return res.status(500).send()
@@ -370,7 +347,6 @@ export class User {
     static async apiLeaderboard(req, res) {
 
         try {
-            // res.setHeader('Access-Control-Allow-Origin', '*').send(await db.getLeaderboard())
             res.send(await db.getLeaderboard())
         } catch (e) {
             res.status(500).send()

@@ -1,5 +1,6 @@
 import express from 'express'
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
 import { db } from './db/db.js'
 import { getFullPath } from './utils.js'
 import { User } from './user.js'
@@ -19,8 +20,14 @@ app.use(express.json())
 
 app.use(cookieParser())
 
+app.use(cors({
+    origin: config.getItem('corsOrigin')
+}))
+
 app.use(User.getRouter())
 
-app.listen(httpPort, () => {
-    console.log(`Server is up on port ${httpPort}`)
-})
+if (httpPort) {
+    app.listen(httpPort, () => {
+        console.log(`Server is up on port ${httpPort}`)
+    })
+}
