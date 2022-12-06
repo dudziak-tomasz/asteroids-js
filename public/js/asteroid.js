@@ -100,8 +100,6 @@ export class Asteroid extends ComplexFlyingObject {
         const shardLeft = this.left + this.width / 2
         const shardTop = this.top + this.height / 2
 
-        Spacetime.removeAsteroid(this)
-
         if (this.size > 1) {
             Spacetime.addAsteroid(new Asteroid(newSize, newLeft, newTop))
             Spacetime.addAsteroid(new Asteroid(newSize, newLeft, newTop))
@@ -110,6 +108,8 @@ export class Asteroid extends ComplexFlyingObject {
         for (let i = 0; i < this.amounOfShards; i++) {
             Spacetime.addShard(new Shard(shardLeft, shardTop))
         }    
+
+        Spacetime.removeAsteroid(this)
 
         this.audioBang.play()
     }
