@@ -75,13 +75,19 @@ Project startup scripts can be run with or without --dev parameter. If they are 
 
 "publicDirectory" - if set to true, express serve static files from asteroids-js/public as "/". You can disable the public directory when the front-end is running on another server. Then change the request path in public/js/api.js.
 
+---
+
 ## EXPRESS PORTS
 
-"httpPort", "httpsPort" - ports on which express provides API endpoints
+"httpPort", "httpsPort" - ports on which express provides API endpoints; if httpsPort is enabled, save the certificate and server key in the config directory: config/server.cert, config/server.key.
+
+---
 
 ## CORS
 
 "corsOrigin" - list of clients that have access to endpoints
+
+---
 
 ## SENDING EMAILS
 
