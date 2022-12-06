@@ -6,9 +6,7 @@ ASTEROIDS JS is a game inspired by the arcade game [Asteroids](https://en.wikipe
 
 The project is made in JavaScript, both front-end and back-end.
 
-Stable version (front-end only, playable game): [asteroids.doitjs.eu](https://asteroids.doitjs.eu)
-
-Development version (front-end + back-end): [asteroids.doitjs.eu:8080](http://asteroids.doitjs.eu:8080)
+Current version (working but not finished): [http://asteroids.doitjs.eu](http://asteroids.doitjs.eu)
 
 ---
 
