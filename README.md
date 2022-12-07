@@ -6,7 +6,7 @@ ASTEROIDS JS is a game inspired by the arcade game [Asteroids](https://en.wikipe
 
 The project is made in JavaScript, both front-end and back-end.
 
-Current version (working but not finished): [http://asteroids.doitjs.eu](http://asteroids.doitjs.eu)
+Current version (working but not finished): [https://asteroids.doitjs.eu](https://asteroids.doitjs.eu)
 
 ---
 
@@ -25,6 +25,8 @@ Working front-end (playable game): November 18, 2022
 REST API server side ready: November 28, 2022
 
 Client side requests for REST API endpoints: December 2, 2022
+
+SSL secured server for REST API running on target domain: December 7, 2022
 
 ---
 
