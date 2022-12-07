@@ -43,8 +43,8 @@ if (httpPort) {
 if (httpsPort) {
 
     const credentials = {
-        key: fs.readFileSync('config/server.key'), 
-        cert: fs.readFileSync('config/server.cert')
+        key: fs.readFileSync('config/asteroids.key'), 
+        cert: fs.readFileSync('config/asteroids.crt')
     }
 
     const httpsServer = https.createServer(credentials, app)

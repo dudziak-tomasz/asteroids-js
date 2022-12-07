@@ -7,6 +7,7 @@ export const config = {
             let prefix = url.protocol + '//'
             if (url.hostname === 'localhost' || url.hostname === '127.0.0.1') prefix += 'localhost:' + (url.protocol === 'http:' ? 3000 : 3443)
             else if (url.hostname.includes('asteroids')) prefix += 'asteroids.doitjs.eu:' + (url.protocol === 'http:' ? 8080 : 8443)
+            else prefix = ''
 
             return prefix
         }
