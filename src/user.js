@@ -282,8 +282,8 @@ export class User {
             const dbUser = await db.findUserById(data.id)
             if (!dbUser) return res.status(403).send()
     
-            const dbToken = await db.findToken(dbUser.id, token)
-            if (!dbToken || dbToken.reason !== 'passwordreset') return res.status(403).send()
+            const dbToken = await db.findToken(dbUser.id, token, 'passwordreset')
+            if (!dbToken) return res.status(403).send()
     
             const newUser = new User(dbUser)
             newUser.password = req.body.password

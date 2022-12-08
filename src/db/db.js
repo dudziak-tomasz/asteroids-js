@@ -136,11 +136,11 @@ export const db = {
         `)
     },
 
-    async findToken(userId, token) {
+    async findToken(userId, token, reason = '') {
         const [rows] = await this.pool.execute(`
             SELECT * 
             FROM ${this.database}.tokens
-            WHERE userid = '${userId}' AND token = '${token}'
+            WHERE userid = '${userId}' AND token = '${token}' AND reason = '${reason}'
         `)
 
         if (rows.length > 0) return rows[0]
