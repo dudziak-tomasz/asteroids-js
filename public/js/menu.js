@@ -54,9 +54,14 @@ export class Menu extends Box {
 
         const urlParams = new URLSearchParams(window.location.search)
         if (urlParams.has('q')) {
-            this.handlePasswordResetChangePassword(urlParams.get('q'))
-        }
 
+            const qParam = urlParams.get('q')
+            if (qParam !== '') {
+                if (qParam === '404') this.openBox('404')
+                else this.handlePasswordResetChangePassword(qParam)
+            }
+        }
+        window.history.pushState({}, document.title, '/')
     }
 
     initializeMenuItems() {
@@ -325,7 +330,7 @@ export class Menu extends Box {
 
             if (res.status === 200) {
                 this.$boxErrorMessage.innerHTML = 'PASSWORD CHANGED. YOU CAN LOG IN.'
-                
+
                 this.$changePasswordForm.newPassword.value = ''
                 this.$changePasswordForm.retypeNewPassword.value = ''
             } else if (res.status === 400) {

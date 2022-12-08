@@ -1,5 +1,10 @@
 export const pages = new Map()
 
+pages.set('404', `
+    <p class="box-title">404: PAGE NOT FOUND</p>
+    <p>BUT A LOT OF ASTEROIDS FOUND HERE</p>
+`)
+
 pages.set('LOGIN', `
     <p class="box-title">LOGIN</p>
     <form id="box-login-form">
