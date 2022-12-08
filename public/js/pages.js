@@ -57,16 +57,18 @@ pages.set('REGISTER', `
     <form id="box-register-form">
         <p>
             USERNAME<br>
-            <input type="text" name="username" maxlength="20" autocomplete="off">
+            <input type="text" name="username" maxlength="20" autocomplete="off"><br>
+            <span id="box-username-info" class="font-75"></span>
         </p>
-        <p>
+        <p class="top-10">
             PASSWORD<br>
-            <input type="password" name="password">
+            <input type="password" name="password"><br>
+            <span id="box-password-info" class="font-75"></span>
         </p>
-        <p>
+        <p class="top-10">
             EMAIL (OPTIONAL)<br>
             <input type="text" name="email" autocomplete="off"><br>
-            <span class="font-75">FOR PASSWORD RESET ONLY</span>
+            <span id="box-email-info" class="font-75"></span>
         </p>
         <p class="top-10"><button name="submit">REGISTER</button></p>
         <p id="box-error-message"></p>

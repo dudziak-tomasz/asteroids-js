@@ -32,7 +32,7 @@ app.use(User.getRouter())
 
 if (httpPort) {
 
-    const httpServer = http.createServer(app);
+    const httpServer = http.createServer(app)
 
     httpServer.listen(httpPort, () => {
         console.log(`http server is up on port ${httpPort}`)

@@ -15,9 +15,9 @@ export class Menu extends Box {
 
         this.content.className = 'menu-content'
 
-        this.errorNotLogged = `YOU'RE NOT LOGGED IN... PLEASE LOG IN.`
-        this.errorConnectionProblem = 'CONNECTION PROBLEM... PLEASE TRY AGAIN LATER.'
-        this.errorUsernameInvalid = 'MINIMUM 3 CHARACTERS, ONLY LETTERS, NUMBERS AND UNDERSCORES.'
+        this.errorNotLogged = `YOU'RE NOT LOGGED IN... PLEASE LOG IN`
+        this.errorConnectionProblem = 'CONNECTION PROBLEM... PLEASE TRY AGAIN LATER'
+        this.errorUsernameInvalid = 'MINIMUM 3 CHARACTERS, ONLY LETTERS, NUMBERS AND UNDERSCORES'
         this.errorPasswordInvalid = 'MINIMUM 8 CHARACTERS, 1 CAPITAL LETTER, 1 SMALL LETTER, 1 NUMBER'
         this.errorCapsLock = 'CAPS LOCK IS ON!'
 
@@ -208,6 +208,13 @@ export class Menu extends Box {
     handleRegister() {
         this.$registerForm = document.getElementById('box-register-form')
         this.$boxErrorMessage = document.getElementById('box-error-message')
+        this.$boxUsernameInfo = document.getElementById('box-username-info')
+        this.$boxPasswordInfo = document.getElementById('box-password-info')
+        this.$boxEmailInfo = document.getElementById('box-email-info')
+
+        this.$boxUsernameInfo.innerHTML = this.errorUsernameInvalid
+        this.$boxPasswordInfo.innerHTML = this.errorPasswordInvalid
+        this.$boxEmailInfo.innerHTML = 'FOR PASSWORD RESET ONLY'
 
         this.$registerForm.username.focus()
 
@@ -231,8 +238,6 @@ export class Menu extends Box {
                 this.openBox('REGISTER OK')
             } else if (res.status === 400) {
                 this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
-                if (res.error === 'username is invalid') this.$boxErrorMessage.innerHTML += `: ${this.errorUsernameInvalid}`
-                else if (res.error === 'password too weak') this.$boxErrorMessage.innerHTML += `: ${this.errorPasswordInvalid}`
             } else {
                 this.$boxErrorMessage.innerHTML = this.errorConnectionProblem
             }
@@ -320,6 +325,9 @@ export class Menu extends Box {
 
             if (res.status === 200) {
                 this.$boxErrorMessage.innerHTML = 'PASSWORD CHANGED. YOU CAN LOG IN.'
+                
+                this.$changePasswordForm.newPassword.value = ''
+                this.$changePasswordForm.retypeNewPassword.value = ''
             } else if (res.status === 400) {
                 this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
             } else if (res.status === 403) {
@@ -382,6 +390,10 @@ export class Menu extends Box {
     
                     if (res.status === 200) {
                         this.$boxErrorMessage.innerHTML = 'PASSWORD CHANGED'
+
+                        this.$changePasswordForm.currentPassword.value = ''
+                        this.$changePasswordForm.newPassword.value = ''
+                        this.$changePasswordForm.retypeNewPassword.value = ''
                     } else if (res.status === 400) {
                         this.$boxErrorMessage.innerHTML = res.error.toUpperCase() + `: ${this.errorPasswordInvalid}`
                     } else if (res.status === 403) {
