@@ -90,13 +90,13 @@ Back-end:
 
 ## REST API AUTHENTICATION
 
-When logging in or creating a new user, the server creates a token that is saved in the database and sent to the client cookies. A separate token is created for each session of a user, so a user can have several tokens stored in the database.
+When logging in or creating a new user, the server creates a token that is saved in the database and sent to the client. The client saves the token in localStorage. A separate token is created for each session of a user, so a user can have several tokens stored in the database.
 
-During logout, the server removes the session token from the database and from the client cookies.
+During logout, the server removes the session token from the database and client removes from localStorage.
 
 A logged-in user can send a request to log off all sessions. Then the server removes all tokens of a user from the database.
 
-During a request that requires authentication, the server compares the token sent by the client from the cookies with the token stored in the database. If the tokens match, the request is processed and if not, the server sends an authentication error.
+During a request that requires authentication, the server compares the token sent by the client with the token stored in the database. If the tokens match, the request is processed and if not, the server sends an authentication error.
 
 ---
 
