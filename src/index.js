@@ -2,12 +2,13 @@ import fs from 'fs'
 import http from 'http'
 import https from 'https'
 import express from 'express'
-import cookieParser from 'cookie-parser'
+// import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { db } from './db/db.js'
 import { getFullPath } from './utils.js'
 import { User } from './user.js'
 import { config } from './config.js'
+import { ChatServer } from './chatserver.js'
 
 const app = express()
 const httpPort = config.getItem('httpPort')
@@ -22,7 +23,7 @@ if (config.getItem('publicDirectory')) {
 
 app.use(express.json())
 
-app.use(cookieParser())
+// app.use(cookieParser())
 
 app.use(cors({
     origin: config.getItem('corsOrigin')
@@ -33,6 +34,12 @@ app.use(User.getRouter())
 if (httpPort) {
 
     const httpServer = http.createServer(app)
+
+    new ChatServer(httpServer, {
+        cors: {
+            origin: config.getItem('corsOrigin')
+        }
+    })
 
     httpServer.listen(httpPort, () => {
         console.log(`http server is up on port ${httpPort}`)
@@ -48,6 +55,12 @@ if (httpsPort) {
     }
 
     const httpsServer = https.createServer(credentials, app)
+
+    new ChatServer(httpsServer, {
+        cors: {
+            origin: config.getItem('corsOrigin')
+        }
+    })
 
     httpsServer.listen(httpsPort, () => {
         console.log(`https server is up on port ${httpsPort}`)

@@ -201,6 +201,28 @@ button:disabled {
    cursor: wait;
 }
 
+.chat-container {
+   position: absolute;
+   left: 10px;
+   width: 30vw;
+   min-width: 300px;
+   bottom: 0;
+   max-height: 50vh;
+   font-family: var(--font-game);
+   color: var(--dark-gray);
+   font-size: 75%;
+   text-transform: uppercase;
+   opacity: .5;
+   transition: opacity .5s;
+   overflow-y: hidden;
+   overflow-x: hidden;
+   z-index: -1;
+}
+
+.chat-container-hidden {
+   opacity: 0;
+}
+
 .box-container {
    position: absolute;
    width: 60vw;
@@ -466,6 +488,10 @@ button:disabled {
 }
 
 @media screen and (max-width: 600px) {
+
+   .chat-container {
+      display: none;
+   }
 
    .profile-label {
       display: block;
