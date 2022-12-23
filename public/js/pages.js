@@ -5,6 +5,18 @@ pages.set('404', `
     <p>BUT A LOT OF ASTEROIDS FOUND HERE</p>
 `)
 
+pages.set('CHAT', `
+    <div class="box-chat-title"><p class="box-title">CHAT</p></div>
+    <div id="box-chat-messages" class="box-chat-messages">
+    </div>
+    <div class="box-chat-form">
+        <form id="box-chat-form">
+            <input type="text" name="message" autocomplete="off" class="box-chat-input">
+            <button name="submit">SEND</button>
+        </form>
+    </div>
+`)
+
 pages.set('LOGIN', `
     <p class="box-title">LOGIN</p>
     <form id="box-login-form">

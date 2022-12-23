@@ -3,6 +3,7 @@ import { pages } from './pages.js'
 import { game } from './game.js'
 import { Spacetime } from './spacetime.js'
 import { api } from './api.js'
+import { chat } from './chat.js'
 
 export class Menu extends Box {
     constructor(parentElement) {
@@ -37,6 +38,9 @@ export class Menu extends Box {
         }, {
             text: 'EXIT FS',
             enabled: false
+        }, {
+            text: 'CHAT',
+            enabled: true
         }, {
             text: 'HOW TO PLAY',
             enabled: true
@@ -592,6 +596,7 @@ export class Menu extends Box {
         else if (name === 'PROFILE') this.handleProfile()
         else if (name === 'REGISTER') this.handleRegister()
         else if (name === 'PASSWORD RESET') this.handlePasswordReset()
+        else if (name === 'CHAT') chat.handleChatBox()
     }
 
     initializeEvents() {

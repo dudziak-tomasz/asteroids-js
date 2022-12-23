@@ -201,27 +201,21 @@ button:disabled {
    cursor: wait;
 }
 
-.chat-container {
-   position: absolute;
-   left: 10px;
-   width: 30vw;
-   min-width: 300px;
-   bottom: 0;
-   max-height: 50vh;
-   font-family: var(--font-game);
-   color: var(--dark-gray);
-   font-size: 75%;
-   text-transform: uppercase;
-   opacity: .5;
-   transition: opacity .5s;
-   overflow-y: hidden;
-   overflow-x: hidden;
-   z-index: -1;
+::-webkit-scrollbar {
+   width: 40px;
 }
-
-.chat-container-hidden {
-   opacity: 0;
+ 
+::-webkit-scrollbar-track {
+   background: var(--gray);
 }
+  
+::-webkit-scrollbar-thumb {
+   background: var(--light-gray);
+}
+ 
+/* ::-webkit-scrollbar-thumb:hover {
+   background: var(--light-gray);
+} */
 
 .box-container {
    position: absolute;
@@ -255,6 +249,66 @@ button:disabled {
 
 .box-light-gray {
    color: var(--light-gray);
+}
+
+.box-dark-gray {
+   color: var(--dark-gray);
+}
+
+.box-chat-container {
+   margin-top: 0;
+   top: 0;
+   height: 100%;
+}
+
+.box-chat-content {
+   box-sizing: border-box;
+   height: 100%;
+   display: flex;
+   flex-direction: column;
+}
+
+/* .box-chat-title {
+   background-color: coral;
+} */
+
+.box-chat-messages {
+   flex-grow: 1;
+   text-transform: uppercase;
+   word-wrap: break-word;
+   overflow-x: hidden;
+   overflow-y: auto;
+}
+
+.box-chat-form {
+   padding: 20px 0;
+}
+
+.box-chat-input {
+   width: 70%;
+}
+
+.chat-container {
+   position: absolute;
+   left: 10px;
+   width: 30vw;
+   min-width: 300px;
+   bottom: 0;
+   max-height: 50vh;
+   font-family: var(--font-game);
+   color: var(--dark-gray);
+   font-size: 75%;
+   text-transform: uppercase;
+   opacity: .5;
+   transition: opacity .5s;
+   word-wrap: break-word;
+   overflow-x: hidden;
+   overflow-y: hidden;
+   z-index: -1;
+}
+
+.chat-container-hidden {
+   opacity: 0;
 }
 
 .menu-container {
@@ -417,6 +471,11 @@ button:disabled {
       margin-top: 5vh;
    }
 
+   .box-chat-container {
+      margin-top: 0;
+   }
+
+
 }
 
 @media screen and (max-height: 800px) {
@@ -490,6 +549,10 @@ button:disabled {
 @media screen and (max-width: 600px) {
 
    .chat-container {
+      display: none;
+   }
+
+   ::-webkit-scrollbar {
       display: none;
    }
 

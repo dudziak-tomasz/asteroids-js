@@ -15,9 +15,9 @@ export class ChatServer {
     ioConnection(socket) {
         
         ChatServer.addUser(socket.id)
-        console.log('a user connected', socket.id, ChatServer.getUser(socket.id))
+        // console.log('a user connected', socket.id, ChatServer.getUser(socket.id))
 
-        socket.emit('messageclient', 'admin: hi')
+        // socket.emit('messageclient', 'admin: hi')
         // socket.broadcast.emit('messageclient', socket.id + ' has joined chat')
 
         socket.on('messageserver', (message) => this.socketMessageServer(socket, message))
@@ -27,15 +27,16 @@ export class ChatServer {
 
     socketMessageServer(socket, message) {
         if (message.user) {
-            this.io.emit('messageclient', message.user.username + ': ' + message.text)
+            this.io.emit('messageclient', { username: message.user.username, text: message.text, time: Date.now() })
+            // this.io.emit('messageclient', { username: 'admin', text: 'message sent' })
         } else {
-            socket.emit('messageclient', 'please login first')
+            socket.emit('messageclient', { username: 'admin', text:'please login first', time: Date.now() })
         }
         
     }    
 
     socketDisconnect(socket) {
-        console.log('a user disconnected', socket.id)
+        // console.log('a user disconnected', socket.id)
         // this.io.emit('messageclient', socket.id + ' has left chat')
         ChatServer.removeUser(socket.id)
     }

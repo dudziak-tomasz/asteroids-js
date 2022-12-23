@@ -5,6 +5,8 @@ export class Box {
     constructor (parentElement, innerHTML = '', name = '') {
         this.parentElement = parentElement
 
+        this.name = name
+
         this.container = document.createElement('div')
         this.container.className = 'box-container'
         this.container.id = getRandomID('box')
@@ -30,8 +32,13 @@ export class Box {
 
         this.content.innerHTML = innerHTML
 
+        if (name === 'CHAT') {
+            this.container.classList.add('box-chat-container')
+            this.content.classList.add('box-chat-content')
+        }
+
         if (this.constructor.name === 'Box') {
-            game.mainDiv.dispatchEvent(new CustomEvent('boxopen', { detail: { name: name } }))
+            game.mainDiv.dispatchEvent(new CustomEvent('boxopen', { detail: { name: this.name } }))
         }
 
         this.initializeEvents()
@@ -42,7 +49,7 @@ export class Box {
             this.container.remove()
             this.container = undefined
             
-            game.mainDiv.dispatchEvent(new CustomEvent('boxclose'))
+            game.mainDiv.dispatchEvent(new CustomEvent('boxclose', { detail: { name: this.name } }))
         }
     }
 
