@@ -52,6 +52,7 @@ export const chat = {
 
         if (this.isChatBox) {
             this.renderChatBoxMessage(message)
+            this.scrollBoxMessages()
         }
     },
 
@@ -65,7 +66,6 @@ export const chat = {
         `
 
         this.$chatMessages.insertAdjacentHTML('beforeend', html)
-        this.scrollBoxMessages()
     },
 
     scrollMessages() {
@@ -73,19 +73,7 @@ export const chat = {
     },
 
     scrollBoxMessages() {
-        const $lastMessage = this.$chatMessages.lastElementChild
-
-        const lastMessageStyles = getComputedStyle($lastMessage)
-        const lastMessageMargin = parseInt(lastMessageStyles.marginBottom)
-        const lastMessageHeight = $lastMessage.offsetHeight + lastMessageMargin
-        
-        const visibleHeight = this.$chatMessages.offsetHeight
-        const containerHeight = this.$chatMessages.scrollHeight
-        const scrollOffset = this.$chatMessages.scrollTop + visibleHeight
-    
-        if (containerHeight - lastMessageHeight <= scrollOffset || isMobileDevice()) {
-            this.$chatMessages.scrollTop = this.$chatMessages.scrollHeight
-        }
+        this.$chatMessages.scrollTop = this.$chatMessages.scrollHeight
     },
 
     hideChat() {
@@ -116,6 +104,7 @@ export const chat = {
         }
             
         this.messages.forEach(message => this.renderChatBoxMessage(message))
+        this.scrollBoxMessages()
 
         this.$chatForm.message.focus()
 
@@ -132,7 +121,6 @@ export const chat = {
                 }
 
                 this.socket.emit('messageserver', message)
-                this.$chatMessages.scrollTop = this.$chatMessages.scrollHeight
             }
 
             this.$chatForm.message.value = ''

@@ -1,4 +1,5 @@
 import { Server } from 'socket.io'
+import validator from 'validator'
 
 export class ChatServer {
 
@@ -15,10 +16,6 @@ export class ChatServer {
     ioConnection(socket) {
         
         ChatServer.addUser(socket.id)
-        // console.log('a user connected', socket.id, ChatServer.getUser(socket.id))
-
-        // socket.emit('messageclient', 'admin: hi')
-        // socket.broadcast.emit('messageclient', socket.id + ' has joined chat')
 
         socket.on('messageserver', (message) => this.socketMessageServer(socket, message))
 
@@ -27,8 +24,8 @@ export class ChatServer {
 
     socketMessageServer(socket, message) {
         if (message.user) {
-            this.io.emit('messageclient', { username: message.user.username, text: message.text, time: Date.now() })
-            // this.io.emit('messageclient', { username: 'admin', text: 'message sent' })
+            const messageText = validator.escape(message.text)
+            this.io.emit('messageclient', { username: message.user.username, text: messageText, time: Date.now() })
         } else {
             socket.emit('messageclient', { username: 'admin', text:'please login first', time: Date.now() })
         }
@@ -36,20 +33,16 @@ export class ChatServer {
     }    
 
     socketDisconnect(socket) {
-        // console.log('a user disconnected', socket.id)
-        // this.io.emit('messageclient', socket.id + ' has left chat')
         ChatServer.removeUser(socket.id)
     }
 
     static addUser(user) {
         ChatServer.users.push(user)
-        // console.log(ChatServer.users)
     }
 
     static removeUser(user) {
         let index = ChatServer.users.indexOf(user)
         if (index !== -1) ChatServer.users.splice(index, 1)
-        // console.log(ChatServer.users)
     }
 
     static getUser(user) {
