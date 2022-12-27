@@ -2,7 +2,6 @@ import fs from 'fs'
 import http from 'http'
 import https from 'https'
 import express from 'express'
-// import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import { db } from './db/db.js'
 import { getFullPath } from './utils.js'
@@ -22,8 +21,6 @@ if (config.getItem('publicDirectory')) {
 }
 
 app.use(express.json())
-
-// app.use(cookieParser())
 
 app.use(cors({
     origin: config.getItem('corsOrigin')
