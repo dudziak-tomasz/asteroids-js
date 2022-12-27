@@ -333,10 +333,9 @@ export class Menu extends Box {
             this.$changePasswordForm.submit.disabled = false
 
             if (res.status === 200) {
+                this.openBox('LOGIN')
+                this.$boxErrorMessage = document.getElementById('box-error-message')
                 this.$boxErrorMessage.innerHTML = 'PASSWORD CHANGED. YOU CAN LOG IN.'
-
-                this.$changePasswordForm.newPassword.value = ''
-                this.$changePasswordForm.retypeNewPassword.value = ''
             } else if (res.status === 400) {
                 this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
             } else if (res.status === 403) {
