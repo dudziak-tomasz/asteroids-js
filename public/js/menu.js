@@ -86,19 +86,13 @@ export class Menu extends Box {
             menuItem.innerHTML = item.text
             if (!item.enabled) menuItem.classList.toggle('menu-item-disabled')
             this.content.appendChild(menuItem)
-        })
-        
+        })       
     }
 
     menuStartClick() {
         this.menuStart.classList.toggle('menu-x')
-        this.content.classList.toggle('menu-content-show')
-        
-        if (this.content.classList.length === 2) {
-            game.mainDiv.dispatchEvent(new CustomEvent('boxopen'))
-        } else {
-            game.mainDiv.dispatchEvent(new CustomEvent('boxclose'))
-        }
+        this.content.classList.toggle('menu-content-show')    
+        this.content.classList.length === 2 ? game.mainDiv.dispatchEvent(new CustomEvent('boxopen')) : game.mainDiv.dispatchEvent(new CustomEvent('boxclose'))
     }
 
     openBox(pageName) {
@@ -129,7 +123,6 @@ export class Menu extends Box {
     }
 
     handlePreferences() {
-
         this.$boxSliderMusic = document.getElementById('box-slider-music')
         this.$boxSliderSound = document.getElementById('box-slider-sound')
         this.$boxRadios = document.querySelectorAll('input[name="box-radio-background"]')
@@ -142,13 +135,11 @@ export class Menu extends Box {
         }
 
         this.$boxSliderSound.value = Spacetime.getAudioVolume()
-        this.$boxSliderSound.oninput = async () => {
+        this.$boxSliderSound.oninput = () => {
             const volume = parseFloat(this.$boxSliderSound.value)
             Spacetime.setAudioVolume(volume)
             this.audio.volume = Spacetime.audioVolume
-            try {
-                await this.audio.play()
-            } catch { }
+            this.audio.play()
         }
 
         const track = game.audioTrack
@@ -159,6 +150,10 @@ export class Menu extends Box {
                 game.playAudio()
             }
         })
+    }
+    
+    getCapsLockError(event) {
+        return event.getModifierState("CapsLock") ? this.errorCapsLock : ''
     }
 
     handleLogin() {
@@ -193,25 +188,10 @@ export class Menu extends Box {
             }
         }
 
-        this.$loginForm.username.oninput = () => {
-            this.$boxErrorMessage.innerHTML = ''
-        }
-
-        this.$loginForm.password.addEventListener('keydown', (e) => {
-            if (e.getModifierState("CapsLock")) this.$boxErrorMessage.innerHTML = this.errorCapsLock
-            else this.$boxErrorMessage.innerHTML = ''
-        })
-
-        this.$boxRegisterButton.onclick = (e) => {
-            e.preventDefault()
-            this.openBox('REGISTER')
-        }
-
-        this.$boxPasswordResetButton.onclick = (e) => {
-            e.preventDefault()
-            this.openBox('PASSWORD RESET')
-        }
-
+        this.$loginForm.password.onkeydown = (e) => this.$boxErrorMessage.innerHTML = this.getCapsLockError(e)
+        this.$loginForm.username.oninput = () => this.$boxErrorMessage.innerHTML = ''
+        this.$boxRegisterButton.onclick = () => this.openBox('REGISTER')
+        this.$boxPasswordResetButton.onclick = () => this.openBox('PASSWORD RESET')
     }
 
     handleRegister() {
@@ -250,26 +230,14 @@ export class Menu extends Box {
             } else {
                 this.$boxErrorMessage.innerHTML = this.errorConnectionProblem
             }
-
         }
 
-        this.$registerForm.username.oninput = () => {
-            this.$boxErrorMessage.innerHTML = ''
-        }
-
-        this.$registerForm.password.addEventListener('keydown', (e) => {
-            if (e.getModifierState("CapsLock")) this.$boxErrorMessage.innerHTML = this.errorCapsLock
-            else this.$boxErrorMessage.innerHTML = ''
-        })
-
-        this.$registerForm.email.oninput = () => {
-            this.$boxErrorMessage.innerHTML = ''
-        }
-
+        this.$registerForm.password.onkeydown = (e) => this.$boxErrorMessage.innerHTML = this.getCapsLockError(e)
+        this.$registerForm.username.oninput = () => this.$boxErrorMessage.innerHTML = ''
+        this.$registerForm.email.oninput = () => this.$boxErrorMessage.innerHTML = ''
     }
 
     handlePasswordReset() {
-
         this.$passwordResetForm = document.getElementById('box-password-reset-form')
         this.$boxErrorMessage = document.getElementById('box-error-message')
 
@@ -298,13 +266,10 @@ export class Menu extends Box {
             } else {
                 this.$boxErrorMessage.innerHTML = this.errorConnectionProblem
             }
-
         }
-
     }
 
     handlePasswordResetChangePassword(token) {
-
         this.openBox('PASSWORD RESET CHANGE PASSWORD')
 
         this.$changePasswordForm = document.getElementById('box-change-password-form')
@@ -345,22 +310,11 @@ export class Menu extends Box {
             }
         }
 
-        const capsLock = (e) => {
-            if (e.getModifierState("CapsLock")) this.$boxErrorMessage.innerHTML = this.errorCapsLock
-            else this.$boxErrorMessage.innerHTML = ''
-        }
-
-        this.$changePasswordForm.newPassword.addEventListener('keydown', (e) => {
-            capsLock(e)
-        })
-        this.$changePasswordForm.retypeNewPassword.addEventListener('keydown', (e) => {
-            capsLock(e)
-        })
-
+        this.$changePasswordForm.newPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = this.getCapsLockError(e)
+        this.$changePasswordForm.retypeNewPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = this.getCapsLockError(e)
     }
 
     handleChangePassword() {
-
         this.$changePasswordForm = document.getElementById('box-change-password-form')
         this.$boxErrorMessage = document.getElementById('box-error-message')
 
@@ -385,11 +339,10 @@ export class Menu extends Box {
             user.password = currentPassword
             user.test = true
 
-            // is currentPassword matches?
+            // currentPassword matches?
             let res = await api.login(user)
 
             if (res.status === 200) {
-
                     delete user.username
                     user.password = newPassword
 
@@ -418,27 +371,14 @@ export class Menu extends Box {
             }
 
             this.$changePasswordForm.submit.disabled = false
-
         }
 
-        const capsLock = (e) => {
-            if (e.getModifierState("CapsLock")) this.$boxErrorMessage.innerHTML = this.errorCapsLock
-            else this.$boxErrorMessage.innerHTML = ''
-        }
-
-        this.$changePasswordForm.currentPassword.addEventListener('keydown', (e) => {
-            capsLock(e)
-        })
-        this.$changePasswordForm.newPassword.addEventListener('keydown', (e) => {
-            capsLock(e)
-        })
-        this.$changePasswordForm.retypeNewPassword.addEventListener('keydown', (e) => {
-            capsLock(e)
-        })
+        this.$changePasswordForm.currentPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = this.getCapsLockError(e)
+        this.$changePasswordForm.newPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = this.getCapsLockError(e)
+        this.$changePasswordForm.retypeNewPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = this.getCapsLockError(e)
     }
 
     async handleProfile() {
-
         this.$boxProfileErrorMessage = document.getElementById('box-profile-error-message')
         this.$boxProfileDiv = document.getElementById('box-profile-div')
 
@@ -467,7 +407,6 @@ export class Menu extends Box {
         const res = await api.profile()
 
         if (res.status === 200) {
-
             closeMessages()
             this.$boxProfileDiv.style.display = 'block'
 
@@ -512,9 +451,7 @@ export class Menu extends Box {
             }
         }
 
-        this.$logoutButton.onclick = async (e) => {
-            e.preventDefault()
-
+        this.$logoutButton.onclick = async () => {
             closeMessages()
             this.$boxErrorMessage.innerHTML = 'LOGOUT...'
             this.$logoutButton.disabled = true
@@ -523,18 +460,11 @@ export class Menu extends Box {
 
             this.$logoutButton.disabled = false
             
-            if (res.status === 200 || res.status === 403) {
-                this.box.close()
-            } else {
-                this.$boxErrorMessage.innerHTML = this.errorConnectionProblem    
-            }
+            res.status === 200 || res.status === 403 ? this.box.close() : this.$boxErrorMessage.innerHTML = this.errorConnectionProblem
         }
 
-        this.$logoutAllButton.onclick = async (e) => {
-            e.preventDefault()
-
-            if (this.$logoutAllButton.disabled === true) return
-
+        this.$logoutAllButton.onclick = async () => {
+            if (this.$logoutAllButton.disabled) return
             closeMessages()
             this.$boxLogoutAllErrorMessage.innerHTML = 'LOGOUT...'
             this.$logoutAllButton.disabled = true
@@ -543,49 +473,28 @@ export class Menu extends Box {
 
             this.$logoutAllButton.disabled = false
             
-            if (res.status === 200 || res.status === 403) {
-                this.box.close()
-            } else {
-                this.$boxLogoutAllErrorMessage.innerHTML = this.errorConnectionProblem
-            }
+            res.status === 200 || res.status === 403 ? this.box.close() : this.$boxLogoutAllErrorMessage.innerHTML = this.errorConnectionProblem
         }
 
-        this.$changePasswordButton.onclick = (e) => {
-            e.preventDefault()
+        this.$changePasswordButton.onclick = () => this.openBox('CHANGE PASSWORD')
 
-            closeMessages()
-
-            this.openBox('CHANGE PASSWORD')
-        }
-
-        this.$closeAccountButton.onclick = (e) => {
-            e.preventDefault()
-
+        this.$closeAccountButton.onclick = () => {
             closeMessages()
             this.$boxCloseMessage.style.display = 'block'
 
-            this.$boxCloseNo.onclick = (e) => {
-                e.preventDefault()
-                closeMessages()
-            }
+            this.$boxCloseNo.onclick = () => closeMessages()
 
-            this.$boxCloseYes.onclick = async (e) => {
-                e.preventDefault()
-
+            this.$boxCloseYes.onclick = async () => {
                 closeMessages()
                 this.$boxCloseErrorMessage.innerHTML = 'CLOSING ACCOUNT...'
 
                 const res = await api.deleteUser()
 
-                if (res.status === 200) {
-                    this.box.close()
-                } else {
-                    if (res.status === 403) this.$boxCloseErrorMessage.innerHTML = this.errorNotLogged
-                    else this.$boxCloseErrorMessage.innerHTML = this.errorConnectionProblem
-                }    
+                if (res.status === 200) this.box.close()
+                else if (res.status === 403) this.$boxCloseErrorMessage.innerHTML = this.errorNotLogged
+                else this.$boxCloseErrorMessage.innerHTML = this.errorConnectionProblem
             }
         }
-        
     }
 
     handlePageElements(name = '') {
@@ -623,6 +532,5 @@ export class Menu extends Box {
         game.mainDiv.addEventListener('logout', () => {
             this.initializeMenuItems()
         })
-
     }
 }
