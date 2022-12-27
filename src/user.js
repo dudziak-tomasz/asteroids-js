@@ -71,8 +71,7 @@ export class User {
     validateUsername() {
 
         if (!this.username) return false
-        if (this.username.length < 3) return false
-        if (this.username.length > 20) return false
+        if (this.username.length < 3 || this.username.length > 20) return false
         if (!validator.isAlphanumeric(this.username.replaceAll('_', ''))) return false
 
         return true
@@ -200,7 +199,6 @@ export class User {
                 newUser.email = req.user.email
             }
 
-            // Todo: send highscore with more control the game
             if (newUser.highscore === undefined || newUser.highscore < req.user.highscore) newUser.highscore = req.user.highscore
 
             await newUser.save()
@@ -348,7 +346,7 @@ export class User {
 
         try {
             res.send(await db.getLeaderboard())
-        } catch (e) {
+        } catch {
             res.status(500).send()
         }
 
