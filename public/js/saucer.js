@@ -11,20 +11,13 @@ export class Saucer extends ComplexFlyingObject {
 
         this.id = getRandomID('saucer')
 
-        this.maxSizeSmall = getScreenSize() / 40       // px
-        if (this.maxSizeSmall < 18) {
-            this.maxSizeSmall = 18
-        }
+        this.maxSizeSmall = Math.max(getScreenSize() / 40, 18)
 
         this.amounOfShards = 10
-        this.startMargin = 40  // 10
+        this.startMargin = 40
 
         // Size: 2 large, 1 small
-        if (size !== 1 && size !== 2) {
-            this.size = 2
-        } else {
-            this.size = size 
-        }
+        this.size = [1, 2].includes(size) ? size : 2
 
         this.width = this.size * this.maxSizeSmall
         this.height = this.width
@@ -35,11 +28,10 @@ export class Saucer extends ComplexFlyingObject {
 
         this.counterFire = 0
         this.counterMaxFire = 150 * this.size 
-        this.probabilityFireAccurate = 0.25
-        if (this.size === 2) this.probabilityFireAccurate = 0
+        this.probabilityFireAccurate = this.size === 1 ? 0.25 : 0
 
         this.maxSpeed = 1.8 * getHDRatio()
-        if (this.size === 2) this.maxSpeed *=0.5
+        if (this.size === 2) this.maxSpeed *= 0.5
 
         this.speedX = 0
         this.speedY = 0
@@ -53,12 +45,7 @@ export class Saucer extends ComplexFlyingObject {
             this.speedX = - this.maxSpeed
         }
 
-        if (Math.random() < 0.5) {
-            this.top = this.startMargin
-        }
-        else {
-            this.top = Spacetime.getHeight() - this.height - this.startMargin
-        }
+        this.top = Math.random() < 0.5 ? this.startMargin : Spacetime.getHeight() - this.height - this.startMargin
 
         // Canvas for saucer in super
         this.canvas.id = this.id

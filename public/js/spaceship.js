@@ -11,8 +11,8 @@ export class Spaceship extends ComplexFlyingObject {
 
         this.id = getRandomID('spaceship')
 
-        this.width = Math.round(getScreenSize() / 40)    // 27
-        this.height = Math.round(getScreenSize() / 32)   // 34
+        this.width = Math.round(getScreenSize() / 40)
+        this.height = Math.round(getScreenSize() / 32)
 
         if (this.width < 18) {
             this.width = 18
@@ -33,7 +33,7 @@ export class Spaceship extends ComplexFlyingObject {
 
         this.amounOfPieces = 8
 
-        this.intervalTimeAccelerate = 100  //msec
+        this.intervalTimeAccelerate = 100 
         this.intervalIdAccelerate = undefined
 
         this.maxAccelerate = 0.5 * getHDRatio()
@@ -41,22 +41,15 @@ export class Spaceship extends ComplexFlyingObject {
 
         this.maxNumberOfMissiles = 5
         this.numberOfMissiles = 0
-        this.intervalTimeFire = 100  //msec
+        this.intervalTimeFire = 100 
         this.intervalIdFire = undefined
 
         this.hyperspace = 0
         this.maxHyperspaceTime = 100
 
-        if (left === undefined) {
-            this.left = Spacetime.getWidth() / 2 - this.width / 2
-        } else {
-            this.left = left
-        }
-        if (top === undefined) {
-            this.top = Spacetime.getHeight() / 2 - this.height / 2
-        } else {
-            this.top = top
-        }
+        this.left = left === undefined ? Spacetime.getWidth() / 2 - this.width / 2 : left
+
+        this.top = top === undefined ? Spacetime.getHeight() / 2 - this.height / 2 : top
 
         // Canvas for spaceship in super
         this.canvas.id = this.id
@@ -91,11 +84,7 @@ export class Spaceship extends ComplexFlyingObject {
 
         super.draw()
 
-        if (this.intervalIdAccelerate) {
-            this.polygonEngine.setAttributeNS(undefined,'display', 'block')
-        } else {
-            this.polygonEngine.setAttributeNS(undefined,'display', 'none')
-        }
+        this.intervalIdAccelerate ? this.polygonEngine.setAttributeNS(undefined,'display', 'block') : this.polygonEngine.setAttributeNS(undefined,'display', 'none')
 
         if (this.hyperspace) {
             if (this.hyperspace === 1) {

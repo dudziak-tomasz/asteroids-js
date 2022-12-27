@@ -4,11 +4,7 @@ import { game } from './game.js'
 export const api = {
 
     user: undefined,
-    // token: undefined,
     parseError: { status: 499 },
-    // prefix: '',
-    // prefix: 'http://localhost:3000',
-    // prefix: 'http://asteroids.doitjs.eu:8080',
     prefix: config.getItem('apiPrefix'),
 
     setToken(token) {

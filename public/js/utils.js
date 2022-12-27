@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'https://jspm.dev/uuid'
 
 export const getRandomID = (prefix) => {
-    // const id = prefix + Math.round(length * Math.random() + length)
     const id = prefix + uuidv4()
     return id
 }
@@ -29,8 +28,10 @@ export const getScreenSize = () => {
 
 export const getHDRatio = () => {
     let ratio = getScreenSize() / 1080
-    if (ratio < 0.7) ratio = 0.7
-    if (ratio > 1.3) ratio = 1.3
+ 
+    ratio = Math.max(ratio, 0.7)
+    ratio = Math.min(ratio, 1.3)
+
     return ratio
 }
 

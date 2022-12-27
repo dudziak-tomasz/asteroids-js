@@ -3,7 +3,7 @@ import { Saucer } from './saucer.js'
 import { Asteroid } from './asteroid.js'
 
 export class Spacetime {
-    static createSpacetime(canvas) {             // Big Bang
+    static createSpacetime(canvas) {
 
         this.canvas = canvas
 
@@ -13,7 +13,7 @@ export class Spacetime {
         this.spaceship = undefined
         this.saucer = undefined
 
-        this.intervalTime = 10  //msec - quantum of time (chronon)
+        this.intervalTime = 10 
         this.intervalId = undefined
 
         this.oneSecond = 1000 / this.intervalTime
@@ -27,8 +27,7 @@ export class Spacetime {
 
     static getAudioVolume() {
         const volume = localStorage.getItem('soundVolume')
-        if (volume) this.audioVolume = parseFloat(volume)
-        else this.setAudioVolume()
+        volume ? this.audioVolume = parseFloat(volume) : this.setAudioVolume()
         return this.audioVolume
     }
 
@@ -80,8 +79,6 @@ export class Spacetime {
             asteroid.canvas.remove()
             this.asteroids.splice(asteroidIndex, 1)
         }
-
-        // if (this.asteroids.length === 0) this.sendEvent('noasteroids')
     }
 
     static removeAllAsteroid() {
@@ -123,9 +120,8 @@ export class Spacetime {
     }
 
     static start() {
-        if (this.intervalId) {
-            return
-        }
+        if (this.intervalId) return
+
         this.intervalId = setInterval(() => {
             this.move()
         }, this.intervalTime)
@@ -134,9 +130,8 @@ export class Spacetime {
     }
 
     static stop() {
-        if (!this.intervalId) {
-            return
-        }
+        if (!this.intervalId) return
+
         clearInterval(this.intervalId)
         this.intervalId = undefined
 
@@ -206,8 +201,7 @@ export class Spacetime {
                 }                
             })
 
-            if (this.saucer && !isAsteroidHit && this.saucer.isHitBy(asteroid)) {
-                
+            if (this.saucer && !isAsteroidHit && this.saucer.isHitBy(asteroid)) {             
                 this.saucer.hit()
                 asteroid.hit()
             }

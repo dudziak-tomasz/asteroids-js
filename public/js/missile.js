@@ -9,7 +9,7 @@ export class Missile extends SimpleFlyingObject {
         this.id = getRandomID(idPrefix)
         this.canvas.id = this.id
 
-        this.maxSpeed = 6 * speedTimeRatio * getHDRatio()     // px / intervalTime
+        this.maxSpeed = 6 * speedTimeRatio * getHDRatio() 
         this.timeOfDestruction = Math.round(0.8 * Spacetime.getSize() / this.maxSpeed) * speedTimeRatio
         this.counterOfDestruction = 0
 
@@ -20,8 +20,8 @@ export class Missile extends SimpleFlyingObject {
         this.speedX += Math.sin(angleRad) * this.maxSpeed + startSpeedX
         this.speedY -= Math.cos(angleRad) * this.maxSpeed - startSpeedY
 
-        let audioTrack = 'fire.mp3'
-        if (idPrefix.startsWith('alien-')) audioTrack = 'fire_saucer.mp3'
+        const audioTrack = idPrefix.startsWith('alien-') ? 'fire_saucer.mp3' : 'fire.mp3'
+
         this.audio = new Audio(`/audio/${audioTrack}`)
         this.audio.volume = Spacetime.audioVolume
 

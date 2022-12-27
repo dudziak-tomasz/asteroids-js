@@ -10,15 +10,14 @@ export class PieceOfSpaceship extends SimpleFlyingObject {
         this.id = getRandomID('piece')
         this.canvas.id = this.id
 
-        this.minSpeed = 0.1     // px / intervalTime
-        this.maxSpeed = 0.3       // px / intervalTime
-        this.minRotation = 0.7    // deg
-        this.maxRotation = 1.5    // deg
-        this.timeOfDestruction = 200 // timeOfDestruction * Spacetime.intervalTime = msec
+        this.minSpeed = 0.1
+        this.maxSpeed = 0.3
+        this.minRotation = 0.7
+        this.maxRotation = 1.5
+        this.timeOfDestruction = 200
         this.counterOfDestruction = 0
 
-        this.height = Math.round(getScreenSize() / 60) 
-        if (this.height < 12) this.height = 12
+        this.height = Math.max(Math.round(getScreenSize() / 60), 12)
         
         this.width = 2
         this.left = x

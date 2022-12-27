@@ -9,43 +9,39 @@ export class Asteroid extends ComplexFlyingObject {
         super()
 
         this.id = getRandomID('asteroid')
-        this.maxSizeSmall = getScreenSize() / 40       // px
-        if (this.maxSizeSmall < 18) {
-            this.maxSizeSmall = 18
-        }
+        
+        this.maxSizeSmall = Math.max(getScreenSize() / 40, 18)
 
         this.amounOfShards = 6
 
         // Size: 3 large, 2 middle, 1 small
-        if (size !== 1 && size !== 2 && size !== 3 ) {
-            this.size = 3
-        } else {
-            this.size = size 
-        }
+        this.size = [1, 2, 3].includes(size) ? size : 3
 
-        this.minSpeed = 0.3      // px / intervalTime
-        this.maxSpeed = 2.4 * getHDRatio()       // px / intervalTime
+        this.minSpeed = 0.3      
+        this.maxSpeed = 2.4 * getHDRatio()
 
         const speedRatio = (this.size - 1) / 2 + 1
         this.maxSpeed = (this.maxSpeed - this.minSpeed) / speedRatio + this.minSpeed
 
-        this.minRotation = 0.3    // deg
-        this.maxRotation = 0.7    // deg
+        this.minRotation = 0.3
+        this.maxRotation = 0.7
 
         this.speedX = getRandomPlusMinus(this.minSpeed, this.maxSpeed)
         this.speedY = getRandomPlusMinus(this.minSpeed, this.maxSpeed)
         this.rotation = getRandomPlusMinus(this.minRotation, this.maxRotation)    
 
         if (left === 0) {
-            if (Math.random() < 0.5) this.left = getRandomInteger(Spacetime.getWidth() / 3)
-            else this.left = getRandomInteger(Spacetime.getWidth() / 3) + 2 * Spacetime.getWidth() / 3
+            const width3 = Spacetime.getWidth() / 3
+            const randWidth3 = getRandomInteger(width3)
+            this.left = Math.random() < 0.5 ? randWidth3 : randWidth3 + 2 * width3
         } else {
             this.left = left
         }
 
         if (top === 0) {
-            if (Math.random() < 0.5) this.top = getRandomInteger(Spacetime.getHeight() / 3)
-            else this.top = getRandomInteger(Spacetime.getHeight() / 3) + 2 * Spacetime.getHeight() / 3
+            const height3 = Spacetime.getHeight() / 3
+            const randHeight3 = getRandomInteger(height3)
+            this.top = Math.random() < 0.5 ? randHeight3 : randHeight3 + 2 * height3
         } else {
             this.top = top
         }
@@ -77,6 +73,7 @@ export class Asteroid extends ComplexFlyingObject {
 
         const widthPart = this.width / fraction
         const heightPart = this.height / fraction
+        
         iSorted.forEach((i) => {
             let x = getRandomInteger(widthPart) 
             let y = getRandomInteger(heightPart)

@@ -10,9 +10,9 @@ export class Shard extends SimpleFlyingObject {
         this.id = getRandomID('shard')
         this.canvas.id = this.id
 
-        this.minSpeed = 0.5     // px / intervalTime
-        this.maxSpeed = 2 * getHDRatio()      // px / intervalTime
-        this.timeOfDestruction = 50 // timeOfDestruction * Spacetime.intervalTime = msec
+        this.minSpeed = 0.5
+        this.maxSpeed = 2 * getHDRatio()
+        this.timeOfDestruction = 50
         this.counterOfDestruction = 0
 
         this.left = left

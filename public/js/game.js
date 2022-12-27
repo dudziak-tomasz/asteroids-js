@@ -25,12 +25,12 @@ export const game = {
     accelerate: false,
     fire: [],
     hyperspace: [],
-    timeBetweenLevels: 3000,   // msec
-    timeBlikScore: 1000,    // msec
+    timeBetweenLevels: 3000,
+    timeBlikScore: 1000,
     timeBetweenSaucers: 15, // 15 sec
-    probabilityMinCreateSaucer: 0.3,  // 0.3
-    probabilityCreateSaucer: 0.3,     // 0.3
-    typeOfSaucer: [2000, 10000, 40000],   // [2000, 10000, 40000] 0 - no saucer - 2000 - large saucer - 10000 - random saucer - 40000 - small saucer
+    probabilityMinCreateSaucer: 0.3,
+    probabilityCreateSaucer: 0.3,
+    typeOfSaucer: [2000, 10000, 40000],   // 0 - no saucer - 2000 - large saucer - 10000 - random saucer - 40000 - small saucer
     startingLevel: false,
     pressFireTo: '',
     isTouch: false,
@@ -73,8 +73,7 @@ export const game = {
 
     getAudioTrack() {
         const track = localStorage.getItem('audioTrack')
-        if (track) this.audioTrack = track
-        else this.setAudioTrack()
+        track ? this.audioTrack = track : this.setAudioTrack()
         this.audio.src = `/audio/${this.audioTrack}`
         return this.audioTrack
     },
@@ -87,8 +86,7 @@ export const game = {
 
     getAudioVolume() {
         const volume = localStorage.getItem('musicVolume')
-        if (volume) this.audioVolume = parseFloat(volume)
-        else this.setAudioVolume()
+        volume ? this.audioVolume = parseFloat(volume) : this.setAudioVolume()
         this.audio.volume = this.audioVolume
         return this.audioVolume
     },
@@ -101,7 +99,6 @@ export const game = {
 
     playAudio() {
         if (this.audioVolume === 0) return
-        
         this.audio.play()
     },
 
@@ -114,7 +111,6 @@ export const game = {
 
         if (this.leaderboard) {
             if (this.pressFireTo === 'startgame' || this.pressFireTo === 'initializegame') {
-                // let innerHTML = '<p CLASS="box-light-gray">LEADERBOARD</p><table class="leaderboard-table">'
                 let innerHTML = '<table class="leaderboard-table">'
 
                 this.leaderboard.forEach((leader) => {
@@ -123,7 +119,6 @@ export const game = {
     
                 innerHTML += '</table>'
                 this.canvasLeaderboard.innerHTML = innerHTML
-    
                 this.canvasLeaderboard.className = 'leaderboard'    
             }
         }    
@@ -179,7 +174,7 @@ export const game = {
 
     startLevel() {
         if (this.lives.length === 0 && !Spacetime.spaceship) return
-        game.level++
+        this.level++
         this.showAlert(`LEVEL ${this.level}`)    
         this.startingLevel = true
         setTimeout(() => {
@@ -187,7 +182,7 @@ export const game = {
             this.startingLevel = false
             Spacetime.createAsteroids(this.level + 1)
             if (!Spacetime.spaceship) this.newSpaceship()
-        }, game.timeBetweenLevels)
+        }, this.timeBetweenLevels)
     },
 
     startSpaceship() {
@@ -279,24 +274,15 @@ export const game = {
     },
 
     generateSaucer() {
-        if (!Spacetime.spaceship || Spacetime.saucer || this.pause || this.startingLevel) return
+        if (!Spacetime.spaceship || Spacetime.saucer || this.pause || this.startingLevel || this.score < this.typeOfSaucer[0]) return
 
-        if (this.score < this.typeOfSaucer[0]) return   // 2000
+        if (this.score < this.typeOfSaucer[1]) this.createSaucer(2)
+        else if (this.score < this.typeOfSaucer[2]) Math.random() < 0.5 ? this.createSaucer(1) : this.createSaucer(2)
+        else this.createSaucer(1)
+    },
 
-        if (this.score < this.typeOfSaucer[1]) {       // 10000
-            if (Math.random() < this.probabilityCreateSaucer) Spacetime.createSaucer(2)
-            return
-        }
-
-        if (this.score < this.typeOfSaucer[2]) {       // 40000
-            if (Math.random() < this.probabilityCreateSaucer) {
-                if (Math.random() < 0.5) Spacetime.createSaucer(1)
-                else Spacetime.createSaucer(2)
-            }
-            return
-        }
-
-        if (Math.random() < this.probabilityCreateSaucer) Spacetime.createSaucer(1)
+    createSaucer(size) {
+        if (Math.random() < this.probabilityCreateSaucer) Spacetime.createSaucer(size)
     },
 
     extraLife() {
@@ -322,8 +308,7 @@ export const game = {
     },
 
     addLives() {
-        let color = getComputedStyle(this.canvasScore).getPropertyValue('--gray')
-        if (!color || color === '') color = 'white'
+        const color = getComputedStyle(this.canvasScore).getPropertyValue('--gray') || 'white'
         this.lives.push(new Spaceship(0, 0, 0.6, 'static', color))
     },
 
@@ -352,7 +337,6 @@ export const game = {
     },
 
     refreshHighScore() {
-        // this.canvasHighScore.innerHTML = `${this.highScore}`
         this.canvasHighScore.innerHTML = `${this.highScore} ${api.user ? api.user.username.toUpperCase() : ''}`
     },
 
@@ -406,23 +390,15 @@ export const game = {
 
         if (this.openBoxes !== 0) return
         
-        if (!Spacetime.spaceship) {
-            
+        if (!Spacetime.spaceship) {            
             if (this.fire.length > 0) this.pressFireNoSpaceship()
-
             return
         }
 
-        if (this.hyperspace.length > 0) Spacetime.spaceship.startHyperspace()
-
-        if (this.fire.length > 0) Spacetime.spaceship.startFire()
-        else Spacetime.spaceship.stopFire()
-
-        if (this.rotation.length > 0) Spacetime.spaceship.startRotation(this.rotation[0])
-        else Spacetime.spaceship.stopRotation()
-
-        if (this.accelerate) Spacetime.spaceship.startAccelerate()
-        else Spacetime.spaceship.stopAccelerate()
+        this.hyperspace.length > 0 ? Spacetime.spaceship.startHyperspace() : 0
+        this.fire.length > 0 ? Spacetime.spaceship.startFire() : Spacetime.spaceship.stopFire()
+        this.rotation.length > 0 ? Spacetime.spaceship.startRotation(this.rotation[0]) : Spacetime.spaceship.stopRotation()
+        this.accelerate ? Spacetime.spaceship.startAccelerate() : Spacetime.spaceship.stopAccelerate()
 
     },
 
@@ -461,12 +437,12 @@ export const game = {
             case 'KeyA':
             case 'ArrowLeft':
                 const indexLeft = this.rotation.findIndex(r => r === 'left')
-                this.rotation.splice(indexLeft,1)
+                this.rotation.splice(indexLeft, 1)
                 break
             case 'KeyD':
             case 'ArrowRight':
                 const indexRight = this.rotation.findIndex(r => r === 'right')
-                this.rotation.splice(indexRight,1)
+                this.rotation.splice(indexRight, 1)
                 break
             case 'KeyW':
             case 'ArrowUp':
@@ -474,11 +450,11 @@ export const game = {
                 break
             case 'Space':
                 const indexFire = this.fire.findIndex(f => f === 'keyboard')
-                this.fire.splice(indexFire,1)
+                this.fire.splice(indexFire, 1)
                 break
             case 'KeyH':
                 const indexHyperspace = this.hyperspace.findIndex(h => h === 'keyboard')
-                this.hyperspace.splice(indexHyperspace,1)
+                this.hyperspace.splice(indexHyperspace, 1)
                 break
         }    
 
@@ -532,10 +508,8 @@ export const game = {
 
         this.touchEnd = this.touchStart
 
-        // Fire
         if (!this.fire.includes('touch')) this.fire.unshift('touch')
 
-        // Rotation stop
         this.rotation = []
 
         if (!this.pause) this.checkSwitches()
@@ -565,14 +539,11 @@ export const game = {
             if (this.touchEnd[i].y - this.touchStart[i].y > hyperspaceSensitivity) newHyperspace = true
         }
 
-        // Rotation
         if (newRotation === 'left' && !this.rotation.includes('left')) this.rotation.unshift('left')
         if (newRotation === 'right' && !this.rotation.includes('right')) this.rotation.unshift('right')
 
-        // Accelerate
         this.accelerate = newAcclerate
 
-        // Hyperspace
         if (newHyperspace && !this.hyperspace.includes('touch')) {
             this.hyperspace.unshift('touch')
             this.rotation = []
