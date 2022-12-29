@@ -28,6 +28,8 @@ Client side requests for REST API endpoints: December 2, 2022
 
 SSL secured server for REST API running on target domain: December 7, 2022
 
+Real-time communication between online users in game chat: December 29, 2022
+
 ---
 
 ## REQUIRMENTS
@@ -102,7 +104,7 @@ During a request that requires authentication, the server compares the token sen
 
 ## LINKS
 
-Background music:
+Game background music:
 
 [Far Far Space by Audio Tape CINEMATIC NCS (No Copyright Music)](https://www.youtube.com/watch?v=egE7dPevJ_w)
 
@@ -114,6 +116,5 @@ Background music:
 
 ## TODOS
 
-- Server side / client side: socket.io for in-game chat
 - Improve support for mobile devices
 - Some new ideas for the game: more saucers after reaching 100,000 points; the ability to play with two players
