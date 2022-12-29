@@ -11,7 +11,7 @@ pages.set('CHAT', `
     </div>
     <div class="box-chat-form">
         <form id="box-chat-form">
-            <input type="text" name="message" autocomplete="off" class="box-chat-input">
+            <input type="text" name="message" maxlength="255" autocomplete="off" class="box-chat-input">
             <button name="submit">SEND</button>
         </form>
     </div>

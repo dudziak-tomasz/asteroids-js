@@ -26,7 +26,6 @@ export const chat = {
         this.socket.on('messageclient', (message) => this.messageClient(message))
 
         this.initializeEvents()
-
     },
 
     getTime(time) {
@@ -50,10 +49,7 @@ export const chat = {
         this.scrollMessages()
         this.hideChat()
 
-        if (this.isChatBox) {
-            this.renderChatBoxMessage(message)
-            this.scrollBoxMessages()
-        }
+        this.renderAndScrollChatBoxMessageIfIsChatBox(message)
     },
 
     renderChatBoxMessage(message) {
@@ -66,6 +62,13 @@ export const chat = {
         `
 
         this.$chatMessages.insertAdjacentHTML('beforeend', html)
+    },
+
+    renderAndScrollChatBoxMessageIfIsChatBox(message) {
+        if (this.isChatBox) {
+            this.renderChatBoxMessage(message)
+            if (this.isScrollBottom) this.scrollBoxMessages()
+        }
     },
 
     scrollMessages() {
@@ -96,13 +99,12 @@ export const chat = {
 
     handleChatBox() {
         this.isChatBox = true
+        this.isScrollBottom = true
         this.$chatMessages = document.getElementById('box-chat-messages')
         this.$chatForm = document.getElementById('box-chat-form')
 
-        if (this.messages.length === 0) {
-            this.messages.push({ username: 'admin', text:'welcome!', time: Date.now() })
-        }
-            
+        this.loginChatServer()
+
         this.messages.forEach(message => this.renderChatBoxMessage(message))
         this.scrollBoxMessages()
 
@@ -127,6 +129,48 @@ export const chat = {
             this.$chatForm.message.focus()
         }
 
+        this.$chatMessages.onscroll = () => {
+            const scrollPosition = Math.abs(this.$chatMessages.scrollHeight - this.$chatMessages.scrollTop - this.$chatMessages.clientHeight)
+            
+            const lastElementStyle = getComputedStyle(this.$chatMessages.lastElementChild)
+            const lastElementMargin = parseInt(lastElementStyle.marginBottom)
+            const lastElementHeight = this.$chatMessages.lastElementChild.clientHeight + lastElementMargin
+
+            this.isScrollBottom = scrollPosition < lastElementHeight
+        }
+    },
+
+    loginChatServer() {
+        const data = {
+            user: api.user,
+            token: api.getToken()
+        }
+
+        this.socket.emit('loginserver', data, (error, response) => {
+            this.deleteAdminMessages()
+            if (!error) {
+                this.messages.push(response)
+            } else {
+                this.renderAndScrollChatBoxMessageIfIsChatBox(error)
+            }
+        })
+    },
+
+    logoutChatServer() {
+        this.socket.emit('logoutserver')
+        this.deleteAdminMessages()
+    },
+
+    deleteAdminMessages() {
+        this.messages = this.messages.filter((message) => message.username !== 'admin')
+    },
+
+    updateScore(score) {
+        this.socket.emit('updatescore', score)
+    },
+
+    updateUsername() {
+        this.socket.emit('updateusername')
     },
 
     initializeEvents() {
@@ -135,6 +179,12 @@ export const chat = {
                 this.isChatBox = false   
             }
         })
+
+        game.mainDiv.addEventListener('login', () => this.loginChatServer())
+
+        game.mainDiv.addEventListener('logout', () => this.logoutChatServer())
+
+        game.mainDiv.addEventListener('username', () => this.updateUsername())
     }
 
 }

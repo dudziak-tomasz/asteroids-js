@@ -53,6 +53,7 @@ export const api = {
             if (response.ok) {
                 this.user = await response.json()
                 this.setToken(this.user.token)
+                delete this.user.token
                 game.mainDiv.dispatchEvent(new CustomEvent('login'))
             } else if (response.status === 400) {
                 res = await response.json()
@@ -138,6 +139,7 @@ export const api = {
             if (response.ok && !user.test) {
                 this.user = await response.json()
                 this.setToken(this.user.token)
+                delete this.user.token
                 game.mainDiv.dispatchEvent(new CustomEvent('login'))
             } 
 

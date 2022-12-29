@@ -268,10 +268,6 @@ button:disabled {
    flex-direction: column;
 }
 
-/* .box-chat-title {
-   background-color: coral;
-} */
-
 .box-chat-messages {
    flex-grow: 1;
    text-transform: uppercase;

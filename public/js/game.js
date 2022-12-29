@@ -1,6 +1,7 @@
 import { Spacetime } from './spacetime.js'
 import { Spaceship } from './spaceship.js'
 import { api } from './api.js'
+import { chat } from './chat.js'
 
 export const game = {
     parentElement: undefined,
@@ -17,7 +18,7 @@ export const game = {
     highScoreAchieved: false,
     scoreForAsteroids: [0, 100, 50, 20],
     scoreForSaucers: [0, 1000, 200],
-    scoreForNewLife: 10000,
+    scoreForNewLife: 10000,  // 10000
     lives: [],
     numberOfLives: 3,
     pause: false,
@@ -170,6 +171,9 @@ export const game = {
         Spacetime.removeAllAsteroid()
 
         this.startLevel()
+
+        chat.loginChatServer()
+        chat.updateScore(0)
     },
 
     startLevel() {
@@ -261,6 +265,8 @@ export const game = {
         })
 
         this.mainDiv.addEventListener('logout', () => {
+            this.score = 0
+            this.refreshScore()
             this.getHighScore()
             this.refreshHighScore()
         })
@@ -296,6 +302,7 @@ export const game = {
         const newScore = this.score + points
         if (Math.trunc(this.score / this.scoreForNewLife) < Math.trunc(newScore / this.scoreForNewLife)) {
             this.extraLife()
+            chat.updateScore(newScore)
         }
         this.score = newScore
         this.refreshScore()

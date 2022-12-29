@@ -5,6 +5,7 @@ import validator from 'validator'
 import { config } from './config.js'
 import { db } from './db/db.js'
 import { sendMail } from './utils.js'
+import { ChatServer } from './chatserver.js'
 
 export class User {
     constructor(user = {}) {
@@ -44,6 +45,7 @@ export class User {
     async deleteAllTokens() {
 
         await db.deleteTokensByUserId(this.id)
+        ChatServer.removeUserByUserId(this.id)
 
     }
 
@@ -171,39 +173,41 @@ export class User {
     static async apiUpdateUser(req, res) {
 
         try {
-            const newUser = new User(req.body)
-            newUser.id = req.user.id
+            const newUserData = new User(req.body)
+            newUserData.id = req.user.id
 
-            if (newUser.username !== undefined) {
-                const dbUser = await db.findUserByUsername(newUser.username)
-                if (dbUser && newUser.id !== dbUser.id) return res.status(400).send({ error: 'username taken' })
-                if (!newUser.validateUsername()) return res.status(400).send({ error: 'username is invalid' })
+            if (newUserData.username !== undefined) {
+                const dbUser = await db.findUserByUsername(newUserData.username)
+                if (dbUser && newUserData.id !== dbUser.id) return res.status(400).send({ error: 'username taken' })
+                if (!newUserData.validateUsername()) return res.status(400).send({ error: 'username is invalid' })
             } else {
-                newUser.username = req.user.username
+                newUserData.username = req.user.username
             }
 
-            if (newUser.password !== undefined) {
-                if (!newUser.validatePassword()) return res.status(400).send({ error: 'password too weak' })
-                await newUser.hashPassword()
+            if (newUserData.password !== undefined) {
+                if (!newUserData.validatePassword()) return res.status(400).send({ error: 'password too weak' })
+                await newUserData.hashPassword()
             } else {
-                newUser.password = req.user.password
+                newUserData.password = req.user.password
             }
-            
-            if (newUser.email !== undefined) {
-                if (!newUser.validateEmail()) return res.status(400).send({ error: 'email is invalid' })
-                if (newUser.email !== '') {
-                    const dbUser = await db.findUserByEmail(newUser.email)
-                    if (dbUser && newUser.id !== dbUser.id) return res.status(400).send({ error: 'email taken' })
+
+            if (newUserData.email !== undefined) {
+                if (!newUserData.validateEmail()) return res.status(400).send({ error: 'email is invalid' })
+                if (newUserData.email !== '') {
+                    const dbUser = await db.findUserByEmail(newUserData.email)
+                    if (dbUser && newUserData.id !== dbUser.id) return res.status(400).send({ error: 'email taken' })
                 }
             } else {
-                newUser.email = req.user.email
+                newUserData.email = req.user.email
             }
 
-            if (newUser.highscore === undefined || newUser.highscore < req.user.highscore) newUser.highscore = req.user.highscore
+            if (newUserData.highscore === undefined || newUserData.highscore < req.user.highscore || !ChatServer.canUpdateHighscore(newUserData.id, newUserData.highscore)) {
+                newUserData.highscore = req.user.highscore
+            }
 
-            await newUser.save()
+            await newUserData.save()
 
-            return res.send(newUser)
+            return res.send(newUserData)
 
         } catch {
             return res.status(500).send()
