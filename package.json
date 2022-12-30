@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "test": "nodemon tests/test.js --test",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js --dev",
     "dbinit": "node src/db/dbinit.js",
@@ -25,6 +26,7 @@
     "validator": "^13.7.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "supertest": "^6.3.3"
   }
 }

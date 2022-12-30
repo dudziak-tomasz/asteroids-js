@@ -14,6 +14,7 @@ export const config = {
             const dataParsed = JSON.parse(dataJSON)
 
             if (process.argv[2] === '--dev') this.values = dataParsed.development
+            else if (process.argv[2] === '--test') this.values = dataParsed.test
             else this.values = dataParsed.production
 
         } catch (e) {
