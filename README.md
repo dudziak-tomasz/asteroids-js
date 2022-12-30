@@ -66,7 +66,7 @@ Initialize production database (optional):
     
 ---
 
-## RUN
+## RUN / TEST
 
 Developer mode:
 
@@ -75,6 +75,10 @@ Developer mode:
 Production mode:
 
     npm start
+
+Testing mod:
+
+    npm test
     
 ---
 
@@ -87,6 +91,10 @@ Front-end:
 Back-end:
 
     asteroids-js/src
+
+Tests:
+
+    asteroids-js/tests
 
 ---
 

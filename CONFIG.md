@@ -11,6 +11,28 @@
             "publicDirectory": true,
             "httpPort": 3000,
             "httpsPort": 3443,
+            "sslKey": "config/asteroids.key",
+            "sslCert": "config/asteroids.crt",
+            "corsOrigin": "*",
+            "emailSender": "",
+            "emailHost": "",
+            "emailPort": 465,
+            "emailSSL": true,
+            "emailUser": "",
+            "emailPassword": ""
+        },
+        "test": {
+            "host": "localhost",
+            "user": "root",
+            "password": "",
+            "database": "asteroids_test",
+            "dbDropCreate": true,
+            "tokenKey": "secret_key",
+            "publicDirectory": true,
+            "httpPort": 3000,
+            "httpsPort": 3443,
+            "sslKey": "config/asteroids.key",
+            "sslCert": "config/asteroids.crt",
             "corsOrigin": "*",
             "emailSender": "",
             "emailHost": "",
@@ -29,6 +51,8 @@
             "publicDirectory": true,
             "httpPort": false,
             "httpsPort": 443,
+            "sslKey": "config/asteroids.key",
+            "sslCert": "config/asteroids.crt",
             "corsOrigin": ["http://asteroids.doitjs.eu","https://asteroids.doitjs.eu"],
             "emailSender": "",
             "emailHost": "",
@@ -43,7 +67,7 @@
 
 ## DEVELOPMENT / PRODUCTION
 
-Project startup scripts can be run with or without --dev parameter. If they are started with the --dev parameter, data from the "development" section will be used. If without --dev parameter, then from the "production".
+Project startup scripts can be run with --dev, --test, or no parameters. If they are run with the --dev parameter, the data from the "development" section will be used, if with the --test parameter, the data from the "test" section will be used. If without a parameter, data from the "production" section will be used.
 
 ---
 
@@ -79,7 +103,17 @@ Project startup scripts can be run with or without --dev parameter. If they are 
 
 ## EXPRESS PORTS
 
-"httpPort", "httpsPort" - ports on which express provides API endpoints; if httpsPort is enabled, save the certificate and server key in the config directory: config/server.cert, config/server.key.
+"httpPort", "httpsPort" - ports on which express provides API endpoints
+
+---
+
+## SSL CERTIFICATE
+
+If "httpsPort" is enabled, copy the SSL certificate and private key files to the config directory and set the paths in the following parameters:
+
+"sslKey" - SSL private key
+
+"sslCert" - SSL certifikate
 
 ---
 
