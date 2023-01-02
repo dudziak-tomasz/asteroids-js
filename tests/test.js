@@ -1,5 +1,19 @@
-import './config.test.js'
-import './db.test.js'
+import { db } from '../src/db/db.js'
+
+import { configTest } from './config.test.js'
+import { dbTest } from './db.test.js'
+import { chatServerTest } from './chatserver.test.js'
+
+
+// config.js should be tested first, because is used by db.js
+configTest()
+
+db.connect()
+
+await dbTest()
+await chatServerTest()
+
+db.disconnect()
 
 console.log()
 console.log('+------------------+')
