@@ -34,13 +34,13 @@ export const chatServerTest = async () => {
 
 
     // check users table
-    assert.deepEqual(ChatServer.users.length, 0, 'There should be no users before the first user is added')
+    assert.deepEqual(ChatServer.users.size, 0, 'There should be no users before the first user is added')
 
 
     // add first user to ChatServer
     ChatServer.addUser(chatUser1)
-    assert.deepEqual(ChatServer.users.length, 1, 'Should be one user')
-    assert.deepEqual(ChatServer.users[0], chatUser1, 'Should be the same user in table')
+    assert.deepEqual(ChatServer.users.size, 1, 'Should be one user')
+    assert.deepEqual(ChatServer.users.get(chatUser1.socketId), chatUser1, 'Should be the same user in table')
 
 
     // get user by socket id
@@ -54,15 +54,15 @@ export const chatServerTest = async () => {
 
     // remove user from ChatServer by socket id
     ChatServer.removeUserBySocketId(socket1Id)
-    assert.deepEqual(ChatServer.users.length, 0, 'There should be no users')
+    assert.deepEqual(ChatServer.users.size, 0, 'There should be no users')
 
 
     // remove user from ChatServer by user id
     ChatServer.addUser(chatUser1)
     ChatServer.addUser(chatUser2)
-    assert.deepEqual(ChatServer.users.length, 2, 'Should be two users')
+    assert.deepEqual(ChatServer.users.size, 2, 'Should be two users')
     ChatServer.removeUserByUserId(user1Id)
-    assert.deepEqual(ChatServer.users.length, 0, 'There should be no users')
+    assert.deepEqual(ChatServer.users.size, 0, 'There should be no users')
 
 
     // prepare instance of ChatServer
@@ -90,19 +90,19 @@ export const chatServerTest = async () => {
 
     // try to log in to chat server when user is not in db
     await chatServer1.socketLoginServer(mockSocket1, mockData1, mockCalback1)
-    assert.deepEqual(ChatServer.users.length, 0, 'There should be no users because user is not in db')
+    assert.deepEqual(ChatServer.users.size, 0, 'There should be no users because user is not in db')
 
 
     // try to login to chat server when user is in db but not logged in - no token in db
     await db.addUser(dbUser1)
     await chatServer1.socketLoginServer(mockSocket1, mockData1, mockCalback1)
-    assert.deepEqual(ChatServer.users.length, 0, 'There should be no users because user is not logged in')
+    assert.deepEqual(ChatServer.users.size, 0, 'There should be no users because user is not logged in')
 
 
     // login to chat server when user is in db and is logged in
     await db.addToken(user1Id, token1)
     await chatServer1.socketLoginServer(mockSocket1, mockData1, mockCalback1)
-    assert.deepEqual(ChatServer.users.length, 1, 'There should be one user')
+    assert.deepEqual(ChatServer.users.size, 1, 'There should be one user')
 
     
     // update username
@@ -110,17 +110,17 @@ export const chatServerTest = async () => {
     dbUser2.username = 'user2'
     await db.updateUser(dbUser2)
     await chatServer1.socketUpdateUsername(mockSocket1)
-    assert.deepEqual(ChatServer.users[0].user.username, 'user2', 'Should get new username from db')
+    assert.deepEqual(ChatServer.users.get(mockSocket1.id).user.username, 'user2', 'Should get new username from db')
 
 
     // try to update score more than 11000 points
     chatServer1.socketUpdateScore(mockSocket1, 20000)
-    assert.deepEqual(ChatServer.users[0].score, 0, 'Should not be changed')
+    assert.deepEqual(ChatServer.users.get(mockSocket1.id).score, 0, 'Should not be changed')
 
 
     // update score less than 11000 points
     chatServer1.socketUpdateScore(mockSocket1, 10500)
-    assert.deepEqual(ChatServer.users[0].score, 10500, 'Should be changed')
+    assert.deepEqual(ChatServer.users.get(mockSocket1.id).score, 10500, 'Should be changed')
 
 
     // send message to the server
@@ -130,7 +130,7 @@ export const chatServerTest = async () => {
         
     // logout of the chat
     chatServer1.socketLogoutServer(mockSocket1)
-    assert.deepEqual(ChatServer.users.length, 0, 'There should be no users')
+    assert.deepEqual(ChatServer.users.size, 0, 'There should be no users')
 
 
     // try to send message when user is logged out

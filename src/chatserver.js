@@ -4,7 +4,7 @@ import { db } from './db/db.js'
 
 export class ChatServer {
 
-    static users = []
+    static users = new Map()
 
     constructor(server, params) {    
         this.io = new Server(server, params)
@@ -48,13 +48,14 @@ export class ChatServer {
 
     async socketUpdateUsername(socket) {
         try {
-            const index = ChatServer.users.findIndex(user => user.socketId === socket.id)
-            if (index === -1) return
+            const chatUser = ChatServer.getUserBySocketId(socket.id)
+            if (!chatUser) return
 
-            const dbUser = await db.findUserById(ChatServer.users[index].user.id)
+            const dbUser = await db.findUserById(chatUser.user.id)
             if (!dbUser) throw new Error()
 
-            ChatServer.users[index].user.username = dbUser.username
+            chatUser.user.username = dbUser.username
+            ChatServer.users.set(socket.id, chatUser)
         } catch {
 
         }
@@ -72,9 +73,10 @@ export class ChatServer {
     }    
 
     socketUpdateScore(socket, score) {
-        const index = ChatServer.users.findIndex(user => user.socketId === socket.id)
-        if (index !== -1 && score - ChatServer.users[index].score <= 11000) {
-            ChatServer.users[index].score = score
+        const chatUser = ChatServer.getUserBySocketId(socket.id)
+        if (chatUser && score - chatUser.score <= 11000) {
+            chatUser.score = score
+            ChatServer.users.set(socket.id, chatUser)
         }
     }
 
@@ -87,25 +89,24 @@ export class ChatServer {
     }
 
     static addUser(user) {
-        if (!this.getUserBySocketId(user.socketId)) ChatServer.users.push(user)
+        if (!ChatServer.users.has(user.socketId)) ChatServer.users.set(user.socketId, user)
     }
 
     static removeUserBySocketId(socketId) {
-        const index = ChatServer.users.findIndex(user => user.socketId === socketId)
-        if (index !== -1) ChatServer.users.splice(index, 1)
+        ChatServer.users.delete(socketId)
     }
 
     static removeUserByUserId(userId) {
-        const newUsers = ChatServer.users.filter(user => user.user.id !== userId)
-        this.users = newUsers
+        ChatServer.users.forEach(user => user.user.id === userId ? ChatServer.users.delete(user.socketId) : 0)
     }
 
     static getUserBySocketId(socketId) {
-        return ChatServer.users.find((u) => u.socketId === socketId)
+        return ChatServer.users.get(socketId)
     }
 
     static canUpdateHighscore(userId, newHighscore) {
-        return ChatServer.users.some((user) => user.user.id === userId && newHighscore - user.score <= 10000)
+        const users = [...ChatServer.users.values()]
+        return users.some((user) => user.user.id === userId && newHighscore - user.score <= 10000)
     }
 
 }
