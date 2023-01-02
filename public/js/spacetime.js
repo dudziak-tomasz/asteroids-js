@@ -7,7 +7,7 @@ export class Spacetime {
 
         this.canvas = canvas
 
-        this.asteroids = []
+        this.asteroids = new Map()
         this.shards = []
         this.missiles = []
         this.spaceship = undefined
@@ -59,7 +59,7 @@ export class Spacetime {
         this.saucer.canvas.remove()
         this.saucer = undefined
 
-        if (this.asteroids.length === 0 && this.shards.length === 0) this.sendEvent('noasteroids')
+        if (this.asteroids.size === 0 && this.shards.length === 0) this.sendEvent('noasteroids')
     }
 
     static createAsteroids(amount = 2, size = 3) {
@@ -69,21 +69,17 @@ export class Spacetime {
     }
     
     static addAsteroid(asteroid) {
-        this.asteroids.push(asteroid)
+        this.asteroids.set(asteroid.id, asteroid)
         this.canvas.appendChild(asteroid.canvas)
     }
 
     static removeAsteroid(asteroid) {
-        const asteroidIndex = this.asteroids.findIndex((a) => a.id === asteroid.id)
-        if (asteroidIndex >= 0) {
-            asteroid.canvas.remove()
-            this.asteroids.splice(asteroidIndex, 1)
-        }
+        asteroid.canvas.remove()
+        this.asteroids.delete(asteroid.id)
     }
 
     static removeAllAsteroid() {
-        this.asteroids.forEach(asteroid => asteroid.canvas.remove())
-        this.asteroids = []
+        this.asteroids.forEach(asteroid => this.removeAsteroid(asteroid))
     }
 
     static addShard(shard) {
@@ -101,7 +97,7 @@ export class Spacetime {
         if (this.shards.length === 0) {
             if (!this.spaceship) this.sendEvent('spaceshiphit')
 
-            if (this.asteroids.length === 0 && !this.saucer) this.sendEvent('noasteroids')
+            if (this.asteroids.size === 0 && !this.saucer) this.sendEvent('noasteroids')
         }
 
     }
