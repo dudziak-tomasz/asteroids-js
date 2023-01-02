@@ -265,8 +265,6 @@ export const game = {
         })
 
         this.mainDiv.addEventListener('logout', () => {
-            this.score = 0
-            this.refreshScore()
             this.getHighScore()
             this.refreshHighScore()
         })
