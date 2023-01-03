@@ -163,7 +163,7 @@ export class UserRouter {
             `
             const isSent = await sendMail(user.email, 'Password reset', emailHTML)
 
-            if (!isSent) return res.status(403).send()
+            if (!isSent) return res.status(500).send()
 
             return res.send()
                 

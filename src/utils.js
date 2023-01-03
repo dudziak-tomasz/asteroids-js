@@ -12,6 +12,8 @@ export const getFullPath = (fromPath) => {
 
 export const sendMail = async (emailTo, emailSubject, emailHTML) => {
     try {
+        if (!config.getItem('emailHost')) return true
+        
         let transporter = nodemailer.createTransport({
             host: config.getItem('emailHost'),
             port: config.getItem('emailPort'),
