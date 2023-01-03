@@ -1,32 +1,14 @@
 import fs from 'fs'
 import http from 'http'
 import https from 'https'
-import express from 'express'
-import cors from 'cors'
 import { db } from './db/db.js'
-import { getFullPath } from './utils.js'
-import { UserRouter } from './userrouter.js'
 import { config } from './config.js'
 import { ChatServer } from './chatserver.js'
-
-const app = express()
-const httpPort = config.getItem('httpPort')
-const httpsPort = config.getItem('httpsPort')
+import { app } from './app.js'
 
 db.connect()
 
-if (config.getItem('publicDirectory')) {
-    const publicDirectoryPath =  getFullPath('../public')
-    app.use(express.static(publicDirectoryPath))
-}
-
-app.use(express.json())
-
-app.use(cors({
-    origin: config.getItem('corsOrigin')
-}))
-
-app.use(UserRouter.getRouter())
+const httpPort = config.getItem('httpPort')
 
 if (httpPort) {
 
@@ -43,6 +25,8 @@ if (httpPort) {
     })
 
 }
+
+const httpsPort = config.getItem('httpsPort')
 
 if (httpsPort) {
 
