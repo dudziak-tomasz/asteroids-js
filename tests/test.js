@@ -1,8 +1,8 @@
 import { db } from '../src/db/db.js'
 
-import { configTest } from './config.test.js'
-import { dbTest } from './db.test.js'
-import { chatServerTest } from './chatserver.test.js'
+import { configTest } from './src.config.test.js'
+import { dbTest } from './src.db.db.test.js'
+import { chatServerTest } from './src.chatserver.test.js'
 
 
 // config.js should be tested first, because is used by db.js
