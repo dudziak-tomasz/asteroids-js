@@ -5,7 +5,7 @@ import express from 'express'
 import cors from 'cors'
 import { db } from './db/db.js'
 import { getFullPath } from './utils.js'
-import { User } from './user.js'
+import { UserRouter } from './userrouter.js'
 import { config } from './config.js'
 import { ChatServer } from './chatserver.js'
 
@@ -26,7 +26,7 @@ app.use(cors({
     origin: config.getItem('corsOrigin')
 }))
 
-app.use(User.getRouter())
+app.use(UserRouter.getRouter())
 
 if (httpPort) {
 
