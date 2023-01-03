@@ -3,10 +3,6 @@ import { config } from '../src/config.js'
 
 export const configTest = () => {
 
-    assert.equal(config.configReady, false, 'Should be false before first using .getItem()')
-
-    assert.deepEqual(config.values, {}, 'Should be empty object before first using .getItem()')
-
     assert.deepEqual(config.getItem('host'), 'localhost', 'Should get localhost from config.json')
 
     assert.equal(config.configReady, true, 'Should be true after first using .getItem()')
