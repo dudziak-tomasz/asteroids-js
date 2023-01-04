@@ -6,217 +6,341 @@ import { User } from '../src/user.js'
 
 export const userRouterTest = async () => {
 
+    // Delete data from db
     await db.initializeDB()
 
-    // Prepare data & function
+    // Prepare test data & function
     const user1 = {
         username: 'user1',
         password: 'Abc12345',
         email: 'test@doitjs.eu'
     }
+
+    let user1Id, user1Token
+
     const login = async () => {
         const res = await request(app).post('/users/login').send(user1)
-        user1.id = res.body.id
-        user1.token = res.body.token
+        user1Id = res.body.id
+        user1Token = res.body.token
     }
 
 
     // Should create new user
-    const res1 = await request(app).post('/users/new').send(user1).expect(201)
-    const dbUser1 = await db.findUserById(res1.body.id)
-    assert.ok(dbUser1, 'Should be added to db')
-    assert.deepEqual(dbUser1.username, user1.username, 'Should be the same username')
-    assert.deepEqual(dbUser1.email, user1.email, 'Should be the same email')
-    assert.ok(!res1.body.password, 'Password should not be sent')
-    const dbToken1 = await db.findToken(res1.body.id, res1.body.token)
-    assert.deepEqual(dbToken1.token, res1.body.token, 'Should user be logged in and token should be created in db')
+    {
+        const res = await request(app).post('/users/new').send(user1).expect(201)
+        const dbUser = await db.findUserById(res.body.id)
+        assert.ok(dbUser, 'Should be added to db')
+        assert.deepEqual(dbUser.username, user1.username, 'Should be the same username')
+        assert.deepEqual(dbUser.email, user1.email, 'Should be the same email')
+        assert.deepEqual(res.body.password, undefined, 'Password should not be sent')
+        const dbToken = await db.findToken(res.body.id, res.body.token)
+        assert.deepEqual(dbToken.token, res.body.token, 'Should be logged in and token should be created in db')    
+    }
 
 
     // Should not create new user with if username taken
-    await request(app).post('/users/new').send({
-        username: user1.username,
-        password: 'Qwerty12345'
-    }).expect(400)
+    {
+        await request(app).post('/users/new')
+            .send({
+                username: user1.username,
+                password: 'Qwerty12345'
+            })
+            .expect(400)    
+    }
 
 
     // Should not create new user with if email taken
-    await request(app).post('/users/new').send({
-        username: 'user2',
-        password: 'Qwerty12345',
-        email: user1.email
-    }).expect(400)
+    {
+        await request(app)
+            .post('/users/new')
+            .send({
+                username: 'user2',
+                password: 'Qwerty12345',
+                email: user1.email
+            })
+            .expect(400)    
+    }
 
 
     // Should not create new user with invalid username
-    await request(app).post('/users/new').send({
-        username: 'aa',
-        password: user1.password
-    }).expect(400)
+    {
+        await request(app)
+            .post('/users/new')
+            .send({
+                username: 'aa',
+                password: user1.password
+            })
+            .expect(400)    
+    }
 
 
     // Should not create new user with invalid password
-    await request(app).post('/users/new').send({
-        username: 'user2',
-        password: '12345'
-    }).expect(400)
+    {
+        await request(app)
+            .post('/users/new')
+            .send({
+                username: 'user2',
+                password: '12345'
+            })
+            .expect(400)    
+    }
 
 
     // Should not create new user with invalid email
-    await request(app).post('/users/new').send({
-        username: 'user2',
-        password: user1.password,
-        email: 'testing@'
-    }).expect(400)
+    {
+        await request(app)
+            .post('/users/new')
+            .send({
+                username: 'user2',
+                password: user1.password,
+                email: 'testing@'
+            })
+            .expect(400)    
+    }
 
 
     // Should not login non-existent user
-    await request(app).post('/users/login').send({
-        username: 'user2',
-        password: 'Abc12345!'
-    }).expect(403)
+    {
+        await request(app)
+            .post('/users/login')
+            .send({
+                username: 'user2',
+                password: 'Abc12345!'
+            })
+            .expect(403)    
+    }
 
 
     // Should not login existing user with incorect password
-    await request(app).post('/users/login').send({
-        username: user1.username,
-        password: 'testing'
-    }).expect(403)
+    {
+        await request(app)
+            .post('/users/login')
+            .send({
+                username: user1.username,
+                password: 'testing'
+            })
+            .expect(403)    
+    }
 
 
     // Should login existing user
-    const res2 = await request(app).post('/users/login').send({
-        username: user1.username,
-        password: user1.password
-    }).expect(200)
-    const dbToken2 = await db.findToken(res2.body.id, res2.body.token)
-    assert.deepEqual(dbToken2.token, res2.body.token, 'Should token be created in db')
+    {
+        const res = await request(app)
+            .post('/users/login')
+            .send({
+                username: user1.username,
+                password: user1.password
+            })
+            .expect(200)
+
+        const dbToken = await db.findToken(res.body.id, res.body.token)
+        assert.deepEqual(dbToken.token, res.body.token, 'Should be created in db')    
+    }
 
 
-    // Prepare user1 for authorization 
+    // Prepare user1 for authorization tests
     await login()
 
 
     // Should not get profile for unauthorized user
-    await request(app).get('/users/me').send().expect(403)
+    {
+        await request(app)
+            .get('/users/me')
+            .send()
+            .expect(403)
+    }
 
 
     // Should get profile for authorized user
-    const res3 = await request(app).get('/users/me')
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send().expect(200)
-    assert.deepEqual(res3.body.username, user1.username, 'Should be the same username')
-    assert.deepEqual(res3.body.email, user1.email, 'Should be the same email')
-    assert.ok(!res3.body.password, 'Password should not be sent')
+    {
+        const res = await request(app)
+            .get('/users/me')
+            .set('Authorization', `Bearer ${user1Token}`)
+            .send()
+            .expect(200)
+
+        assert.deepEqual(res.body.username, user1.username, 'Should be the same username')
+        assert.deepEqual(res.body.email, user1.email, 'Should be the same email')
+        assert.deepEqual(res.body.password, undefined, 'Password should not be sent')
+    }
  
 
     // Should not logout all sesions unauthorized user
-    await request(app).post('/users/logoutall').send().expect(403)
+    {
+        await request(app)
+            .post('/users/logoutall')
+            .send()
+            .expect(403)
+    }
 
 
     // Should logout all sesions authorized user
-    await request(app).post('/users/logoutall')
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send().expect(200)
+    {
+        await request(app)
+            .post('/users/logoutall')
+            .set('Authorization', `Bearer ${user1Token}`)
+            .send()
+            .expect(200)
+    }
 
 
     // Should not get profile for logged out user
-    await request(app).get('/users/me')
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send().expect(403)
+    {
+        await request(app)
+            .get('/users/me')
+            .set('Authorization', `Bearer ${user1Token}`)
+            .send()
+            .expect(403)
+    }
 
 
-    // Prepare user1 for authorization 
+    // Prepare user1 for authorization tests
     await login()
 
 
     // Should not logout unauthorized user
-    await request(app).post('/users/logout').send().expect(403)
+    {
+        await request(app)
+            .post('/users/logout')
+            .send()
+            .expect(403)
+    }
 
 
     // Should logout authorized user
-    await request(app).post('/users/logout')
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send().expect(200)
+    {
+        await request(app)
+            .post('/users/logout')
+            .set('Authorization', `Bearer ${user1Token}`)
+            .send()
+            .expect(200)
+    }
 
 
     // Should not send password reset email without email
-    await request(app).post('/users/passwordreset').send().expect(400)
+    {
+        await request(app)
+            .post('/users/passwordreset')
+            .send()
+            .expect(400)
+    }
+    
+
+    // Should not send password reset email by non-existent email
+    {
+        await request(app)
+            .post('/users/passwordreset')
+            .send({
+                email: 'testing@host.com'
+            })
+            .expect(403)
+    }
 
 
-    // Should not send password reset email whith non-existent email
-    await request(app).post('/users/passwordreset')
-        .send({
-            email: 'testing@host.com'
-        }).expect(403)
-
-
-    // Should send password reset email whith existing email
-    await request(app).post('/users/passwordreset')
-        .send({
-            email: user1.email
-        }).expect(200)
+    // Should send password reset email by existing email
+    {
+        await request(app)
+            .post('/users/passwordreset')
+            .send({
+                email: user1.email
+            })
+            .expect(200)
+    }
 
 
     // Should not update password without temporary token
-    const newPassword1 = 'Qwe12345'
-    await request(app).patch('/users/passwordreset')
-        .send({
-            password: newPassword1
-        }).expect(403)
+    {
+        const newPassword = 'Qwe12345'
+        await request(app)
+            .patch('/users/passwordreset')
+            .send({
+                password: newPassword
+            })
+            .expect(403)
+    }
 
 
     // Should update password with temporary token
-    const mockUser = new User(user1)
-    await mockUser.generateToken('passwordreset')
-    const newPassword2 = 'Qwe12345'
-    await request(app).patch('/users/passwordreset')
-        .send({
-            password: newPassword2,
-            token: mockUser.token
-        }).expect(200)
+    {
+        const user1Mock = new User({id: user1Id, ...user1})
+        await user1Mock.generateToken('passwordreset')
+        const newPassword = 'Qwe12345'
+        await request(app).patch('/users/passwordreset')
+            .send({
+                password: newPassword,
+                token: user1Mock.token
+            }).expect(200)    
+    }
 
 
-    // Prepare user1 for authorization 
-    user1.password = newPassword2
+    // Prepare user1 for authorization tests
+    user1.password = 'Qwe12345'
     await login()
 
 
     // Should not update unauthorized user
-    await request(app).patch('/users/me')
-        .send({
-            username: 'user2'
-        }).expect(403)
+    {
+        await request(app)
+            .patch('/users/me')
+            .send({
+                username: 'user2'
+            })
+            .expect(403)
+    }
     
     
     // Should update authorized user
-    const res5 = await request(app).patch('/users/me')
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send({
-            username: 'user2'
-        }).expect(200)
-    const dbUser2 = await db.findUserById(res5.body.id)
-    assert.deepEqual(dbUser2.username, 'user2', 'Should update username')
+    {
+        const res = await request(app)
+            .patch('/users/me')
+            .set('Authorization', `Bearer ${user1Token}`)
+            .send({
+                username: 'user2'
+            })
+            .expect(200)
+
+        const dbUser = await db.findUserById(res.body.id)
+        assert.deepEqual(dbUser.username, 'user2', 'Should update username')
+    }
 
     
     // Should not delete unauthorized user
-    await request(app).delete('/users/me').send().expect(403)
+    {
+        await request(app)
+            .delete('/users/me')
+            .send()
+            .expect(403)
+    }
 
 
     // Should delete authorized user
-    await request(app).delete('/users/me')
-        .set('Authorization', `Bearer ${user1.token}`)
-        .send().expect(200)
-    const dbUser3 = await db.findUserByUsername('user2')
-    assert.ok(!dbUser3, 'Should not be user in db')
+    {
+        await request(app)
+            .delete('/users/me')
+            .set('Authorization', `Bearer ${user1Token}`)
+            .send()
+            .expect(200)
+
+        const dbUser = await db.findUserByUsername('user2')
+        assert.ok(!dbUser, 'Should not exist user in db')
+    }
 
 
     // Should get leaderboard
-    for (let i = 1; i <= 20; i++) await db.addUser({ username: `user${i}`, password: '12345', email: `user${i}@host.com`, highscore: i })
-    const res6 = await request(app).get('/leaderboard').expect(200)
-    const leaderboard1 = res6.body
-    assert.deepEqual(leaderboard1.length, 10, 'Should be 10 elements array')
-    assert.deepEqual(leaderboard1[0].highscore, 20, 'Should be the highest highscore in first element')
-    const hihgscores1 = leaderboard1.map(leader => leader.highscore)
-    assert.deepEqual(hihgscores1, [20,19,18,17,16,15,14,13,12,11], 'Should be highscores in descending order')
+    {
+        for (let i = 1; i <= 20; i++) await db.addUser({ username: `user${i}`, password: '12345', email: `user${i}@host.com`, highscore: i })
+
+        const res = await request(app)
+            .get('/leaderboard')
+            .send()
+            .expect(200)
+
+        const leaderboard = res.body
+        assert.deepEqual(leaderboard.length, 10, 'Should be 10 elements array')
+        assert.deepEqual(leaderboard[0].highscore, 20, 'Should be the highest highscore in first element')
+ 
+        const hihgscores = leaderboard.map(leader => leader.highscore)
+        assert.deepEqual(hihgscores, [20,19,18,17,16,15,14,13,12,11], 'Should be highscores in descending order')    
+    }
 
 }
