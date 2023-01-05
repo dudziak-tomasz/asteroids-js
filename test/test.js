@@ -9,6 +9,9 @@ import { userRouterTest } from './src.userrouter.test.js'
 import { utilsTest } from './src.utils.test.js'
 import { publicUtilsTest } from './public.js.utils.test.js'
 import { publicConfigTest } from './public.js.config.test.js'
+import { spacetimeTest } from './public.js.spacetime.test.js'
+import { shardTest } from './public.js.shard.test.js'
+
 
 // Prepare mocks for front-end
 const { JSDOM } = jsdom
@@ -16,8 +19,17 @@ const dom = new JSDOM()
 global.dom = dom
 global.window = dom.window
 global.document = dom.window.document
+global.screen = {
+    availWidth: 1920,
+    availHeight: 1080    
+}
+global.localStorage = {
+    getItem() {},
+    setItem() {}
+}
 
 
+// Start tests
 console.time('Time')
 console.clear()
 console.log('Testing...')
@@ -36,6 +48,8 @@ utilsTest()
 // Front-end tests
 publicConfigTest()
 publicUtilsTest()
+spacetimeTest()
+shardTest()
 
 db.disconnect()
 

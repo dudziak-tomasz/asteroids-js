@@ -49,60 +49,6 @@ export const publicUtilsTest = () => {
     }
 
 
-    // Should get smaller value of screen size
-    {
-        // Prepare mocks
-        global.screen = {
-            availWidth: 1920,
-            availHeight: 1080    
-        }
-
-        const size1 = getScreenSize()
-        assert.deepEqual(size1, 1080, 'Should be smaller value of screen.availWidth and screen.availHeight')
-
-        global.screen = {
-            availWidth: 400,
-            availHeight: 1000    
-        }
-        const size2 = getScreenSize()
-        assert.deepEqual(size2, 400, 'Should be smaller value of screen.availWidth and screen.availHeight')
-
-        // Delete mocks
-        delete global.screen
-    }
-
-
-    // Should get ratio between 0.7 and 1.3
-    {
-        // Prepare mocks
-        global.screen = {
-            availWidth: 1920,
-            availHeight: 1080    
-        }
-
-        const ratio1 = getHDRatio()
-        assert.ok(0.7 <= ratio1 && ratio1 <= 1.3, 'Should get ratio between 0.7 and 1.3')
-
-        global.screen = {
-            availWidth: 10000,
-            availHeight: 10000    
-        }
-
-        const ratio2 = getHDRatio()
-        assert.ok(0.7 <= ratio2  && ratio2 <= 1.3, 'Should get ratio between 0.7 and 1.3')
-
-        global.screen = {
-            availWidth: 400,
-            availHeight: 400    
-        }
-
-        const ratio3 = getHDRatio()
-        assert.ok(0.7 <= ratio3  && ratio3 <= 1.3, 'Should get ratio between 0.7 and 1.3')
-
-        // Delete mocks
-        delete global.screen
-    }
-
     // Should be point inside rectangle
     {
         const point = {
@@ -132,4 +78,60 @@ export const publicUtilsTest = () => {
         assert.ok(!isInside, 'Should not be inside rectangle')
     }
 
+
+    // Copy global.screen for mocks
+    const screenCopy = { ...global.screen }
+
+
+    // Should get smaller value of screen size
+    {
+        // Prepare mocks
+        global.screen = {
+            availWidth: 1920,
+            availHeight: 1080    
+        }
+
+        const size1 = getScreenSize()
+        assert.deepEqual(size1, 1080, 'Should be smaller value of screen.availWidth and screen.availHeight')
+
+        global.screen = {
+            availWidth: 400,
+            availHeight: 1000    
+        }
+        const size2 = getScreenSize()
+        assert.deepEqual(size2, 400, 'Should be smaller value of screen.availWidth and screen.availHeight')
+    }
+
+
+    // Should get ratio between 0.7 and 1.3
+    {
+        // Prepare mocks
+        global.screen = {
+            availWidth: 1920,
+            availHeight: 1080    
+        }
+
+        const ratio1 = getHDRatio()
+        assert.ok(0.7 <= ratio1 && ratio1 <= 1.3, 'Should get ratio between 0.7 and 1.3')
+
+        global.screen = {
+            availWidth: 10000,
+            availHeight: 10000    
+        }
+
+        const ratio2 = getHDRatio()
+        assert.ok(0.7 <= ratio2  && ratio2 <= 1.3, 'Should get ratio between 0.7 and 1.3')
+
+        global.screen = {
+            availWidth: 400,
+            availHeight: 400    
+        }
+
+        const ratio3 = getHDRatio()
+        assert.ok(0.7 <= ratio3  && ratio3 <= 1.3, 'Should get ratio between 0.7 and 1.3')
+    }
+
+    // Copy global.screen for mocks
+    global.screen = { ...screenCopy }
+    
 }
