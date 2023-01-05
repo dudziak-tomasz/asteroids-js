@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "nodemon tests/test.js --test",
+    "test": "nodemon test/test.js --test",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js --dev",
     "dbinit": "node src/db/dbinit.js",

@@ -6,7 +6,7 @@ export const utilsTest = () => {
 
     // Should get full path to file
     {
-        const fullPath = getFullPath('../tests/test.js')
+        const fullPath = getFullPath('../test/test.js')
         assert.deepEqual(fullPath, argv[1], 'Should get full path to file test.js')
     }
 

@@ -94,7 +94,7 @@ Back-end:
 
 Tests:
 
-    asteroids-js/tests
+    asteroids-js/test
 
 ---
 
