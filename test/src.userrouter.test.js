@@ -3,6 +3,7 @@ import request from 'supertest'
 import { db } from '../src/db/db.js'
 import { app } from '../src/app.js'
 import { User } from '../src/user.js'
+import { ChatServer } from '../src/chatserver.js'
 
 export const userRouterTest = async () => {
 
@@ -303,7 +304,47 @@ export const userRouterTest = async () => {
         assert.deepEqual(dbUser.username, 'user2', 'Should update username')
     }
 
-    
+
+    // Should not update highscore
+    {
+        const res = await request(app)
+            .patch('/users/me')
+            .set('Authorization', `Bearer ${user1Token}`)
+            .send({
+                highscore: 25000
+            })
+            .expect(200)
+
+        const dbUser = await db.findUserById(res.body.id)
+        assert.deepEqual(dbUser.highscore, 0, 'Should not update highscore')
+    }
+
+
+    // Should update highscore if scoreresult was lower than highscore by a maximum of 10000
+    {
+        // Prepare mocks
+        const chatUser = {
+            user: {
+                id: user1Id,
+                ...user1
+            },
+            score: 20030
+        }
+        ChatServer.addUser(chatUser)
+        
+        const res = await request(app)
+            .patch('/users/me')
+            .set('Authorization', `Bearer ${user1Token}`)
+            .send({
+                highscore: 25000
+            })
+            .expect(200)
+
+        const dbUser = await db.findUserById(res.body.id)
+        assert.deepEqual(dbUser.highscore, 25000, 'Should update highscore')
+    }
+
+
     // Should not delete unauthorized user
     {
         await request(app)
