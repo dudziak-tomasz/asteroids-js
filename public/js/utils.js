@@ -17,10 +17,6 @@ export const getRandomInteger = (max = 10) => {
     return Math.trunc(Math.random() * max)
 }
 
-export const isMobileDevice = () => {
-    return window.navigator.userAgent.toLowerCase().includes('mobi')
-}
-
 export const getScreenSize = () => {
     return screen.availWidth < screen.availHeight ? screen.availWidth : screen.availHeight
 }
