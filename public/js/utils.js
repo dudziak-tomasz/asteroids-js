@@ -1,8 +1,7 @@
-import { v4 as uuidv4 } from 'https://jspm.dev/uuid'
+const id8 = () => Math.random().toString(36).substring(2, 10)
 
-export const getRandomID = (prefix) => {
-    const id = prefix + uuidv4()
-    return id
+export const getRandomID = (prefix = 'id') => {
+    return `${prefix}-${id8()}-${id8()}-${id8()}-${id8()}`
 }
 
 export const getRandomPlusMinus = (min = 0, max = 1) => {
