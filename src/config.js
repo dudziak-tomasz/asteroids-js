@@ -13,12 +13,12 @@ export const config = {
             const dataJSON = dataBuffer.toString()
             const dataParsed = JSON.parse(dataJSON)
 
-            if (process.argv[2] === '--dev') this.values = dataParsed.development
-            else if (process.argv[2] === '--test') this.values = dataParsed.test
+            if (process.argv[2] === '--test' || process.argv[1].includes('.test.')) this.values = dataParsed.test
+            else if (process.argv[2] === '--dev') this.values = dataParsed.development
             else this.values = dataParsed.production
 
         } catch (e) {
-            console.log('I cannot load the file config/config.json')
+            console.log('Cannot load the file config/config.json')
             console.log(e)
          }
 
