@@ -30,7 +30,7 @@ export const getHDRatio = () => {
     return ratio
 }
 
-export const isPointInside = (pointX, pointY, rectangleLeft, rectangleTop, rectangleWidth, rectangleHeight) => {
-    return pointX > rectangleLeft && pointX < rectangleLeft + rectangleWidth &&
-           pointY > rectangleTop && pointY < rectangleTop + rectangleHeight
+export const isPointInsideRectangle = (point, rectangle) => {
+    return rectangle.left < point.x && point.x < rectangle.left + rectangle.width &&
+           rectangle.top < point.y  && point.y < rectangle.top + rectangle.height
 }

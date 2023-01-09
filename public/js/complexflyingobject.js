@@ -1,5 +1,5 @@
 import { FlyingObject } from './flyingobject.js'
-import { isPointInside } from './utils.js'
+import { isPointInsideRectangle } from './utils.js'
 
 export class ComplexFlyingObject extends FlyingObject {
     constructor() {
@@ -39,27 +39,29 @@ export class ComplexFlyingObject extends FlyingObject {
     }
 
     isHitByMissile(missile) {
-        const x = missile.left + missile.width / 2
-        const y = missile.top + missile.height / 2
+        const center = {
+            x: missile.left + missile.width / 2,
+            y: missile.top + missile.height / 2
+        }
 
-        return isPointInside(x, y, this.left, this.top, this.width, this.height)
+        return isPointInsideRectangle(center, this)
     }
 
     isHitBy(something) {
+        const left04 = this.left + .4 * this.width
+        const left06 = this.left + .6 * this.width
+        const top04 = this.top + .4 * this.height
+        const top06 = this.top + .6 * this.height
 
-        const p = [
-            this.left + .4 * this.width, this.top + .4 * this.height,
-            this.left + .6 * this.width, this.top + .4 * this.height,
-            this.left + .4 * this.width, this.top + .6 * this.height,
-            this.left + .6 * this.width, this.top + .6 * this.height
-        ]
+        const leftTop = { x: left04, y: top04 }
+        const rightTop = { x: left06, y: top04 }
+        const leftBottom = { x: left04, y: top06 } 
+        const rightBottom = { x: left06, y: top06 }
 
-        let sum = 0
-        for (let i = 0; i < 4; i++) {
-            sum += isPointInside(p[2 * i], p[2 * i + 1], something.left, something.top, something.width, something.height)
-        }
-
-        return sum > 0 
+        return  isPointInsideRectangle(leftTop, something) ||
+                isPointInsideRectangle(rightTop, something) ||
+                isPointInsideRectangle(leftBottom, something) ||
+                isPointInsideRectangle(rightBottom, something)
 
     }
 }
