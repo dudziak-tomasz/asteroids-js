@@ -1,19 +1,15 @@
 import assert from 'assert'
-import { argv } from 'process'
+import { test } from 'node:test'
 import { getFullPath, sendMail } from '../src/utils.js'
 
-export const utilsTest = () => {
 
-    // Should get full path to file
-    {
-        const fullPath = getFullPath('../test/test.js')
-        assert.deepEqual(fullPath, argv[1], 'Should get full path to file test.js')
-    }
+test('Should get full path to file', () => {
+    const fullPath = getFullPath('../test/src.utils.test.js')
+    assert.deepEqual(fullPath, process.argv[1])
+})
 
-    // Should send email
-    {
-        const isSend = sendMail('test@doitjs.eu', 'Test subject', 'Test body')
-        assert.ok(isSend, 'Should send email')
-    }
 
-}
+test('Should send email', () => {
+    const isSend = sendMail('test@doitjs.eu', 'Test subject', 'Test body')
+    assert.ok(isSend)
+})
