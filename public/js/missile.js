@@ -3,24 +3,30 @@ import { Spacetime } from './spacetime.js'
 import { getRandomID, getHDRatio } from './utils.js'
 
 export class Missile extends SimpleFlyingObject {
-    constructor(x = 0, y = 0, angle = 0, startSpeedX = 0, startSpeedY = 0, idPrefix = 'missile', speedTimeRatio = 1) {
+    constructor(centerPoint = {}, direction = {}, options = {}) {
+        // parameters: centerPoint = { x, y }, direction = { angle, speedX, speedY }, options = { idPrefix, speedRatio }
+
         super()
 
-        this.id = getRandomID(idPrefix)
+        this.id = getRandomID(options.idPrefix ? options.idPrefix : 'missile')
         this.canvas.id = this.id
 
-        this.maxSpeed = 6 * speedTimeRatio * getHDRatio() 
-        this.timeOfDestruction = Math.round(0.8 * Spacetime.getSize() / this.maxSpeed) * speedTimeRatio
+        this.maxSpeed = 6 * getHDRatio() 
+        this.timeOfDestruction = Math.round(0.8 * Spacetime.getSize() / this.maxSpeed)
         this.counterOfDestruction = 0
 
-        this.left = x - 1
-        this.top = y - 1
+        this.maxSpeed *= options.speedRatio ? options.speedRatio : 1
 
-        const angleRad = angle * Math.PI / 180
-        this.speedX += Math.sin(angleRad) * this.maxSpeed + startSpeedX
-        this.speedY -= Math.cos(angleRad) * this.maxSpeed - startSpeedY
+        this.left = (centerPoint.x ? centerPoint.x : 0) - 1
+        this.top = (centerPoint.y ? centerPoint.y : 0) - 1
 
-        const audioTrack = idPrefix.startsWith('alien-') ? 'fire_saucer.mp3' : 'fire.mp3'
+        const angleRad = direction.angle ? direction.angle * Math.PI / 180 : 0
+        this.speedX += Math.sin(angleRad) * this.maxSpeed
+        this.speedX += direction.speedX ? direction.speedX : 0
+        this.speedY -= Math.cos(angleRad) * this.maxSpeed
+        this.speedY -= direction.speedY ? direction.speedY : 0
+
+        const audioTrack = this.id.startsWith('alien-') ? 'fire_saucer.mp3' : 'fire.mp3'
 
         this.audio = new Audio(`/audio/${audioTrack}`)
         this.audio.volume = Spacetime.audioVolume

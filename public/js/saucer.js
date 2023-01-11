@@ -144,9 +144,11 @@ export class Saucer extends ComplexFlyingObject {
     }
 
     fire() {
+        const startPoint = {
+            x: Math.round(this.left + this.width / 2),
+            y: Math.round(this.top + 0.3 * this.height)    
+        }
 
-        const x = Math.round(this.left + this.width / 2)
-        const y = Math.round(this.top + 0.3 * this.height)
         let fireAngle = getRandomInteger(360)
 
         if (Spacetime.spaceship && Math.random() < this.probabilityFireAccurate) {
@@ -160,7 +162,18 @@ export class Saucer extends ComplexFlyingObject {
 
         } 
 
-        Spacetime.addMissile(new Missile(x, y, fireAngle, 0, 0, 'alien-missile', 1 / this.size))
+        const direction = {
+            angle: fireAngle,
+            speedX: 0,
+            speedY: 0
+        }
+
+        const options = {
+            idPrefix: 'alien-missile',
+            speedRatio: 1 / this.size
+        }
+
+        Spacetime.addMissile(new Missile(startPoint, direction, options))
     }
 
     hit() {

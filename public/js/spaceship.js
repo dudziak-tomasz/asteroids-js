@@ -193,10 +193,12 @@ export class Spaceship extends ComplexFlyingObject {
         const dx = r * Math.sin(angleRad)
         const dy = r * Math.cos(angleRad)
 
-        const x = this.left + this.points[0] + dx
-        const y = this.top  - dy + r
+        const startPoint = {
+            x: this.left + this.points[0] + dx,
+            y: this.top  - dy + r
+        }
 
-        Spacetime.addMissile(new Missile(x, y, this.angle, this.speedX, this.speedY))
+        Spacetime.addMissile(new Missile(startPoint, this))
     }
 
     startHyperspace() {
