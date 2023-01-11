@@ -164,13 +164,13 @@ export class Saucer extends ComplexFlyingObject {
     }
 
     hit() {
-        const centerX = this.left + this.width / 2
-        const centerY = this.top + this.height / 2
+        const shardLeftTop = {
+            left: this.left + this.width / 2,
+            top: this.top + this.height / 2
+        }
 
         for (let i = 0; i < this.amounOfShards; i++) {
-            let x = centerX + getRandomPlusMinus(this.width / 4, this.width / 2)
-            let y = centerY + getRandomPlusMinus(this.width / 4, this.width / 2)
-            Spacetime.addShard(new Shard(x, y, this.speedX, this.speedY))
+            Spacetime.addShard(new Shard(shardLeftTop))
         }    
 
         this.destroy()   

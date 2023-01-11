@@ -3,7 +3,7 @@ import { Spacetime } from './spacetime.js'
 import { getHDRatio, getRandomID, getRandomPlusMinus } from './utils.js'
 
 export class Shard extends SimpleFlyingObject {
-    constructor(left = 0, top = 0) {
+    constructor(leftTopPoint = {}) {
 
         super()
 
@@ -15,8 +15,8 @@ export class Shard extends SimpleFlyingObject {
         this.timeOfDestruction = 50
         this.counterOfDestruction = 0
 
-        this.left = left
-        this.top = top
+        this.left = leftTopPoint.left ? leftTopPoint.left : 0
+        this.top = leftTopPoint.top ? leftTopPoint.top : 0
 
         this.speedX = getRandomPlusMinus(this.minSpeed, this.maxSpeed)
         this.speedY = getRandomPlusMinus(this.minSpeed, this.maxSpeed)

@@ -8,7 +8,7 @@ import './__mocks__/mock.spacetime.js'
 
 
 test('Should create new shard and assign data', () => {
-    const shard = new Shard(200, 100)
+    const shard = new Shard({left: 200, top: 100})
     assert.ok(shard.id, 'Should assign id')
     assert.deepEqual(shard.id, shard.canvas.id, 'Should be the same id')
     assert.ok(shard.minSpeed > 0, 'Should assign positive value')
@@ -22,7 +22,7 @@ test('Should create new shard and assign data', () => {
 
 
 test('Should increase counterOfDestruction by 1', () => {
-    const shard = new Shard(200, 100)
+    const shard = new Shard({left: 200, top: 100})
     assert.deepEqual(shard.counterOfDestruction, 1)
     shard.draw()
     assert.deepEqual(shard.counterOfDestruction, 2)
@@ -31,7 +31,7 @@ test('Should increase counterOfDestruction by 1', () => {
 
 test('Should remove shard after 50 steps from Spacetime.shards', () => {
     Spacetime.createSpacetime(document.body)
-    const shard = new Shard(200, 100)
+    const shard = new Shard({left: 200, top: 100})
     Spacetime.addShard(shard)
     for (let i = 0; i < 49; i++) shard.draw() 
     assert.deepEqual(Spacetime.shards.size, 1)

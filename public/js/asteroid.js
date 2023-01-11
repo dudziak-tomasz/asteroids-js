@@ -94,16 +94,19 @@ export class Asteroid extends ComplexFlyingObject {
         const newSize = this.size - 1
         const newLeft = this.left + this.width / 4
         const newTop = this.top + this.height / 4
-        const shardLeft = this.left + this.width / 2
-        const shardTop = this.top + this.height / 2
 
         if (this.size > 1) {
             Spacetime.addAsteroid(new Asteroid(newSize, newLeft, newTop))
             Spacetime.addAsteroid(new Asteroid(newSize, newLeft, newTop))
         } 
 
+        const shardLeftTop = {
+            left: this.left + this.width / 2,
+            top: this.top + this.height / 2
+        }
+
         for (let i = 0; i < this.amounOfShards; i++) {
-            Spacetime.addShard(new Shard(shardLeft, shardTop))
+            Spacetime.addShard(new Shard(shardLeftTop))
         }    
 
         Spacetime.removeAsteroid(this)
