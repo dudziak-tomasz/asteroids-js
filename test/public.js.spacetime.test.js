@@ -25,7 +25,7 @@ test('Should create Spacetime and assign data', () => {
     assert.deepEqual(Spacetime.canvas, canvas)
     assert.deepEqual(Spacetime.asteroids.constructor.name, 'Map')
     assert.deepEqual(Spacetime.shards.constructor.name, 'Map')
-    assert.deepEqual(Spacetime.missiles.constructor.name, 'Array')
+    assert.deepEqual(Spacetime.missiles.constructor.name, 'Map')
     assert.deepEqual(Spacetime.spaceship, undefined)
     assert.deepEqual(Spacetime.saucer, undefined)
     assert.deepEqual(Spacetime.intervalTime, 10)
@@ -145,20 +145,20 @@ test('Should remove shard', () => {
 
 
 test('Should add missile and append to document', () => {
-    assert.deepEqual(Spacetime.missiles.length, 0, 'Should be empty Array')
+    assert.deepEqual(Spacetime.missiles.size, 0, 'Should be empty Map')
     const missile = new Missile()
     Spacetime.addMissile(missile)
-    assert.deepEqual(Spacetime.missiles.length, 1)
-    assert.deepEqual(Spacetime.missiles[0], missile)
+    assert.deepEqual(Spacetime.missiles.size, 1)
+    assert.deepEqual([...Spacetime.missiles.values()][0], missile)
     const $missile = document.getElementById(missile.id)
     assert.deepEqual($missile, missile.canvas)
 })
 
 
 test('Should remove missile', () => {
-    const missile = Spacetime.missiles[0]
+    const missile = [...Spacetime.missiles.values()][0]
     Spacetime.removeMissile(missile)
-    assert.deepEqual(Spacetime.missiles.length, 0, 'Should be empty Array')
+    assert.deepEqual(Spacetime.missiles.size, 0, 'Should be empty Map')
     const $missile = document.getElementById(missile.id)
     assert.deepEqual($missile, undefined)
 })

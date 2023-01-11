@@ -46,7 +46,7 @@ test('Should create new missile and assign given data', () => {
     assert.deepEqual(missile.left, 99)
     assert.deepEqual(missile.top, 199)
     assert.deepEqual(missile.speedX, 13)
-    assert.deepEqual(missile.speedY, 10)
+    assert.deepEqual(missile.speedY, -10)
     assert.deepEqual(missile.audio.src, '/audio/fire_saucer.mp3')
 })
 
@@ -64,7 +64,7 @@ test('Should remove from Spacetime.missiles after 144 steps', () => {
     const missile = new Missile()
     Spacetime.addMissile(missile)
     for (let i = 0; i < 143; i++) missile.draw()
-    assert.deepEqual(Spacetime.missiles.length, 1)
+    assert.deepEqual(Spacetime.missiles.size, 1)
     missile.draw()
-    assert.deepEqual(Spacetime.missiles.length, 0)
+    assert.deepEqual(Spacetime.missiles.size, 0)
 })

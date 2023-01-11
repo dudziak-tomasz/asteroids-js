@@ -9,7 +9,7 @@ export class Spacetime {
 
         this.asteroids = new Map()
         this.shards = new Map()
-        this.missiles = []
+        this.missiles = new Map()
         this.spaceship = undefined
         this.saucer = undefined
 
@@ -100,16 +100,13 @@ export class Spacetime {
     }
 
     static addMissile(missile) {
-        this.missiles.push(missile)
+        this.missiles.set(missile.id, missile)
         this.canvas.appendChild(missile.canvas)
     }
 
     static removeMissile(missile) {
-        const missileIndex = this.missiles.findIndex((m) => m.id === missile.id)
-        if (missileIndex >= 0) {
-            missile.canvas.remove()
-            this.missiles.splice(missileIndex, 1)
-        }
+        missile.canvas.remove()
+        this.missiles.delete(missile.id)
     }
 
     static start() {

@@ -24,7 +24,7 @@ export class Missile extends SimpleFlyingObject {
         this.speedX += Math.sin(angleRad) * this.maxSpeed
         this.speedX += direction.speedX ? direction.speedX : 0
         this.speedY -= Math.cos(angleRad) * this.maxSpeed
-        this.speedY -= direction.speedY ? direction.speedY : 0
+        this.speedY += direction.speedY ? direction.speedY : 0
 
         const audioTrack = this.id.startsWith('alien-') ? 'fire_saucer.mp3' : 'fire.mp3'
 
