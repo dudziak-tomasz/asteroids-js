@@ -103,10 +103,16 @@ export class UserRouter {
                 newUserData.email = req.user.email
             }
 
-            if (newUserData.highscore === undefined || newUserData.highscore < req.user.highscore || !ChatServer.canUpdateHighscore(newUserData.id, newUserData.highscore)) {
+            if (newUserData.highscore !== undefined) {
+                if (newUserData.highscore <= req.user.highscore) newUserData.highscore = req.user.highscore
+                else {
+                    const canUpdate = ChatServer.canUpdateHighscore(newUserData.id, newUserData.highscore)
+                    if (!canUpdate) return res.status(400).send({ error: 'highscore is invalid' })
+                }
+            } else {
                 newUserData.highscore = req.user.highscore
             }
-
+            
             await newUserData.save()
 
             return res.send(newUserData)

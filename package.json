@@ -1,8 +1,8 @@
 {
   "name": "asteroids",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "JavaScript version of the classic arcade game",
+  "main": "src/index.js",
   "type": "module",
   "scripts": {
     "test": "nodemon --test test/",
@@ -11,7 +11,7 @@
     "dbinit": "node src/db/dbinit.js",
     "dbinitdev": "node src/db/dbinit.js --dev"
   },
-  "author": "",
+  "author": "Tomasz Dudziak",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",

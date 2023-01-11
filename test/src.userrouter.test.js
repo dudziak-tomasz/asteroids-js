@@ -285,15 +285,15 @@ await test('Should update authorized user', async () => {
 
 
 await test('Should not update highscore', async () => {
-    const res = await request(app)
+    await request(app)
         .patch('/users/me')
         .set('Authorization', `Bearer ${user1Token}`)
         .send({
             highscore: 25000
         })
-        .expect(200)
+        .expect(400)
 
-    const dbUser = await db.findUserById(res.body.id)
+    const dbUser = await db.findUserById(user1Id)
     assert.deepEqual(dbUser.highscore, 0)
 })
 
