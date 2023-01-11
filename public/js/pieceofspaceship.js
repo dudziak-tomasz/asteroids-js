@@ -3,7 +3,7 @@ import { Spacetime } from './spacetime.js'
 import { getRandomID, getRandomPlusMinus, getRandomInteger, getScreenSize } from './utils.js'
 
 export class PieceOfSpaceship extends SimpleFlyingObject {
-    constructor(x = 0, y = 0, startSpeedX = 0, startSpeedY = 0) {
+    constructor(startPoint = {}, startSpeed = {}) {
 
         super()
 
@@ -20,13 +20,19 @@ export class PieceOfSpaceship extends SimpleFlyingObject {
         this.height = Math.max(Math.round(getScreenSize() / 60), 12)
         
         this.width = 2
-        this.left = x
-        this.top = y - this.height
+        this.left = startPoint.x ? startPoint.x : 0
+        this.top = startPoint.y ? startPoint.y - this.height : 0
 
-        this.speedX = getRandomPlusMinus(this.minSpeed, this.maxSpeed) + startSpeedX / 3
-        this.speedY = getRandomPlusMinus(this.minSpeed, this.maxSpeed) + startSpeedY / 3
+        this.speedX = getRandomPlusMinus(this.minSpeed, this.maxSpeed)
+        this.speedX += startSpeed.speedX ? startSpeed.speedX / 3 : 0
+        this.speedY = getRandomPlusMinus(this.minSpeed, this.maxSpeed) 
+        this.speedY += startSpeed.speedY ? startSpeed.speedY / 3 : 0
+
         this.rotation = getRandomPlusMinus(this.minRotation, this.maxRotation)    
         this.angle = getRandomInteger(360)    
+
+        this.canvas.style.width = this.width + 'px'
+        this.canvas.style.height = this.height + 'px'
 
         this.draw()
     }
@@ -36,12 +42,12 @@ export class PieceOfSpaceship extends SimpleFlyingObject {
         super.draw()
 
         const newAngle = Math.round(this.angle)
-        const newOpacity = 1 - this.counterOfDestruction / this.timeOfDestruction
-
-        this.canvas.style.width = this.width + 'px'
-        this.canvas.style.height = this.height + 'px'
         this.canvas.style.transform = `rotate(${newAngle}deg)`
-        if (this.counterOfDestruction > 0.8 * this.timeOfDestruction) this.canvas.style.opacity = newOpacity
+
+        if (this.counterOfDestruction > 0.8 * this.timeOfDestruction) {
+            const newOpacity = 1 - this.counterOfDestruction / this.timeOfDestruction
+            this.canvas.style.opacity = newOpacity
+        }
 
         this.counterOfDestruction++
         if (this.counterOfDestruction > this.timeOfDestruction) {

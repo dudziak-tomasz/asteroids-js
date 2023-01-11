@@ -216,9 +216,12 @@ export class Spaceship extends ComplexFlyingObject {
         const centerY = this.top + this.height / 2
 
         for (let i = 0; i < this.amounOfPieces; i++) {
-            let x = centerX + getRandomPlusMinus(this.width / 4, this.width / 2)
-            let y = centerY + getRandomPlusMinus(this.width / 4, this.width / 2)
-            Spacetime.addShard(new PieceOfSpaceship(x, y, this.speedX, this.speedY))
+            const centerPoint = {
+                x: centerX + getRandomPlusMinus(this.width / 4, this.width / 2),
+                y: centerY + getRandomPlusMinus(this.width / 4, this.width / 2)
+            }
+
+            Spacetime.addShard(new PieceOfSpaceship(centerPoint, this))
         }    
 
         this.destroy()
