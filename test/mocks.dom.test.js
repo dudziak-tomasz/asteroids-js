@@ -58,3 +58,7 @@ test('Should create instance of Audio', () => {
 })
 
 
+test('Should assign src for new Audio', () => {
+    const audio = new Audio('test.mp3')
+    assert.deepEqual(audio.src, 'test.mp3')
+})

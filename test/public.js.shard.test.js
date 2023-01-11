@@ -9,15 +9,15 @@ import './__mocks__/mock.spacetime.js'
 
 test('Should create new shard and assign data', () => {
     const shard = new Shard({left: 200, top: 100})
-    assert.ok(shard.id, 'Should assign id')
-    assert.deepEqual(shard.id, shard.canvas.id, 'Should be the same id')
-    assert.ok(shard.minSpeed > 0, 'Should assign positive value')
-    assert.ok(shard.maxSpeed > 0, 'Should assign positive value')
-    assert.deepEqual(shard.timeOfDestruction, 50, 'Should assign timeOfDestruction')
-    assert.deepEqual(shard.left, 200, 'Should assign left')
-    assert.deepEqual(shard.top, 100, 'Should assign top')
-    assert.ok(shard.speedX < 0 || 0 < shard.speedX, 'Should assign nonzero value')
-    assert.ok(shard.speedY < 0 || 0 < shard.speedY, 'Should assign nonzero value')
+    assert.ok(shard.id)
+    assert.deepEqual(shard.id, shard.canvas.id)
+    assert.ok(shard.minSpeed > 0)
+    assert.ok(shard.maxSpeed > 0)
+    assert.deepEqual(shard.timeOfDestruction, 50)
+    assert.deepEqual(shard.left, 200)
+    assert.deepEqual(shard.top, 100)
+    assert.ok(shard.speedX < 0 || 0 < shard.speedX)
+    assert.ok(shard.speedY < 0 || 0 < shard.speedY)
 })
 
 
