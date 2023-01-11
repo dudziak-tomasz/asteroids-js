@@ -55,7 +55,6 @@ test('Should remove value from localStorage', () => {
 test('Should create instance of Audio', () => {
     const audio = new Audio()
     assert.ok(audio)
-    console.log('===============================', audio)
 })
 
 
