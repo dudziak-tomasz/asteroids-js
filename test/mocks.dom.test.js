@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import './__mocks__/mock.dom.js'
@@ -19,9 +19,9 @@ test('Should create div', () => {
 })
 
 
-test('Should get null for non-existent key in localStorage', () => {
+test('Should get undefined for non-existent key in localStorage', () => {
     const res = localStorage.getItem('test_key')
-    assert.deepEqual(res, null)
+    assert.deepEqual(res, undefined)
 })
 
 
@@ -48,7 +48,7 @@ test('Should remove value from localStorage', () => {
     assert.deepEqual(res1, 'test_value3')
     localStorage.removeItem('test_key3')
     const res2 = localStorage.getItem('test_key3')
-    assert.deepEqual(res2, null)
+    assert.deepEqual(res2, undefined)
 })
 
 
@@ -62,3 +62,26 @@ test('Should assign src for new Audio', () => {
     const audio = new Audio('test.mp3')
     assert.deepEqual(audio.src, 'test.mp3')
 })
+
+
+test('Should play after create', () => {
+    const audio = new Audio()
+    assert.deepEqual(audio.isPlaying, true)
+})
+
+
+test('Should stop playing', () => {
+    const audio = new Audio()
+    audio.pause()
+    assert.deepEqual(audio.isPlaying, false)
+})
+
+
+test('Should play after .play()', () => {
+    const audio = new Audio()
+    audio.pause()
+    audio.play()
+    assert.deepEqual(audio.isPlaying, true)
+})
+
+

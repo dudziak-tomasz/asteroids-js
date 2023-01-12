@@ -28,6 +28,13 @@ global.localStorage = {
 global.Audio = class {
     constructor(src) {
         this.src = src
+        this.isPlaying = true
     }
-    play() {}
+    play() {
+        this.isPlaying = true
+    }
+    pause() {
+        this.isPlaying = false
+    }
+
 }
