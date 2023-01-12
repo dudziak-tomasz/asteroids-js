@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { Spacetime } from '../public/js/spacetime.js'
 import { ComplexFlyingObject } from '../public/js/complexflyingobject.js'
@@ -15,7 +15,7 @@ test('Should create complexFlyingObject and assign data', () => {
     assert.deepEqual(complexFO.polygon.constructor.name, 'SVGElement')
     assert.deepEqual(complexFO.polygon.getAttributeNS(undefined, 'fill'), 'none')
     assert.deepEqual(complexFO.polygon.getAttributeNS(undefined, 'stroke'), 'white')
-    assert.deepEqual(complexFO.polygon.getAttributeNS(undefined, 'stroke-width'), 2)
+    assert.deepEqual(complexFO.polygon.getAttributeNS(undefined, 'stroke-width'), '2')
     const $polygon = complexFO.canvas.querySelector('polygon')
     assert.deepEqual($polygon, complexFO.polygon)
 })

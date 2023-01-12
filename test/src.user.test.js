@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { User } from '../src/user.js'
 import { db } from '../src/db/db.js'

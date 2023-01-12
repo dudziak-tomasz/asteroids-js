@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { Spacetime } from '../public/js/spacetime.js'
 import { Asteroid } from '../public/js/asteroid.js'
@@ -66,7 +66,7 @@ test('Should remove spaceship', () => {
     Spacetime.removeSpaceship()
     assert.deepEqual(Spacetime.spaceship, undefined)
     const $spaceship = document.getElementById(spaceshipId)
-    assert.deepEqual($spaceship, undefined)
+    assert.deepEqual($spaceship, null)
 })
 
 
@@ -84,7 +84,7 @@ test('Should remove saucer', () => {
     Spacetime.removeSaucer()
     assert.deepEqual(Spacetime.saucer, undefined)
     const $saucer = document.getElementById(saucerId)
-    assert.deepEqual($saucer, undefined)
+    assert.deepEqual($saucer, null)
 })
 
 
@@ -104,7 +104,7 @@ test('Should remove asteroid', () => {
     Spacetime.removeAsteroid(asteroid)
     assert.deepEqual(Spacetime.asteroids.size, 0)
     const $asteroid = document.getElementById(asteroid.id)
-    assert.deepEqual($asteroid, undefined)
+    assert.deepEqual($asteroid, null)
 })
 
 
@@ -140,7 +140,7 @@ test('Should remove shard', () => {
     Spacetime.removeShard(shard)
     assert.deepEqual(Spacetime.shards.size, 0, 'Should be empty Map')
     const $shard = document.getElementById(shard.id)
-    assert.deepEqual($shard, undefined)
+    assert.deepEqual($shard, null)
 })
 
 
@@ -160,7 +160,7 @@ test('Should remove missile', () => {
     Spacetime.removeMissile(missile)
     assert.deepEqual(Spacetime.missiles.size, 0, 'Should be empty Map')
     const $missile = document.getElementById(missile.id)
-    assert.deepEqual($missile, undefined)
+    assert.deepEqual($missile, null)
 })
 
 

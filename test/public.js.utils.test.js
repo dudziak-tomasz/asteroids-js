@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { getRandomID, getRandomPlusMinus, getRandomInteger, getScreenSize, getHDRatio, isPointInsideRectangle } from '../public/js/utils.js'
 

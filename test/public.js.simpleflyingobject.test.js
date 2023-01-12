@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { Spacetime } from '../public/js/spacetime.js'
 import { SimpleFlyingObject } from '../public/js/simpleflyingobject.js'

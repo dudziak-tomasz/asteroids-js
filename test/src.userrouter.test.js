@@ -1,4 +1,4 @@
-import assert from 'assert'
+import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import request from 'supertest'
 import { db } from '../src/db/db.js'
