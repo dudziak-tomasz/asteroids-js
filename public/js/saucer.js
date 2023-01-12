@@ -6,7 +6,6 @@ import { getRandomID, getScreenSize, getHDRatio, getRandomInteger, getRandomPlus
 
 export class Saucer extends ComplexFlyingObject {
     constructor(size) {
-
         super()
 
         this.id = getRandomID('saucer')
@@ -87,7 +86,6 @@ export class Saucer extends ComplexFlyingObject {
         this.setAudioVolume()
 
         this.draw()
-
     }
 
     setAudioVolume() {
@@ -104,7 +102,6 @@ export class Saucer extends ComplexFlyingObject {
     }
 
     getPoints() {
-
         const shapePoints = [0, 6, 3, 4, 4, 2, 6, 2, 7, 4, 10, 6, 7, 8, 3, 8]
         const ratio = 10
 
@@ -157,8 +154,8 @@ export class Saucer extends ComplexFlyingObject {
 
             const angleRad = Math.atan(dx / dy)
 
-            fireAngle = - 180 * angleRad / Math.PI  // saucer bottom spaceship
-            if (Spacetime.spaceship.top >= this.top) fireAngle = fireAngle + 180  // spaceship bottom saucer
+            fireAngle = - 180 * angleRad / Math.PI  // saucer under the spaceship
+            if (Spacetime.spaceship.top >= this.top) fireAngle = fireAngle + 180  // saucer above the spaceship
 
         } 
 
