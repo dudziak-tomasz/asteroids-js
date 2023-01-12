@@ -34,7 +34,7 @@ Real-time communication between online users in game chat: December 29, 2022
 
 ## REQUIRMENTS
 
-Server side: Node.js v18.8.0, MySQL 8.0
+Server side: Node.js v18.13.0, MySQL 8.0
 
 Client side: Web browser
 
