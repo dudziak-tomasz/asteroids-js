@@ -4,8 +4,7 @@ import { Shard } from './shard.js'
 import { getRandomID, getScreenSize, getHDRatio, getRandomInteger, getRandomPlusMinus } from './utils.js'
 
 export class Asteroid extends ComplexFlyingObject {
-    constructor(size = 3, left = 0, top = 0) {
-
+    constructor(size, leftTopPoint = {}) {
         super()
 
         this.id = getRandomID('asteroid')
@@ -19,7 +18,6 @@ export class Asteroid extends ComplexFlyingObject {
 
         this.minSpeed = 0.3      
         this.maxSpeed = 2.4 * getHDRatio()
-
         const speedRatio = (this.size - 1) / 2 + 1
         this.maxSpeed = (this.maxSpeed - this.minSpeed) / speedRatio + this.minSpeed
 
@@ -30,20 +28,20 @@ export class Asteroid extends ComplexFlyingObject {
         this.speedY = getRandomPlusMinus(this.minSpeed, this.maxSpeed)
         this.rotation = getRandomPlusMinus(this.minRotation, this.maxRotation)    
 
-        if (left === 0) {
+        if (leftTopPoint.left) {
+            this.left = leftTopPoint.left
+        } else {
             const width3 = Spacetime.getWidth() / 3
             const randWidth3 = getRandomInteger(width3)
             this.left = Math.random() < 0.5 ? randWidth3 : randWidth3 + 2 * width3
-        } else {
-            this.left = left
         }
 
-        if (top === 0) {
+        if (leftTopPoint.top) {
+            this.top = leftTopPoint.top
+        } else {
             const height3 = Spacetime.getHeight() / 3
             const randHeight3 = getRandomInteger(height3)
             this.top = Math.random() < 0.5 ? randHeight3 : randHeight3 + 2 * height3
-        } else {
-            this.top = top
         }
 
         this.width = this.size * this.maxSizeSmall
@@ -63,7 +61,6 @@ export class Asteroid extends ComplexFlyingObject {
         this.setAudioVolume()
 
         this.draw()
-
     }
 
     getRandomPoints() {
@@ -90,14 +87,15 @@ export class Asteroid extends ComplexFlyingObject {
     }
 
     hit() {
-
         const newSize = this.size - 1
-        const newLeft = this.left + this.width / 4
-        const newTop = this.top + this.height / 4
+        const newLeftTopPoint = {
+            left: this.left + this.width / 4,
+            top: this.top + this.height / 4    
+        }
 
         if (this.size > 1) {
-            Spacetime.addAsteroid(new Asteroid(newSize, newLeft, newTop))
-            Spacetime.addAsteroid(new Asteroid(newSize, newLeft, newTop))
+            Spacetime.addAsteroid(new Asteroid(newSize, newLeftTopPoint))
+            Spacetime.addAsteroid(new Asteroid(newSize, newLeftTopPoint))
         } 
 
         const shardLeftTop = {
