@@ -314,7 +314,7 @@ export const game = {
 
     addLives() {
         const color = getComputedStyle(this.canvasScore).getPropertyValue('--gray') || 'white'
-        this.lives.push(new Spaceship(0, 0, 0.6, 'static', color))
+        this.lives.push(new Spaceship({ size: 0.6, position: 'static', color }))
     },
 
     refreshScore() {

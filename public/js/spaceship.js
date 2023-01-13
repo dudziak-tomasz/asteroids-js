@@ -5,7 +5,8 @@ import { PieceOfSpaceship } from './pieceofspaceship.js'
 import { getRandomID, getScreenSize, getHDRatio, getRandomInteger, getRandomPlusMinus } from './utils.js'
 
 export class Spaceship extends ComplexFlyingObject {
-    constructor(left, top, size = 1, position = undefined, color = undefined) {
+    constructor(style = {}) {
+        // args: style = { size, position, color }
 
         super()
 
@@ -19,15 +20,17 @@ export class Spaceship extends ComplexFlyingObject {
             this.height = 23    
         }
 
-        this.width *= size
-        this.height *= size
-
-        if (position) {
-            this.canvas.style.position = position
+        if (style.size) {
+            this.width *= style.size
+            this.height *= style.size
+        }
+        
+        if (style.position) {
+            this.canvas.style.position = style.position
         }
 
-        if (color) {
-            this.color = color
+        if (style.color) {
+            this.color = style.color
             this.polygon.setAttributeNS(undefined,'stroke', this.color)
         }
 
@@ -47,9 +50,8 @@ export class Spaceship extends ComplexFlyingObject {
         this.hyperspace = 0
         this.maxHyperspaceTime = 100
 
-        this.left = left === undefined ? Spacetime.getWidth() / 2 - this.width / 2 : left
-
-        this.top = top === undefined ? Spacetime.getHeight() / 2 - this.height / 2 : top
+        this.left = Spacetime.getWidth() / 2 - this.width / 2
+        this.top = Spacetime.getHeight() / 2 - this.height / 2
 
         // Canvas for spaceship in super
         this.canvas.id = this.id
@@ -77,11 +79,9 @@ export class Spaceship extends ComplexFlyingObject {
         this.setAudioVolume()
 
         this.draw()
-
     }
 
     draw() {
-
         super.draw()
 
         this.intervalIdAccelerate ? this.polygonEngine.setAttributeNS(undefined,'display', 'block') : this.polygonEngine.setAttributeNS(undefined,'display', 'none')
@@ -89,15 +89,18 @@ export class Spaceship extends ComplexFlyingObject {
         if (this.hyperspace) {
             if (this.hyperspace === 1) {
                 this.canvas.style.opacity = 0
+            }
+
+            this.hyperspace++
+
+            if (this.hyperspace === this.maxHyperspaceTime) {
                 const width18 = Spacetime.getWidth() / 8
                 const width68 = width18 * 6 
                 const height18 = Spacetime.getHeight() / 8
                 const height68 = height18 * 6
                 this.left = getRandomInteger(width68) + width18 
                 this.top = getRandomInteger(height68) + height18
-            }
-            this.hyperspace++
-            if (this.hyperspace > this.maxHyperspaceTime) {
+            } else if (this.hyperspace > this.maxHyperspaceTime) {
                 this.hyperspace = 0
 
                 this.canvas.style.opacity = 1
@@ -132,8 +135,7 @@ export class Spaceship extends ComplexFlyingObject {
             this.rotation = -this.maxRotation
         } else if (direction === 'right') {
             this.rotation = this.maxRotation
-        }
-        
+        }    
     }
 
     stopRotation() {
@@ -209,11 +211,9 @@ export class Spaceship extends ComplexFlyingObject {
         if (this.hyperspace) return false
 
         return super.isHitBy(something)
-
     }
 
     hit() {
-
         const centerX = this.left + this.width / 2
         const centerY = this.top + this.height / 2
 
@@ -229,7 +229,6 @@ export class Spaceship extends ComplexFlyingObject {
         this.destroy()
 
         this.audioBang.play()
-
     }
 
     destroy() {

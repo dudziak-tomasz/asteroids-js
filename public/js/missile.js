@@ -4,7 +4,7 @@ import { getRandomID, getHDRatio } from './utils.js'
 
 export class Missile extends SimpleFlyingObject {
     constructor(centerPoint = {}, direction = {}, options = {}) {
-        // parameters: centerPoint = { x, y }, direction = { angle, speedX, speedY }, options = { idPrefix, speedRatio }
+        // args: centerPoint = { x, y }, direction = { angle, speedX, speedY }, options = { idPrefix, speedRatio }
 
         super()
 
