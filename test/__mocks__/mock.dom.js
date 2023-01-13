@@ -6,6 +6,7 @@ const dom = new JSDOM()
 global.dom = dom
 global.window = dom.window
 global.document = dom.window.document
+global.CustomEvent = dom.window.CustomEvent
 
 global.screen = {
     availWidth: 1920,
@@ -36,5 +37,4 @@ global.Audio = class {
     pause() {
         this.isPlaying = false
     }
-
 }
