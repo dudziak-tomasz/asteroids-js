@@ -253,6 +253,60 @@ test('Should fire missile at the spaceship - saucer under the spaceship', () => 
 })
 
 
+test('Should fire missile at the spaceship - angle 45 deg', () => {
+    Spacetime.createSpacetime(document.body)
+    Spacetime.createSpaceship()
+
+    const saucer = new Saucer()
+    saucer.left = Spacetime.spaceship.left + 100
+    saucer.top = Spacetime.spaceship.top + 100
+    saucer.probabilityFireAccurate = 1
+
+    assert.deepEqual(Spacetime.missiles.size, 0)
+    saucer.fire()
+    assert.deepEqual(Spacetime.missiles.size, 1)
+
+    const missile = [...Spacetime.missiles.values()][0]
+    assert.ok(Math.abs(missile.speedX - missile.speedY) < 0.01)
+})
+
+
+test('Should fire missile at the spaceship - angle -45 deg', () => {
+    Spacetime.createSpacetime(document.body)
+    Spacetime.createSpaceship()
+
+    const saucer = new Saucer()
+    saucer.left = Spacetime.spaceship.left + 100
+    saucer.top = Spacetime.spaceship.top - 100
+    saucer.probabilityFireAccurate = 1
+
+    assert.deepEqual(Spacetime.missiles.size, 0)
+    saucer.fire()
+    assert.deepEqual(Spacetime.missiles.size, 1)
+
+    const missile = [...Spacetime.missiles.values()][0]
+    assert.ok(Math.abs(missile.speedX + missile.speedY) < 0.01)
+})
+
+
+test('Should fire missile at the spaceship - angle 116,5 deg', () => {
+    Spacetime.createSpacetime(document.body)
+    Spacetime.createSpaceship()
+
+    const saucer = new Saucer()
+    saucer.left = Spacetime.spaceship.left - 100
+    saucer.top = Spacetime.spaceship.top + 200
+    saucer.probabilityFireAccurate = 1
+
+    assert.deepEqual(Spacetime.missiles.size, 0)
+    saucer.fire()
+    assert.deepEqual(Spacetime.missiles.size, 1)
+
+    const missile = [...Spacetime.missiles.values()][0]
+    assert.ok(Math.abs(2 * missile.speedX + missile.speedY) < 0.01)
+})
+
+
 test('Should be destroyed after hit', () => {
     Spacetime.createSpacetime(document.body)
     Spacetime.createSaucer()
