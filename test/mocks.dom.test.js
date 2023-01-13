@@ -64,24 +64,24 @@ test('Should assign src for new Audio', () => {
 })
 
 
-test('Should play after create', () => {
+test('Should not play after create', () => {
     const audio = new Audio()
-    assert.deepEqual(audio.isPlaying, true)
-})
-
-
-test('Should stop playing', () => {
-    const audio = new Audio()
-    audio.pause()
     assert.deepEqual(audio.isPlaying, false)
 })
 
 
 test('Should play after .play()', () => {
     const audio = new Audio()
-    audio.pause()
     audio.play()
     assert.deepEqual(audio.isPlaying, true)
+})
+
+
+test('Should stop playing', () => {
+    const audio = new Audio()
+    audio.play()
+    audio.pause()
+    assert.deepEqual(audio.isPlaying, false)
 })
 
 
