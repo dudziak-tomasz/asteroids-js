@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { Spacetime } from '../public/js/spacetime.js'
 import { Spaceship } from '../public/js/spaceship.js'
+import { sleep } from './__mocks__/mock.sleep.js'
 
 import './__mocks__/mock.dom.js'
 import './__mocks__/mock.spacetime.js'
@@ -175,6 +176,19 @@ test('Should start and stop accelerate', () => {
 })
 
 
+test('Should accelerate twice', async () => {
+    const ship = new Spaceship()
+    ship.angle = 135
+    ship.startAccelerate()
+    const speedX = ship.speedX
+    const speedY = ship.speedY
+    await sleep(100)
+    ship.stopAccelerate()
+    assert.deepEqual(ship.speedX, 2 * speedX)
+    assert.deepEqual(ship.speedY, 2 * speedY)
+})
+
+
 test('Should play engine sound when accelerate', () => {
     const ship = new Spaceship()
     ship.startAccelerate()
@@ -197,6 +211,17 @@ test('Should start and stop fire', () => {
     assert.notDeepEqual(ship.intervalIdFire, undefined)
     ship.stopFire()
     assert.deepEqual(ship.intervalIdFire, undefined)
+})
+
+
+test('Should fire maximum of 5 missiles', async () => {
+    Spacetime.createSpacetime(document.body)
+    const ship = new Spaceship()
+    ship.intervalTimeFire = 10
+    ship.startFire()
+    await sleep(100)
+    ship.stopFire()
+    assert.deepEqual(Spacetime.missiles.size, 5)
 })
 
 
