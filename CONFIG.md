@@ -65,7 +65,7 @@
 
 ---
 
-## DEVELOPMENT / PRODUCTION
+## DEVELOPMENT / TEST / PRODUCTION
 
 Project startup scripts can be run with --dev, --test, or no parameters. If they are run with the --dev parameter, the data from the "development" section will be used, if with the --test parameter, the data from the "test" section will be used. If without a parameter, data from the "production" section will be used.
 
