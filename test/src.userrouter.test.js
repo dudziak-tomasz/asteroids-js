@@ -118,6 +118,20 @@ await test('Should not login existing user with incorect password', async () => 
 })
 
 
+await test('Should check username and password but should not login', async () => {
+    const res = await request(app)
+        .post('/users/login')
+        .send({
+            username: user1.username,
+            password: user1.password,
+            checkPasswordOnly: true
+        })
+        .expect(200)
+
+    assert.deepEqual(res.body.token, undefined, 'Should not send back token')  
+})
+
+
 await test('Should login existing user', async () => {
     const res = await request(app)
         .post('/users/login')
