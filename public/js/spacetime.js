@@ -66,14 +66,24 @@ export class Spacetime {
     }
 
     static move() {
+        this.createOneSecond()
+        
+        this.moveSpaceshipSaucerAndCheckSpaceshipIsHitBySaucer()
+        this.moveMissilesAndCheckMissileHit()
+        this.moveAsteroidsAndCheckAsteroidHit()
+        this.moveShards()
+    }
+
+    static createOneSecond() {
         this.oneSecondCountdown++
         if (this.oneSecondCountdown > this.oneSecond) {
             this.oneSecondCountdown = 0
             this.sendEvent('onesecond')
         }
+    }
 
+    static moveSpaceshipSaucerAndCheckSpaceshipIsHitBySaucer() {
         if (this.spaceship) this.spaceship.move()
-
         if (this.saucer) this.saucer.move()
 
         if (this.spaceship && this.saucer && this.spaceship.isHitBy(this.saucer)) {
@@ -81,7 +91,9 @@ export class Spacetime {
             this.saucer.hit()
             this.spaceship.hit()
         }
+    }
 
+    static moveMissilesAndCheckMissileHit() {
         this.missiles.forEach(missile => {
             missile.move()
 
@@ -92,15 +104,15 @@ export class Spacetime {
                 }
             } else {
                 if (this.saucer && this.saucer.isHitByMissile(missile)) {
-
                     this.sendEvent('saucerhit', {size: this.saucer.size})
-    
                     this.saucer.hit()
                     this.removeMissile(missile)
                 }    
             }
         })
+    }
 
+    static moveAsteroidsAndCheckAsteroidHit() {
         this.asteroids.forEach(asteroid => {
             let isAsteroidHit = false
 
@@ -129,7 +141,9 @@ export class Spacetime {
                 asteroid.hit()
             }
         })
+    }
 
+    static moveShards() {
         this.shards.forEach(shard => shard.move())
     }
 
