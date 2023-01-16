@@ -131,13 +131,6 @@ test('Should create 6 shards after hit', () => {
 
 test('Should play bang sound after hit', () => {
     const asteroid = new Asteroid()
-
-    // Prepare mocks
-    let playBang = false 
-    asteroid.audioBang.play = () => {
-        playBang = true
-    }
-
     asteroid.hit()
-    assert.deepEqual(playBang, true)
+    assert.deepEqual(asteroid.audioBang.isPlaying, true)
 })
