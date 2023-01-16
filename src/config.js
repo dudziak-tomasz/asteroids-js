@@ -17,12 +17,11 @@ export const config = {
             else if (process.argv[2] === '--dev') this.values = dataParsed.development
             else this.values = dataParsed.production
 
+            this.configReady = true
         } catch (e) {
             console.log('Cannot load the file config/config.json')
             console.log(e)
-         }
-
-        this.configReady = true
+        }
     },
 
     getItem(keyName) {
