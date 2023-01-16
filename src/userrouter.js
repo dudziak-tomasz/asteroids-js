@@ -123,7 +123,7 @@ export class UserRouter {
             const user = new User(dbUser)
             if (!await user.comparePassword(req.body.password)) return res.status(403).send()
 
-            if (!req.body.test) await user.generateToken()
+            if (!req.body.checkPasswordOnly) await user.generateToken()
 
             return res.send(user) 
                 

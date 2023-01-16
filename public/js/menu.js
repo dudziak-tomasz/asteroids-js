@@ -337,7 +337,7 @@ export class Menu extends Box {
 
             user.username = api.user.username
             user.password = currentPassword
-            user.test = true
+            user.checkPasswordOnly = true
 
             // currentPassword matches?
             let res = await api.login(user)
