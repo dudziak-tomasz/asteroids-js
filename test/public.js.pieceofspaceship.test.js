@@ -19,7 +19,7 @@ test('Should create new pieceofspaceship and assign data', () => {
 
     const piece = new PieceOfSpaceship(startPoint, startSpeed)
 
-    assert.ok(piece.id.startsWith('piece'))
+    assert.deepEqual(piece.id.startsWith('piece'), true)
     assert.deepEqual(piece.canvas.id, piece.id)
     assert.deepEqual(piece.minSpeed, 0.1)
     assert.deepEqual(piece.maxSpeed, 0.3)
@@ -31,10 +31,10 @@ test('Should create new pieceofspaceship and assign data', () => {
     assert.deepEqual(piece.width, 2)
     assert.deepEqual(piece.left, 100)
     assert.deepEqual(piece.top, 100 - piece.height)
-    assert.ok(-0.3 + 10 / 3 <= piece.speedX && piece.speedX <= -0.1 + 10 / 3 || 0.1 + 10 / 3 <= piece.speedX && piece.speedX <= 0.3 + 10 / 3)
-    assert.ok(-0.3 - 10 / 3 <= piece.speedY && piece.speedY <= -0.1 - 10 / 3 || 0.1 - 10 / 3 <= piece.speedY && piece.speedY <= 0.3 - 10 / 3)
-    assert.ok(-1.5 <= piece.rotation && piece.rotation <= -0.7 || 0.7 <= piece.rotation && piece.rotation <= 1.5)
-    assert.ok(0 <= piece.angle && piece.angle < 360)
+    assert.deepEqual(-0.3 + 10 / 3 <= piece.speedX && piece.speedX <= -0.1 + 10 / 3 || 0.1 + 10 / 3 <= piece.speedX && piece.speedX <= 0.3 + 10 / 3, true)
+    assert.deepEqual(-0.3 - 10 / 3 <= piece.speedY && piece.speedY <= -0.1 - 10 / 3 || 0.1 - 10 / 3 <= piece.speedY && piece.speedY <= 0.3 - 10 / 3, true)
+    assert.deepEqual(-1.5 <= piece.rotation && piece.rotation <= -0.7 || 0.7 <= piece.rotation && piece.rotation <= 1.5, true)
+    assert.deepEqual(0 <= piece.angle && piece.angle < 360, true)
     assert.deepEqual(piece.canvas.style.width, '2px')
     assert.deepEqual(piece.canvas.style.height, '18px')
 })
@@ -54,7 +54,7 @@ test('Should change opacity after 80% of timeOfDestruction', () => {
     const piece = new PieceOfSpaceship()
     piece.counterOfDestruction = 0.9 * piece.timeOfDestruction
     piece.draw()
-    assert.ok(piece.canvas.style.opacity < 1)
+    assert.deepEqual(piece.canvas.style.opacity < 1, true)
 })
 
 

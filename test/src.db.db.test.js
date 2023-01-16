@@ -22,7 +22,7 @@ await db.initializeDB()
 
 await test( 'Should add user with unique username', async () => {
     await assert.doesNotReject(async () => user1Id = await db.addUser(user1))
-    assert.ok(user1Id > 0, 'Should be a number greater than 0')    
+    assert.deepEqual(user1Id > 0, true)    
 })
 
 

@@ -51,12 +51,12 @@ test('Should get user by socket id', () => {
 
 
 test('Should allow update highscore' , () => {
-    assert.ok(ChatServer.canUpdateHighscore(user1Id, 10000))
+    assert.deepEqual(ChatServer.canUpdateHighscore(user1Id, 10000), true)
 })
 
 
 test('Should not allow update highscore', () => {
-    assert.ok(!ChatServer.canUpdateHighscore(user1Id, 20000))
+    assert.deepEqual(!ChatServer.canUpdateHighscore(user1Id, 20000), true)
 })
 
 
@@ -145,7 +145,7 @@ await test('Should update score by less than 11000 points', () => {
 
 await test('Should send message to the server', () => {
     chatServer1.socketMessageServer(mockSocket1, { text: 'testing' })
-    assert.ok(mockIoEmit1, 'Should call chatServer1.io.emit mock-method')    
+    assert.deepEqual(mockIoEmit1, true)
 })
 
     
@@ -157,7 +157,7 @@ await test('Should log out of the chat', () => {
 
 await test('Should not send message when user is logged out', () => {
     chatServer1.socketMessageServer(mockSocket1, { text: 'testing' })
-    assert.ok(mockEmit1, 'Should call mockSocket1.emit mock-method')    
+    assert.deepEqual(mockEmit1, true)    
 })
 
 

@@ -16,7 +16,7 @@ test('Should not generate duplicates', () => {
     const ids = new Set()
     for (let i = 0; i < 1000; i++) {
         const id = getRandomID()
-        assert.ok(!ids.has(id))
+        assert.deepEqual(ids.has(id), false)
         ids.add(id)
     }
 })
@@ -24,7 +24,7 @@ test('Should not generate duplicates', () => {
 
 test('Should starts with prefix', () => {
     const id = getRandomID('test')
-    assert.ok(id.startsWith('test'))
+    assert.deepEqual(id.startsWith('test'), true)
 })
 
 
@@ -32,8 +32,7 @@ test('Should get random positive or negative number from a given range', () => {
     const x1 = 1.2
     const x2 = 3.8
     const x = getRandomPlusMinus(x1, x2)
-    const xTest = -x2 <= x && x <= -x1 || x1 <= x && x <= x2
-    assert.ok(xTest)
+    assert.deepEqual(-x2 <= x && x <= -x1 || x1 <= x && x <= x2, true)
 })
 
 
@@ -42,7 +41,7 @@ test('Should get random natural number less than given one', () => {
     const i = getRandomInteger(iMax)
     assert.deepEqual(typeof i, 'number', 'Should be a number')
     assert.deepEqual(i, Math.trunc(i), 'Should be integer')
-    assert.ok(0 <= i && i < iMax, 'Should be natural less than 20')
+    assert.deepEqual(0 <= i && i < iMax, true, 'Should be natural less than 20')
 })
 
 
@@ -59,15 +58,15 @@ test('Should be point inside rectangle', () => {
     }
 
     let isInside = isPointInsideRectangle(point, rectangle)
-    assert.ok(isInside)
+    assert.deepEqual(isInside, true)
 
     rectangle.width = 31
     isInside = isPointInsideRectangle(point, rectangle)
-    assert.ok(isInside)
+    assert.deepEqual(isInside, true)
 
     rectangle.height = 31
     isInside = isPointInsideRectangle(point, rectangle)
-    assert.ok(isInside)
+    assert.deepEqual(isInside, true)
 })
 
 
@@ -84,7 +83,7 @@ test('Should not be point inside rectangle', () => {
     }
 
     const isInside = isPointInsideRectangle(point, rectangle)
-    assert.ok(!isInside)
+    assert.deepEqual(isInside, false)
 })
 
 
@@ -115,7 +114,7 @@ test('Should get ratio between 0.7 and 1.3', () => {
     }
 
     const ratio1 = getHDRatio()
-    assert.ok(0.7 <= ratio1 && ratio1 <= 1.3)
+    assert.deepEqual(0.7 <= ratio1 && ratio1 <= 1.3, true)
 
     // Prepare mocks
     global.screen = {
@@ -124,7 +123,7 @@ test('Should get ratio between 0.7 and 1.3', () => {
     }
 
     const ratio2 = getHDRatio()
-    assert.ok(0.7 <= ratio2  && ratio2 <= 1.3)
+    assert.deepEqual(0.7 <= ratio2  && ratio2 <= 1.3, true)
 
     // Prepare mocks
     global.screen = {
@@ -133,5 +132,5 @@ test('Should get ratio between 0.7 and 1.3', () => {
     }
 
     const ratio3 = getHDRatio()
-    assert.ok(0.7 <= ratio3  && ratio3 <= 1.3)
+    assert.deepEqual(0.7 <= ratio3  && ratio3 <= 1.3, true)
 })

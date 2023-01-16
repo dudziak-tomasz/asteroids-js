@@ -21,51 +21,51 @@ test('Should assign user data in the constructor', () => {
 
 
 test('Should pass username validation', () => {
-    assert.ok(user1.validateUsername())
+    assert.deepEqual(user1.validateUsername(), true)
 })
 
 
 test ('Should not pass username validation', () => {
     const userNameInvalid  = new User(user1)
     userNameInvalid.username = 'aa'
-    assert.ok(!userNameInvalid.validateUsername(), 'username to short')
+    assert.deepEqual(userNameInvalid.validateUsername(), false, 'username to short')
     userNameInvalid.username = 'aa12345678901234567890'
-    assert.ok(!userNameInvalid.validateUsername(), 'username to long')
+    assert.deepEqual(userNameInvalid.validateUsername(), false, 'username to long')
     userNameInvalid.username = 'aa$'
-    assert.ok(!userNameInvalid.validateUsername(), 'forbidden chars in username')    
+    assert.deepEqual(userNameInvalid.validateUsername(), false, 'forbidden chars in username')    
 })
 
 
 test('Should pass password validation', () => {
-    assert.ok(user1.validatePassword())
+    assert.deepEqual(user1.validatePassword(), true)
 })
 
 
 test('Should not pass password validation', () => {
     const userPasswordInvalid = new User(user1)
     userPasswordInvalid.password = '12345'
-    assert.ok(!userPasswordInvalid.validatePassword(), 'only numbers in password')
+    assert.deepEqual(!userPasswordInvalid.validatePassword(), true, 'only numbers in password')
     userPasswordInvalid.password = userPasswordInvalid.username + 'Abc123'
-    assert.ok(!userPasswordInvalid.validatePassword(), 'password contains username')
+    assert.deepEqual(!userPasswordInvalid.validatePassword(), true, 'password contains username')
     delete userPasswordInvalid.password
-    assert.ok(!userPasswordInvalid.validatePassword(), 'no password')
+    assert.deepEqual(!userPasswordInvalid.validatePassword(), true, 'no password')
 })
 
 
 test('Should pass email validation', () => {
-    assert.ok(user1.validateEmail())
+    assert.deepEqual(user1.validateEmail(), true)
     const userEmailInvalid = new User(user1)
     delete userEmailInvalid.email
-    assert.ok(userEmailInvalid.validateEmail())
+    assert.deepEqual(userEmailInvalid.validateEmail(), true)
     userEmailInvalid.email = ''
-    assert.ok(userEmailInvalid.validateEmail())
+    assert.deepEqual(userEmailInvalid.validateEmail(), true)
 })
 
 
 test('Should not pass email validation', () => {
     const userEmailInvalid = new User(user1)
     userEmailInvalid.email = 'testing@'
-    assert.ok(!userEmailInvalid.validateEmail())
+    assert.deepEqual(userEmailInvalid.validateEmail(), false)
 })
 
 
@@ -78,7 +78,7 @@ test('Should hash password', async () => {
 test('Should compare hashed password', async () => {
     let isMatch = false
     await assert.doesNotReject(async () => isMatch = await user1.comparePassword(password1))
-    assert.ok(isMatch, 'Should match')
+    assert.deepEqual(isMatch, true)
 })
 
 
@@ -139,14 +139,14 @@ await test('Should generate token and save in db', async () => {
 await test('Should delete all user tokens from db', async () => {
     await assert.doesNotReject(async () => user1.deleteAllTokens())
     const dbToken = await db.findToken(user1.id, user1.token)
-    assert.ok(!dbToken, 'Should be no token in db')
+    assert.deepEqual(dbToken, undefined, 'Should be no token in db')
 })
 
 
 await test('Should delete user from db', async () => {
     await assert.doesNotReject(async () => await user1.delete())
     const dbUser = await db.findUserById(user1.id)
-    assert.ok(!dbUser, 'Should not exist in db')
+    assert.deepEqual(dbUser, undefined)
     })
 
 

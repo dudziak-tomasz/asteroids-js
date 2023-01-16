@@ -352,7 +352,7 @@ await test('Should delete authorized user', async () => {
         .expect(200)
 
     const dbUser = await db.findUserByUsername('user2')
-    assert.ok(!dbUser, 'Should not exist in db')
+    assert.deepEqual(dbUser, undefined)
 })
 
 

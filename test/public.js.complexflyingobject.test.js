@@ -50,7 +50,7 @@ test('Should be hit by missile', () => {
         height:3
     }
 
-    assert.ok(complexFO.isHitByMissile(missile))
+    assert.deepEqual(complexFO.isHitByMissile(missile), true)
 })
 
 
@@ -69,7 +69,7 @@ test('Should not be hit by missile', () => {
         height:3
     }
 
-    assert.ok(!complexFO.isHitByMissile(missile))
+    assert.deepEqual(complexFO.isHitByMissile(missile), false)
 })
 
 
@@ -88,7 +88,7 @@ test('Should be hit by something bigger 1', () => {
         height:100
     }
 
-    assert.ok(complexFO.isHitBy(somethingBigger))
+    assert.deepEqual(complexFO.isHitBy(somethingBigger), true)
 })
 
 
@@ -107,7 +107,7 @@ test('Should be hit by something bigger 2', () => {
         height:100
     }
 
-    assert.ok(complexFO.isHitBy(somethingBigger))
+    assert.deepEqual(complexFO.isHitBy(somethingBigger), true)
 })
 
 
@@ -126,7 +126,7 @@ test('Should be hit by something bigger 3', () => {
         height:100
     }
 
-    assert.ok(complexFO.isHitBy(somethingBigger))
+    assert.deepEqual(complexFO.isHitBy(somethingBigger), true)
 })
 
 
@@ -145,7 +145,7 @@ test('Should be hit by something bigger 4', () => {
         height:100
     }
 
-    assert.ok(complexFO.isHitBy(somethingBigger))
+    assert.deepEqual(complexFO.isHitBy(somethingBigger), true)
 })
 
 
@@ -164,5 +164,5 @@ test('Should not be hit by something bigger', () => {
         height:100
     }
 
-    assert.ok(!complexFO.isHitBy(somethingBigger))
+    assert.deepEqual(complexFO.isHitBy(somethingBigger), false)
 })

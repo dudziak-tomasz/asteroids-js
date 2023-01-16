@@ -10,7 +10,7 @@ import './__mocks__/mock.spacetime.js'
 test('Should create new missile and assign default data', () => {
     Spacetime.createSpacetime(document.body)
     const missile = new Missile()
-    assert.ok(missile.id.startsWith('missile'))
+    assert.deepEqual(missile.id.startsWith('missile'), true)
     assert.deepEqual(missile.canvas.id, missile.id)
     assert.deepEqual(missile.maxSpeed, 6)
     assert.deepEqual(missile.timeOfDestruction, 144)

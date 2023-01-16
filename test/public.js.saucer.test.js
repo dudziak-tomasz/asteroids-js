@@ -23,10 +23,10 @@ test('Should create new saucer and assign data for size = 2', () => {
     assert.deepEqual(saucer.counterMaxFire, 300)
     assert.deepEqual(saucer.probabilityFireAccurate, 0)
     assert.deepEqual(saucer.maxSpeed, 0.9)
-    assert.ok(saucer.speedX === -0.9 || saucer.speedX === 0.9)
+    assert.deepEqual(saucer.speedX === -0.9 || saucer.speedX === 0.9, true)
     assert.deepEqual(saucer.speedY, 0)
-    assert.ok(saucer.left === 0 || saucer.left === 1920 - 54)
-    assert.ok(saucer.top === 40 || saucer.top === 1080 - 54 - 40)
+    assert.deepEqual(saucer.left === 0 || saucer.left === 1920 - 54, true)
+    assert.deepEqual(saucer.top === 40 || saucer.top === 1080 - 54 - 40, true)
 
     assert.deepEqual(saucer.canvas.id, saucer.id)
     assert.deepEqual(saucer.canvas.style.width, '54px')
@@ -69,7 +69,7 @@ test('Should create new saucer and assign data for size = 1', () => {
     assert.deepEqual(saucer.counterMaxFire, 150)
     assert.deepEqual(saucer.probabilityFireAccurate, 0.25)
     assert.deepEqual(saucer.maxSpeed, 1.8)
-    assert.ok(saucer.speedX === -1.8 || saucer.speedX === 1.8)
+    assert.deepEqual(saucer.speedX === -1.8 || saucer.speedX === 1.8, true)
 
     assert.deepEqual(saucer.canvas.style.width, '27px')
     assert.deepEqual(saucer.canvas.style.height, '27px')
@@ -198,7 +198,7 @@ test('Should fire missile at the spaceship - saucer to the right of the spaceshi
     assert.deepEqual(Spacetime.missiles.size, 1)
 
     const missile = [...Spacetime.missiles.values()][0]
-    assert.ok(missile.speedX > 0)
+    assert.deepEqual(missile.speedX > 0, true)
 })
 
 
@@ -215,7 +215,7 @@ test('Should fire missile at the spaceship - saucer to the left of the spaceship
     assert.deepEqual(Spacetime.missiles.size, 1)
 
     const missile = [...Spacetime.missiles.values()][0]
-    assert.ok(missile.speedX < 0)
+    assert.deepEqual(missile.speedX < 0, true)
 })
 
 
@@ -232,7 +232,7 @@ test('Should fire missile at the spaceship - saucer above the spaceship', () => 
     assert.deepEqual(Spacetime.missiles.size, 1)
 
     const missile = [...Spacetime.missiles.values()][0]
-    assert.ok(missile.speedY > 0)
+    assert.deepEqual(missile.speedY > 0, true)
 })
 
 
@@ -249,11 +249,11 @@ test('Should fire missile at the spaceship - saucer under the spaceship', () => 
     assert.deepEqual(Spacetime.missiles.size, 1)
 
     const missile = [...Spacetime.missiles.values()][0]
-    assert.ok(missile.speedY < 0)
+    assert.deepEqual(missile.speedY < 0, true)
 })
 
 
-test('Should fire missile at the spaceship - angle 45 deg', () => {
+test('Should fire missile at the spaceship - angle -45 deg', () => {
     Spacetime.createSpacetime(document.body)
     Spacetime.createSpaceship()
 
@@ -267,11 +267,11 @@ test('Should fire missile at the spaceship - angle 45 deg', () => {
     assert.deepEqual(Spacetime.missiles.size, 1)
 
     const missile = [...Spacetime.missiles.values()][0]
-    assert.ok(Math.abs(missile.speedX - missile.speedY) < 0.01)
+    assert.deepEqual(Math.abs(missile.speedX - missile.speedY) < 0.01, true)
 })
 
 
-test('Should fire missile at the spaceship - angle -45 deg', () => {
+test('Should fire missile at the spaceship - angle 45 deg', () => {
     Spacetime.createSpacetime(document.body)
     Spacetime.createSpaceship()
 
@@ -285,11 +285,11 @@ test('Should fire missile at the spaceship - angle -45 deg', () => {
     assert.deepEqual(Spacetime.missiles.size, 1)
 
     const missile = [...Spacetime.missiles.values()][0]
-    assert.ok(Math.abs(missile.speedX + missile.speedY) < 0.01)
+    assert.deepEqual(Math.abs(missile.speedX + missile.speedY) < 0.01, true)
 })
 
 
-test('Should fire missile at the spaceship - angle 116,5 deg', () => {
+test('Should fire missile at the spaceship - angle -116,5 deg', () => {
     Spacetime.createSpacetime(document.body)
     Spacetime.createSpaceship()
 
@@ -303,7 +303,7 @@ test('Should fire missile at the spaceship - angle 116,5 deg', () => {
     assert.deepEqual(Spacetime.missiles.size, 1)
 
     const missile = [...Spacetime.missiles.values()][0]
-    assert.ok(Math.abs(2 * missile.speedX + missile.speedY) < 0.01)
+    assert.deepEqual(Math.abs(2 * missile.speedX + missile.speedY) < 0.01, true)
 })
 
 
