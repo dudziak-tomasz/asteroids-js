@@ -9,16 +9,12 @@ import { ChatServer } from './chatserver.js'
 export class UserRouter {
 
     static async authorization (req, res, next) {
-
-        const headerAuth = req.header('Authorization')
-
-        let token = undefined
-
-        if (headerAuth) token = headerAuth.replace('Bearer ', '')
-
-        if (!token) return res.status(403).send()
-
         try {
+            let token = undefined
+            const headerAuth = req.header('Authorization')
+            if (headerAuth) token = headerAuth.replace('Bearer ', '')
+            if (!token) return res.status(403).send()
+
             const data = jwt.verify(token, config.getItem('tokenKey'))
 
             const user = await db.findUserById(data.id)
@@ -33,8 +29,7 @@ export class UserRouter {
             return next()
         } catch {
             return res.status(403).send()
-        }
-    
+        }  
     }
 
     static async apiNewUser(req, res) {
@@ -56,7 +51,7 @@ export class UserRouter {
             
             await newUser.hashPassword()
 
-            // highscore only by update endpoint
+            // highscore can be updated only by update endpoint
             newUser.highscore = 0
 
             await newUser.save()
@@ -69,11 +64,9 @@ export class UserRouter {
         } catch {
             return res.status(500).send()
         }
-
     }
 
     static async apiUpdateUser(req, res) {
-
         try {
             const newUserData = new User(req.body)
             newUserData.id = req.user.id
@@ -120,14 +113,11 @@ export class UserRouter {
         } catch {
             return res.status(500).send()
         }
-
     }
 
     static async apiLogin(req, res) {
-        
         try {
             const dbUser = await db.findUserByUsername(req.body.username)
-    
             if (!dbUser) return res.status(403).send()
 
             const user = new User(dbUser)
@@ -140,17 +130,13 @@ export class UserRouter {
         } catch {
             return res.status(500).send()
         }
-
     }
 
     static async apiPasswordReset(req, res) {
-        
         try {
-
             if (!req.body.email) return res.status(400).send({ error: 'email is invalid' })
 
             const dbUser = await db.findUserByEmail(req.body.email)
-
             if (!dbUser) return res.status(403).send()
 
             const user = new User(dbUser)
@@ -159,7 +145,6 @@ export class UserRouter {
             const token = await user.generateToken('passwordreset')
 
             const tokenURL = `${req.get('referer')}?q=${token}`
-
             const emailHTML = `
                 <p>Hello ${user.username.toUpperCase()}!</p>
                 <p>We received a request to reset the password for your account.</p>
@@ -168,7 +153,6 @@ export class UserRouter {
                 <p>Clicking not working? Try pasting it into your browser.</p>
             `
             const isSent = await sendMail(user.email, 'Password reset', emailHTML)
-
             if (!isSent) return res.status(500).send()
 
             return res.send()
@@ -176,15 +160,11 @@ export class UserRouter {
         } catch {
             return res.status(500).send()
         }
-
     }
 
     static async apiPasswordUpdate(req, res) {
-
         try {
-
             const token = req.body.token
-
             if (!token) return res.status(403).send()
 
             const data = jwt.verify(token, config.getItem('tokenKey'))
@@ -205,15 +185,12 @@ export class UserRouter {
             db.deleteTokensByUserIdAndReason(dbUser.id, 'passwordreset')
 
             return res.send()
-                
         } catch {
             return res.status(500).send()
         }
-        
     }
 
     static async apiLogout(req, res) {
-
         try {
             await db.deleteTokenById(req.token.id)
             return res.send()
@@ -221,11 +198,9 @@ export class UserRouter {
         } catch {
             return res.status(500).send()
         }
-
     }
 
     static async apiLogoutAll(req, res) {
-
         try {
             await req.user.deleteAllTokens()
             return res.send()
@@ -233,39 +208,30 @@ export class UserRouter {
         } catch {
             return res.status(500).send()
         }
-
     }
 
     static apiProfile(req, res) {
-
         return res.send(req.user)
-
     }
 
     static async apiDeleteUser(req, res) {
-
         try {
             await req.user.delete()
             return res.send()
-    
         } catch {
             return res.status(500).send()
         }
-
     }
 
     static async apiLeaderboard(req, res) {
-
         try {
             res.send(await db.getLeaderboard())
         } catch {
             res.status(500).send()
         }
-
     }
 
     static getRouter() {
-
         this.router = new express.Router()
         
         this.router.post('/users/new', this.apiNewUser)
@@ -280,6 +246,5 @@ export class UserRouter {
         this.router.get('/leaderboard', this.apiLeaderboard)
                 
         return this.router
-
     }
 }
