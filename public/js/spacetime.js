@@ -25,90 +25,6 @@ export class Spacetime {
         this.start()
     }
 
-    static getAudioVolume() {
-        const volume = localStorage.getItem('soundVolume')
-        volume ? this.audioVolume = parseFloat(volume) : this.setAudioVolume()
-        return this.audioVolume
-    }
-
-    static setAudioVolume(volume) {
-        if (volume !== undefined) this.audioVolume = volume
-        localStorage.setItem('soundVolume', this.audioVolume)
-
-        this.asteroids.forEach(asteroid => asteroid.setAudioVolume())
-        if (this.spaceship) this.spaceship.setAudioVolume()
-        if (this.saucer) this.saucer.setAudioVolume()
-    }
-
-    static createSpaceship() {
-        this.spaceship = new Spaceship()
-        this.canvas.appendChild(this.spaceship.canvas)
-    }
-
-    static removeSpaceship() {
-        this.spaceship.canvas.remove()
-        this.spaceship = undefined
-    }
-
-    static createSaucer(size) {
-        this.saucer = new Saucer(size)
-        this.canvas.appendChild(this.saucer.canvas)
-    }
-
-    static removeSaucer() {
-        this.saucer.canvas.remove()
-        this.saucer = undefined
-
-        if (this.asteroids.size === 0 && this.shards.size === 0) this.sendEvent('noasteroids')
-    }
-
-    static createAsteroids(amount = 2, size = 3) {
-        for (let i = 0; i < amount; i++) {
-            this.addAsteroid(new Asteroid(size))
-        }
-    }
-    
-    static addAsteroid(asteroid) {
-        this.asteroids.set(asteroid.id, asteroid)
-        this.canvas.appendChild(asteroid.canvas)
-    }
-
-    static removeAsteroid(asteroid) {
-        asteroid.canvas.remove()
-        this.asteroids.delete(asteroid.id)
-    }
-
-    static removeAllAsteroid() {
-        this.asteroids.forEach(asteroid => this.removeAsteroid(asteroid))
-    }
-
-    static addShard(shard) {
-        this.shards.set(shard.id, shard)
-        this.canvas.appendChild(shard.canvas)
-    }
-
-    static removeShard(shard) {
-        shard.canvas.remove()
-        this.shards.delete(shard.id)
-
-        if (this.shards.size === 0) {
-            if (!this.spaceship) this.sendEvent('spaceshiphit')
-
-            if (this.asteroids.size === 0 && !this.saucer) this.sendEvent('noasteroids')
-        }
-
-    }
-
-    static addMissile(missile) {
-        this.missiles.set(missile.id, missile)
-        this.canvas.appendChild(missile.canvas)
-    }
-
-    static removeMissile(missile) {
-        missile.canvas.remove()
-        this.missiles.delete(missile.id)
-    }
-
     static start() {
         if (this.intervalId) return
 
@@ -134,12 +50,22 @@ export class Spacetime {
         if (this.saucer) this.saucer.stopPlay()
     }
 
-    static sendEvent(eventText, eventDetail = {}) {
-        this.canvas.dispatchEvent(new CustomEvent(eventText, {detail: eventDetail}))
+    static getAudioVolume() {
+        const volume = localStorage.getItem('soundVolume')
+        volume ? this.audioVolume = parseFloat(volume) : this.setAudioVolume()
+        return this.audioVolume
+    }
+
+    static setAudioVolume(volume) {
+        if (volume !== undefined) this.audioVolume = volume
+        localStorage.setItem('soundVolume', this.audioVolume)
+
+        this.asteroids.forEach(asteroid => asteroid.setAudioVolume())
+        if (this.spaceship) this.spaceship.setAudioVolume()
+        if (this.saucer) this.saucer.setAudioVolume()
     }
 
     static move() {
-
         this.oneSecondCountdown++
         if (this.oneSecondCountdown > this.oneSecond) {
             this.oneSecondCountdown = 0
@@ -205,7 +131,78 @@ export class Spacetime {
         })
 
         this.shards.forEach(shard => shard.move())
+    }
 
+    static createSpaceship() {
+        this.spaceship = new Spaceship()
+        this.canvas.appendChild(this.spaceship.canvas)
+    }
+
+    static removeSpaceship() {
+        this.spaceship.canvas.remove()
+        this.spaceship = undefined
+    }
+
+    static createSaucer(size) {
+        this.saucer = new Saucer(size)
+        this.canvas.appendChild(this.saucer.canvas)
+    }
+
+    static removeSaucer() {
+        this.saucer.canvas.remove()
+        this.saucer = undefined
+
+        if (this.asteroids.size === 0 && this.shards.size === 0) this.sendEvent('noasteroids')
+    }
+
+    static createAsteroids(amount = 2, size = 3) {
+        for (let i = 0; i < amount; i++) {
+            this.addAsteroid(new Asteroid(size))
+        }
+    }
+    
+    static addAsteroid(asteroid) {
+        this.asteroids.set(asteroid.id, asteroid)
+        this.canvas.appendChild(asteroid.canvas)
+    }
+
+    static removeAsteroid(asteroid) {
+        asteroid.canvas.remove()
+        this.asteroids.delete(asteroid.id)
+    }
+
+    static removeAllAsteroid() {
+        this.asteroids.forEach(asteroid => this.removeAsteroid(asteroid))
+    }
+
+    static addShard(shard) {
+        this.shards.set(shard.id, shard)
+        this.canvas.appendChild(shard.canvas)
+    }
+
+    static removeShard(shard) {
+        shard.canvas.remove()
+        this.shards.delete(shard.id)
+
+        if (this.shards.size === 0) {
+            if (!this.spaceship) this.sendEvent('spaceshiphit')
+
+            if (this.asteroids.size === 0 && !this.saucer) this.sendEvent('noasteroids')
+        }
+    }
+
+    static addMissile(missile) {
+        this.missiles.set(missile.id, missile)
+        this.canvas.appendChild(missile.canvas)
+    }
+
+    static removeMissile(missile) {
+        missile.canvas.remove()
+        this.missiles.delete(missile.id)
+    }
+
+    static sendEvent(eventText, eventDetail = {}) {
+        this.canvas.dispatchEvent(new CustomEvent(eventText, {detail: eventDetail}))
     }
 
     static getWidth() {
