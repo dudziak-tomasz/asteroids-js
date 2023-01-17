@@ -1,4 +1,4 @@
-import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js'
+// import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js'
 import { config } from './config.js'
 import { api } from './api.js'
 import { game } from './game.js'
