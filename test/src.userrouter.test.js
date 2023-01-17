@@ -107,7 +107,7 @@ await test('Should not login non-existent user', async () => {
 })
 
 
-await test('Should not login existing user with incorect password', async () => {
+await test('Should not login existing user with incorrect password', async () => {
     await request(app)
         .post('/users/login')
         .send({
