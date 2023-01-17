@@ -136,7 +136,7 @@ export const api = {
                                     body: JSON.stringify(user)
                                 })
 
-            if (response.ok && !user.test) {
+            if (response.ok && !user.checkPasswordOnly) {
                 this.user = await response.json()
                 this.setToken(this.user.token)
                 delete this.user.token
@@ -233,7 +233,7 @@ export const api = {
         try {
             if (!user) user = { highscore: this.user.highscore }
 
-            const oldUsername = this.user.username
+            const oldUsername = this.user ? this.user.username : undefined
 
             const response = await fetch(this.prefix + '/users/me', {
                                     method: 'PATCH',
