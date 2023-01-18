@@ -286,14 +286,13 @@ export class Menu extends Box {
             if (newPassword !== retypeNewPassword) return this.$boxErrorMessage.innerHTML = 'NEW PASSWORD DOES NOT MATCH RETYPED PASSWORD'
 
             const user = {
-                password: newPassword,
-                token
+                password: newPassword
             }
 
             this.$boxErrorMessage.innerHTML = 'CHANGING PASSWORD...'
             this.$changePasswordForm.submit.disabled = true
 
-            const res = await api.passwordUpdate(user)
+            const res = await api.passwordUpdate(user, token)
 
             this.$changePasswordForm.submit.disabled = false
 

@@ -10,26 +10,31 @@ export class UserRouter {
 
     static async authorization (req, res, next) {
         try {
-            let token = undefined
-            const headerAuth = req.header('Authorization')
-            if (headerAuth) token = headerAuth.replace('Bearer ', '')
-            if (!token) return res.status(403).send()
+            const { user, token } = await UserRouter.getUserAndTokenByHeaderToken(req)
 
-            const data = jwt.verify(token, config.getItem('tokenKey'))
-
-            const user = await db.findUserById(data.id)
-            if (!user) throw new Error()
-    
-            const dbToken = await db.findToken(user.id, token)
-            if (!dbToken) throw new Error()
-    
             req.user = new User(user)
-            req.token = dbToken
-    
+            req.token = token
+
             return next()
         } catch {
             return res.status(403).send()
         }  
+    }
+
+    static async getUserAndTokenByHeaderToken(req, reason = '') {
+        const headerAuth = req.header('Authorization')
+        const token = headerAuth ? headerAuth.replace('Bearer ', '') : undefined
+        if (!token) throw new Error()
+
+        const data = jwt.verify(token, config.getItem('tokenKey'))
+
+        const dbUser = await db.findUserById(data.id)
+        if (!dbUser) throw new Error()
+
+        const dbToken = await db.findToken(dbUser.id, token, reason)
+        if (!dbToken) throw new Error()
+
+        return { user: dbUser, token: dbToken}
     }
 
     static async apiNewUser(req, res) {
@@ -164,29 +169,20 @@ export class UserRouter {
 
     static async apiPasswordUpdate(req, res) {
         try {
-            const token = req.body.token
-            if (!token) return res.status(403).send()
-
-            const data = jwt.verify(token, config.getItem('tokenKey'))
-
-            const dbUser = await db.findUserById(data.id)
-            if (!dbUser) return res.status(403).send()
+            const { user } = await UserRouter.getUserAndTokenByHeaderToken(req, 'passwordreset')
     
-            const dbToken = await db.findToken(dbUser.id, token, 'passwordreset')
-            if (!dbToken) return res.status(403).send()
-    
-            const newUser = new User(dbUser)
-            newUser.password = req.body.password
+            const userUpdate = new User(user)
+            userUpdate.password = req.body.password
 
-            if (!newUser.validatePassword()) return res.status(400).send({ error: 'password too weak' })
+            if (!userUpdate.validatePassword()) return res.status(400).send({ error: 'password too weak' })
 
-            await newUser.hashPassword()
-            await newUser.save()
-            db.deleteTokensByUserIdAndReason(dbUser.id, 'passwordreset')
+            await userUpdate.hashPassword()
+            await userUpdate.save()
+            db.deleteTokensByUserIdAndReason(user.id, 'passwordreset')
 
             return res.send()
         } catch {
-            return res.status(500).send()
+            return res.status(403).send()
         }
     }
 

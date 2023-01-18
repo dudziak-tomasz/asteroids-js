@@ -129,12 +129,13 @@ export const api = {
         }
     },
 
-    async passwordUpdate(user) {
+    async passwordUpdate(user, token) {
         try {
             const response = await fetch(this.prefix + '/users/passwordreset', {
                                     method: 'PATCH',
                                     headers: {
-                                        'Content-type': 'application/json'
+                                        'Content-type': 'application/json',
+                                        'Authorization': 'Bearer ' + token
                                     },
                                     body: JSON.stringify(user)
                                 })
