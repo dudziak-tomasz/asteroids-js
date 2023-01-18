@@ -1,4 +1,3 @@
-// import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js'
 import { config } from './config.js'
 import { api } from './api.js'
 import { game } from './game.js'
@@ -13,7 +12,6 @@ export const chat = {
     isChatBox: false, 
 
     createChat(parentElement) {
-
         this.parentElement = parentElement
 
         this.container = document.createElement('div')
@@ -38,7 +36,6 @@ export const chat = {
     },
 
     messageClient(message) {
-
         this.messages.push(message)
         if (this.messages.length > this.messagesMaxNumber) this.messages.shift()
 
@@ -181,9 +178,7 @@ export const chat = {
         })
 
         game.mainDiv.addEventListener('login', () => this.loginChatServer())
-
         game.mainDiv.addEventListener('logout', () => this.logoutChatServer())
-
         game.mainDiv.addEventListener('username', () => this.updateUsername())
     }
 
