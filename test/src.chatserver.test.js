@@ -56,7 +56,7 @@ test('Should allow update highscore' , () => {
 
 
 test('Should not allow update highscore', () => {
-    assert.deepEqual(!ChatServer.canUpdateHighscore(user1Id, 20000), true)
+    assert.deepEqual(ChatServer.canUpdateHighscore(user1Id, 20000), false)
 })
 
 
