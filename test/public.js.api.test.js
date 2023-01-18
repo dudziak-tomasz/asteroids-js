@@ -24,7 +24,7 @@ await test('Should fetch data from REST endpoints', async (t) => {
 
     // Check connection to the correct API server
     const leaderboard = await api.getLeaderboard()
-    if (!leaderboard || leaderboard.length > 0) assert.fail('========== API SERVER SHOULD BE STARTED WITH "--test" ARGUMENT ==========')
+    if (!leaderboard || leaderboard.length > 0) assert.fail('======================== API SERVER SHOULD BE STARTED FOR THIS TEST: "npm run devtest"')
 
     // Prepare test data & function
     const user1 = {
@@ -287,12 +287,13 @@ await test('Should fetch data from REST endpoints', async (t) => {
         await user1Mock.generateToken('passwordreset')
         const newPassword = 'Qwe12345'
 
-        const res = await api.passwordUpdate({ 
-            password: newPassword, 
-            token: user1Mock.token
-        })
-
+        const res = await api.passwordUpdate({ password: newPassword }, user1Mock.token)
         assert.deepEqual(res.status, 200)
+
+        const dbUser = await db.findUserById(api.user.id)
+        const user = new User(dbUser)
+        const isMatch = await user.comparePassword(newPassword)
+        assert.deepEqual(isMatch, true)
     })
 
 

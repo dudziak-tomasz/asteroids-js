@@ -261,11 +261,17 @@ await test('Should update password with temporary token', async () => {
     const user1Mock = new User({id: user1Id, ...user1})
     await user1Mock.generateToken('passwordreset')
     const newPassword = 'Qwe12345'
-    await request(app).patch('/users/passwordreset')
+    await request(app)
+        .patch('/users/passwordreset')
+        .set('Authorization', `Bearer ${user1Token}`)
         .send({
-            password: newPassword,
-            token: user1Mock.token
+            password: newPassword
         }).expect(200)    
+
+    const dbUser = await db.findUserById(user1Id)
+    const user = new User(dbUser)
+    const isMatch = await user.comparePassword(newPassword)
+    assert.deepEqual(isMatch, true)
 })
 
 

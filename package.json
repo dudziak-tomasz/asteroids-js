@@ -8,6 +8,7 @@
     "test": "nodemon --test test/",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js --dev",
+    "devtest": "nodemon src/index.js --test",
     "dbinit": "node src/db/dbinit.js",
     "dbinitdev": "node src/db/dbinit.js --dev"
   },
