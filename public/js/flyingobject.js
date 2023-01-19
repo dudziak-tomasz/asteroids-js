@@ -37,13 +37,9 @@ export class FlyingObject {
         if (this.rotation !== 0) {
             this.angle += this.rotation
 
-            if (this.angle < 0) {
-                this.angle += 360
-            } else if (this.angle > 360) {
-                this.angle -= 360
-            }    
+            if (this.angle < 0) this.angle += 360
+            else if (this.angle > 360) this.angle -= 360    
         }
-
     }
 
 }

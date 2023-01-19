@@ -73,9 +73,7 @@ export class Spaceship extends ComplexFlyingObject {
 
         this.audioEngine = new Audio('/audio/thrust.mp3')
         this.audioEngine.loop = true
-
         this.audioBang =  new Audio('/audio/bang_ship.mp3')
-
         this.setAudioVolume()
 
         this.draw()
@@ -87,9 +85,7 @@ export class Spaceship extends ComplexFlyingObject {
         this.intervalIdAccelerate ? this.polygonEngine.setAttributeNS(undefined,'display', 'block') : this.polygonEngine.setAttributeNS(undefined,'display', 'none')
 
         if (this.hyperspace) {
-            if (this.hyperspace === 1) {
-                this.canvas.style.opacity = 0
-            }
+            if (this.hyperspace === 1) this.canvas.style.opacity = 0
 
             this.hyperspace++
 
@@ -102,7 +98,6 @@ export class Spaceship extends ComplexFlyingObject {
                 this.top = getRandomInteger(height68) + height18
             } else if (this.hyperspace > this.maxHyperspaceTime) {
                 this.hyperspace = 0
-
                 this.canvas.style.opacity = 1
             }
         }
@@ -118,11 +113,12 @@ export class Spaceship extends ComplexFlyingObject {
         const witdh58 = Math.round(5 * this.width / 8)
         const height85 = Math.round(this.height * 0.85)
 
-        this.pointsEngine = [witdh2, this.height, 
-                            witdh38, height85, 
-                            witdh2, height75, 
-                            witdh58, height85]
-
+        this.pointsEngine = [
+            witdh2, this.height, 
+            witdh38, height85, 
+            witdh2, height75, 
+            witdh58, height85
+        ]
     }
 
     setAudioVolume() {
@@ -131,11 +127,8 @@ export class Spaceship extends ComplexFlyingObject {
     }
 
     startRotation(direction) {
-        if (direction === 'left') {
-            this.rotation = -this.maxRotation
-        } else if (direction === 'right') {
-            this.rotation = this.maxRotation
-        }    
+        if (direction === 'left') this.rotation = -this.maxRotation
+        else if (direction === 'right') this.rotation = this.maxRotation
     }
 
     stopRotation() {

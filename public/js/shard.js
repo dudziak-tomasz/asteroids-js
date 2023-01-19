@@ -29,9 +29,7 @@ export class Shard extends SimpleFlyingObject {
         super.draw()
 
         this.counterOfDestruction++
-        if (this.counterOfDestruction > this.timeOfDestruction) {
-            Spacetime.removeShard(this)
-        }
+        if (this.counterOfDestruction > this.timeOfDestruction) Spacetime.removeShard(this)
     }
 
 }

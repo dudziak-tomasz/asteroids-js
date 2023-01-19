@@ -4,7 +4,6 @@ import { getRandomID, getRandomPlusMinus, getRandomInteger, getScreenSize } from
 
 export class PieceOfSpaceship extends SimpleFlyingObject {
     constructor(startPoint = {}, startSpeed = {}) {
-
         super()
 
         this.id = getRandomID('piece')
@@ -38,7 +37,6 @@ export class PieceOfSpaceship extends SimpleFlyingObject {
     }
 
     draw() {
-
         super.draw()
 
         const newAngle = Math.round(this.angle)
@@ -50,9 +48,7 @@ export class PieceOfSpaceship extends SimpleFlyingObject {
         }
 
         this.counterOfDestruction++
-        if (this.counterOfDestruction > this.timeOfDestruction) {
-            Spacetime.removeShard(this)
-        }
+        if (this.counterOfDestruction > this.timeOfDestruction) Spacetime.removeShard(this)
     }
 
 }

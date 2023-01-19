@@ -46,9 +46,7 @@ export class Missile extends SimpleFlyingObject {
         super.draw()
 
         this.counterOfDestruction++
-        if (this.counterOfDestruction > this.timeOfDestruction) {
-            Spacetime.removeMissile(this)          
-        }
+        if (this.counterOfDestruction > this.timeOfDestruction) Spacetime.removeMissile(this)
     }
 
 }

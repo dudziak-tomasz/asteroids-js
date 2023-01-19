@@ -2,7 +2,6 @@ import { FlyingObject } from './flyingobject.js'
 
 export class SimpleFlyingObject extends FlyingObject {
     constructor() {
-
         super()
 
         this.width = 3
@@ -14,7 +13,6 @@ export class SimpleFlyingObject extends FlyingObject {
         this.canvas.style.position = 'absolute'
         this.canvas.style.width = this.width + 'px'
         this.canvas.style.height = this.height + 'px'
-        
     }
 
     move() {
