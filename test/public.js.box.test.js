@@ -31,8 +31,8 @@ test('Should create box and assign default data', () => {
     assert.deepEqual(box.menuX.id.startsWith('box-start'), true)
     assert.deepEqual(box.menuX.classList.contains('menu-start'), true)
     assert.deepEqual(box.menuX.classList.contains('menu-x'), true)
-    const $menuStart = document.getElementById(box.menuX.id)
-    assert.deepEqual($menuStart, box.menuX)
+    const $menuX = document.getElementById(box.menuX.id)
+    assert.deepEqual($menuX, box.menuX)
 
     const $menuBars = box.menuX.querySelectorAll('div')
     assert.deepEqual($menuBars.length, 3)
@@ -90,7 +90,7 @@ test('Should sent "boxclose" event', () => {
 })
 
 
-test('Should close box after click menuStart', () => {
+test('Should close box after click menuX', () => {
     const box = new Box(global.document.body)
     box.menuX.dispatchEvent(new CustomEvent('click'))
     assert.deepEqual(box.container, undefined)
