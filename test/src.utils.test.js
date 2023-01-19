@@ -10,6 +10,10 @@ test('Should get full path to file', () => {
 
 
 test('Should send email', async () => {
-    const isSend = await sendMail('test@doitjs.eu', 'Test subject', 'Test body')
+    const isSend = await sendMail({
+        to: 'test@doitjs.eu', 
+        subject: 'Test subject', 
+        body: 'Test body'
+    })
     assert.deepEqual(isSend, true)
 })

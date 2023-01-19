@@ -10,7 +10,8 @@ export const getFullPath = (fromPath) => {
     return path.join(__dirname, fromPath)
 }
 
-export const sendMail = async (emailTo, emailSubject, emailHTML) => {
+export const sendMail = async (email) => {
+    // arg email = { to, subject, body }
     try {
         if (!config.getItem('emailHost')) return true
         
@@ -26,9 +27,9 @@ export const sendMail = async (emailTo, emailSubject, emailHTML) => {
         
         await transporter.sendMail({
             from: config.getItem('emailSender'),
-            to: emailTo, 
-            subject: emailSubject,
-            html: emailHTML,
+            to: email.to, 
+            subject: email.subject,
+            html: email.body,
         })
 
         return true
