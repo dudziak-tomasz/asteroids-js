@@ -38,7 +38,6 @@ export class UserRouter {
     }
 
     static async apiNewUser(req, res) {
-
         try {
             const newUser = new User(req.body)
 
@@ -55,17 +54,12 @@ export class UserRouter {
             }
             
             await newUser.hashPassword()
-
-            // highscore can be updated only by update endpoint
-            newUser.highscore = 0
+            newUser.highscore = 0   // highscore can be updated only by update endpoint
 
             await newUser.save()
-
             await newUser.generateToken()
     
-            return res.status(201)
-                    .send(newUser)
-                
+            return res.status(201).send(newUser)
         } catch {
             return res.status(500).send()
         }
@@ -73,48 +67,41 @@ export class UserRouter {
 
     static async apiUpdateUser(req, res) {
         try {
-            const newUserData = new User(req.body)
-            newUserData.id = req.user.id
+            const userUpdate = new User(req.body)
+            userUpdate.id = req.user.id
 
-            if (newUserData.username !== undefined) {
-                const dbUser = await db.findUserByUsername(newUserData.username)
-                if (dbUser && newUserData.id !== dbUser.id) return res.status(400).send({ error: 'username taken' })
-                if (!newUserData.validateUsername()) return res.status(400).send({ error: 'username is invalid' })
-            } else {
-                newUserData.username = req.user.username
+            if (userUpdate.username === undefined) userUpdate.username = req.user.username
+            else {
+                const dbUser = await db.findUserByUsername(userUpdate.username)
+                const isUsernameTaken = dbUser && userUpdate.id !== dbUser.id
+                if (isUsernameTaken) return res.status(400).send({ error: 'username taken' })
+                if (!userUpdate.validateUsername()) return res.status(400).send({ error: 'username is invalid' })                
             }
 
-            if (newUserData.password !== undefined) {
-                if (!newUserData.validatePassword()) return res.status(400).send({ error: 'password too weak' })
-                await newUserData.hashPassword()
-            } else {
-                newUserData.password = req.user.password
+            if (userUpdate.password === undefined) userUpdate.password = req.user.password
+            else {
+                if (!userUpdate.validatePassword()) return res.status(400).send({ error: 'password too weak' })
+                await userUpdate.hashPassword()                
             }
 
-            if (newUserData.email !== undefined) {
-                if (!newUserData.validateEmail()) return res.status(400).send({ error: 'email is invalid' })
-                if (newUserData.email !== '') {
-                    const dbUser = await db.findUserByEmail(newUserData.email)
-                    if (dbUser && newUserData.id !== dbUser.id) return res.status(400).send({ error: 'email taken' })
-                }
-            } else {
-                newUserData.email = req.user.email
-            }
+            if (userUpdate.email === undefined) userUpdate.email = req.user.email
+            else if (userUpdate.email !== '') {        
+                const dbUser = await db.findUserByEmail(userUpdate.email)
+                const isEmailTaken = dbUser && userUpdate.id !== dbUser.id
+                if (isEmailTaken) return res.status(400).send({ error: 'email taken' })
+                if (!userUpdate.validateEmail()) return res.status(400).send({ error: 'email is invalid' })
+            }                
 
-            if (newUserData.highscore !== undefined) {
-                if (newUserData.highscore <= req.user.highscore) newUserData.highscore = req.user.highscore
-                else {
-                    const canUpdate = ChatServer.canUpdateHighscore(newUserData.id, newUserData.highscore)
-                    if (!canUpdate) return res.status(400).send({ error: 'highscore is invalid' })
-                }
-            } else {
-                newUserData.highscore = req.user.highscore
-            }
+            if (userUpdate.highscore === undefined) userUpdate.highscore = req.user.highscore
+            else if (userUpdate.highscore <= req.user.highscore) userUpdate.highscore = req.user.highscore
+            else {
+                const canUpdateHighscore = ChatServer.canUpdateHighscore(userUpdate.id, userUpdate.highscore)
+                if (!canUpdateHighscore) return res.status(400).send({ error: 'highscore is invalid' })
+            }                
             
-            await newUserData.save()
+            await userUpdate.save()
 
-            return res.send(newUserData)
-
+            return res.send(userUpdate)
         } catch {
             return res.status(500).send()
         }
@@ -130,8 +117,7 @@ export class UserRouter {
 
             if (!req.body.checkPasswordOnly) await user.generateToken()
 
-            return res.send(user) 
-                
+            return res.send(user)
         } catch {
             return res.status(500).send()
         }
@@ -157,11 +143,15 @@ export class UserRouter {
                 <p><a href="${tokenURL}">${tokenURL}</a></p>
                 <p>Clicking not working? Try pasting it into your browser.</p>
             `
-            const isSent = await sendMail(user.email, 'Password reset', emailHTML)
-            if (!isSent) return res.status(500).send()
+            const isSent = await sendMail({
+                to: user.email,
+                subject: 'Password reset',
+                body: emailHTML
+            })
+
+            if (!isSent) throw new Error()
 
             return res.send()
-                
         } catch {
             return res.status(500).send()
         }
@@ -190,7 +180,6 @@ export class UserRouter {
         try {
             await db.deleteTokenById(req.token.id)
             return res.send()
-    
         } catch {
             return res.status(500).send()
         }
@@ -200,7 +189,6 @@ export class UserRouter {
         try {
             await req.user.deleteAllTokens()
             return res.send()
-    
         } catch {
             return res.status(500).send()
         }

@@ -22,12 +22,12 @@ export const api = {
     async newUser(user = undefined) {
         try {
             const response = await fetch(this.prefix + '/users/new', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-type': 'application/json'
-                                    },
-                                    body: JSON.stringify(user)
-                                })
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            })
                         
             let res = {}
 
@@ -54,21 +54,19 @@ export const api = {
             const oldUsername = this.user ? this.user.username : undefined
 
             const response = await fetch(this.prefix + '/users/me', {
-                                    method: 'PATCH',
-                                    headers: {
-                                        'Content-type': 'application/json',
-                                        'Authorization': 'Bearer ' + this.getToken()
-                                    },
-                                    body: JSON.stringify(user)
-                                })
+                method: 'PATCH',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': 'Bearer ' + this.getToken()
+                },
+                body: JSON.stringify(user)
+            })
                         
             let res = {}
 
             if (response.ok) {
                 this.user = await response.json()
-                if (oldUsername !== this.user.username) {
-                    game.mainDiv.dispatchEvent(new CustomEvent('username'))
-                }
+                oldUsername !== this.user.username ? game.mainDiv.dispatchEvent(new CustomEvent('username')) : 0
             } else if (response.status === 400) {
                 res = await response.json()
             } else if (response.status === 403) {
@@ -86,12 +84,12 @@ export const api = {
     async login(user) {
         try {
             const response = await fetch(this.prefix + '/users/login', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-type': 'application/json'
-                                    },
-                                    body: JSON.stringify(user)
-                                })
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            })
 
             if (response.ok && !user.checkPasswordOnly) {
                 this.user = await response.json()
@@ -109,19 +107,15 @@ export const api = {
     async passwordReset(user) {
         try {
             const response = await fetch(this.prefix + '/users/passwordreset', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-type': 'application/json'
-                                    },
-                                    body: JSON.stringify(user)
-                                })
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(user)
+            })
                         
             let res = {}
-
-            if (response.status === 400) {
-                res = await response.json()
-            }
-
+            if (response.status === 400) res = await response.json()
             res.status = response.status
             return res
         } catch {
@@ -132,20 +126,16 @@ export const api = {
     async passwordUpdate(user, token) {
         try {
             const response = await fetch(this.prefix + '/users/passwordreset', {
-                                    method: 'PATCH',
-                                    headers: {
-                                        'Content-type': 'application/json',
-                                        'Authorization': 'Bearer ' + token
-                                    },
-                                    body: JSON.stringify(user)
-                                })
+                method: 'PATCH',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify(user)
+            })
                         
             let res = {}
-
-            if (response.status === 400) {
-                res = await response.json()
-            }
-
+            if (response.status === 400) res = await response.json()
             res.status = response.status
             return res
         } catch {
@@ -156,12 +146,12 @@ export const api = {
     async logout() {
         try {
             const response = await fetch(this.prefix + '/users/logout', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-type': 'application/json',
-                                        'Authorization': 'Bearer ' + this.getToken()
-                                    }
-                                })
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': 'Bearer ' + this.getToken()
+                }
+            })
 
             if (response.ok || response.status === 403) {
                 this.user = undefined
@@ -178,12 +168,12 @@ export const api = {
     async logoutAll() {
         try {
             const response = await fetch(this.prefix + '/users/logoutall', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-type': 'application/json',
-                                        'Authorization': 'Bearer ' + this.getToken()
-                                    }
-                                })
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': 'Bearer ' + this.getToken()
+                }
+            })
 
             if (response.ok || response.status === 403) {
                 this.user = undefined
@@ -200,12 +190,12 @@ export const api = {
     async profile() {
         try {
             const response = await fetch(this.prefix + '/users/me', {
-                                    method: 'GET',
-                                    headers: {
-                                        'Content-type': 'application/json',
-                                        'Authorization': 'Bearer ' + this.getToken()
-                                    }
-                                })
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': 'Bearer ' + this.getToken()
+                }
+            })
 
             if (response.ok) {
                 this.user = await response.json()
@@ -224,15 +214,16 @@ export const api = {
     async deleteUser() {
         try {
             const response = await fetch(this.prefix + '/users/me', {
-                                    method: 'DELETE',
-                                    headers: {
-                                        'Content-type': 'application/json',
-                                        'Authorization': 'Bearer ' + this.getToken()
-                                    }
-                                })
+                method: 'DELETE',
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': 'Bearer ' + this.getToken()
+                }
+            })
 
             if (response.ok || response.status === 403) {
                 this.user = undefined
+                this.removeToken()
                 game.mainDiv.dispatchEvent(new CustomEvent('logout'))
             } 
 
@@ -246,11 +237,7 @@ export const api = {
         try {
             const response = await fetch(this.prefix + '/leaderboard')
 
-            if (response.ok) {
-                return await response.json()
-            } else {
-                return undefined
-            }
+            return response.ok ? await response.json() : undefined
         } catch {
             return undefined
         }       
