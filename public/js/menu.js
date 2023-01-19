@@ -12,7 +12,7 @@ export class Menu extends Box {
 
         this.container.className = 'menu-container'
         
-        this.menuStart.classList.toggle('menu-x')
+        this.menuX.classList.toggle('menu-x')
 
         this.content.className = 'menu-content'
 
@@ -89,8 +89,8 @@ export class Menu extends Box {
         })       
     }
 
-    menuStartClick() {
-        this.menuStart.classList.toggle('menu-x')
+    menuXClick() {
+        this.menuX.classList.toggle('menu-x')
         this.content.classList.toggle('menu-content-show')    
         this.content.classList.length === 2 ? game.mainDiv.dispatchEvent(new CustomEvent('boxopen')) : game.mainDiv.dispatchEvent(new CustomEvent('boxclose'))
     }
@@ -102,7 +102,7 @@ export class Menu extends Box {
     }
 
     async menuItemClick(itemId) {
-        this.menuStartClick()
+        this.menuXClick()
 
         if (pages.has(this.items[itemId].text)) {
             this.openBox(this.items[itemId].text)
@@ -507,7 +507,7 @@ export class Menu extends Box {
     }
 
     initializeEvents() {
-        this.menuStart.addEventListener('click', () => this.menuStartClick())
+        this.menuX.addEventListener('click', () => this.menuXClick())
 
         this.content.addEventListener('click', (event) => {
             const target = event.target.id

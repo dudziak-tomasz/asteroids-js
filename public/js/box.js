@@ -8,26 +8,26 @@ export class Box {
         this.name = name
 
         this.container = document.createElement('div')
-        this.container.className = 'box-container'
         this.container.id = getRandomID('box')
+        this.container.className = 'box-container'
         this.parentElement.appendChild(this.container)
 
-        this.menuStart = document.createElement('div')
-        this.menuStart.className = 'menu-start'
-        this.menuStart.id = getRandomID('box-start')
-        this.menuStart.classList.toggle('menu-x')
-        this.container.appendChild(this.menuStart)
+        this.menuX = document.createElement('div')
+        this.menuX.id = getRandomID('box-start')
+        this.menuX.className = 'menu-start'
+        this.menuX.classList.toggle('menu-x')
+        this.container.appendChild(this.menuX)
 
         for (let i = 1; i <= 3; i++) {
             const menuBar = document.createElement('div')
-            menuBar.className = 'menu-bar' + i 
             menuBar.id = getRandomID('menu-bar') 
-            this.menuStart.appendChild(menuBar)
+            menuBar.className = 'menu-bar' + i 
+            this.menuX.appendChild(menuBar)
         }
 
         this.content = document.createElement('div')
-        this.content.className = 'box-content'
         this.content.id = getRandomID('box-content')
+        this.content.className = 'box-content'
         this.container.appendChild(this.content)
 
         this.content.innerHTML = innerHTML
@@ -54,6 +54,6 @@ export class Box {
     }
 
     initializeEvents() {
-        this.menuStart.addEventListener('click', () => this.close())
+        this.menuX.addEventListener('click', () => this.close())
     }
 }
