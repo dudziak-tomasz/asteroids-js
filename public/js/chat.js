@@ -2,6 +2,8 @@ import { config } from './config.js'
 import { api } from './api.js'
 import { game } from './game.js'
 import { getRandomID } from './utils.js'
+import { Box} from './box.js'
+import { pages } from './pages.js'
 
 export const chat = {
 
@@ -9,7 +11,6 @@ export const chat = {
     messagesMaxNumber: 100,
     showChatTime: 15000,
     timeoutHideID: undefined,
-    isChatBox: false, 
 
     createChat(parentElement) {
         this.parentElement = parentElement
@@ -19,11 +20,20 @@ export const chat = {
         this.container.id = getRandomID('chat')
         this.parentElement.appendChild(this.container)
 
+        this.box = new Box(parentElement, pages.get('CHAT'))
+        this.box.container.classList.add('box-chat-container')
+        this.box.content.classList.add('box-chat-content')
+
         this.socket = io(config.getItem('apiPrefix'))
 
         this.socket.on('messageclient', (message) => this.messageClient(message))
 
         this.initializeEvents()
+    },
+
+    openBox() {
+        chat.box.open()
+        chat.handleChatBox()
     },
 
     getTime(time) {
@@ -46,10 +56,10 @@ export const chat = {
         this.scrollMessages()
         this.hideChat()
 
-        this.renderAndScrollChatBoxMessageIfIsChatBox(message)
+        this.renderAndScrollMessageIfChatBoxOpen(message)
     },
 
-    renderChatBoxMessage(message) {
+    renderMessage(message) {
         const html = `
             <p>
                 <span class="box-dark-gray">${this.getTime(message.time)}</span>
@@ -61,9 +71,9 @@ export const chat = {
         this.$chatMessages.insertAdjacentHTML('beforeend', html)
     },
 
-    renderAndScrollChatBoxMessageIfIsChatBox(message) {
-        if (this.isChatBox) {
-            this.renderChatBoxMessage(message)
+    renderAndScrollMessageIfChatBoxOpen(message) {
+        if (this.box.isOpen) {
+            this.renderMessage(message)
             if (this.isScrollBottom) this.scrollBoxMessages()
         }
     },
@@ -95,14 +105,13 @@ export const chat = {
     },
 
     handleChatBox() {
-        this.isChatBox = true
         this.isScrollBottom = true
         this.$chatMessages = document.getElementById('box-chat-messages')
         this.$chatForm = document.getElementById('box-chat-form')
 
         this.loginChatServer()
 
-        this.messages.forEach(message => this.renderChatBoxMessage(message))
+        this.messages.forEach(message => this.renderMessage(message))
         this.scrollBoxMessages()
 
         this.$chatForm.message.focus()
@@ -148,7 +157,7 @@ export const chat = {
             if (!error) {
                 this.messages.push(response)
             } else {
-                this.renderAndScrollChatBoxMessageIfIsChatBox(error)
+                this.renderAndScrollMessageIfChatBoxOpen(error)
             }
         })
     },
@@ -171,12 +180,6 @@ export const chat = {
     },
 
     initializeEvents() {
-        game.mainDiv.addEventListener('boxclose', (e) => {
-            if (e.detail && e.detail.name === 'CHAT') {
-                this.isChatBox = false   
-            }
-        })
-
         game.mainDiv.addEventListener('login', () => this.loginChatServer())
         game.mainDiv.addEventListener('logout', () => this.logoutChatServer())
         game.mainDiv.addEventListener('username', () => this.updateUsername())
