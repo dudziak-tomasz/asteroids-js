@@ -11,8 +11,7 @@ export class Box {
 
         this.menuX = document.createElement('div')
         this.menuX.id = getRandomID('box-start')
-        this.menuX.className = 'menu-start'
-        this.menuX.classList.toggle('menu-x')
+        this.menuX.className = 'menu-start menu-x'
         this.container.appendChild(this.menuX)
 
         for (let i = 1; i <= 3; i++) {
@@ -34,10 +33,17 @@ export class Box {
         this.initializeEvents()
     }
 
+    initializeEvents() {
+        this.menuX.addEventListener('click', () => this.close())
+        game.mainDiv.addEventListener('boxopen', (e) => {
+            if (e.detail && e.detail.name === this.constructor.name) this.close()
+        })
+    }
+
     open() {
         if (this.isOpen) return
 
-        game.mainDiv.dispatchEvent(new CustomEvent('boxopen'))
+        game.mainDiv.dispatchEvent(new CustomEvent('boxopen', { detail: { name: this.constructor.name } }))
         this.parentElement.appendChild(this.container)
         this.isOpen = true
     }
@@ -46,12 +52,7 @@ export class Box {
         if (!this.isOpen) return
 
         this.container.remove()       
-        game.mainDiv.dispatchEvent(new CustomEvent('boxclose'))
+        game.mainDiv.dispatchEvent(new CustomEvent('boxclose', { detail: { name: this.constructor.name } }))
         this.isOpen = false
-    }
-
-    initializeEvents() {
-        this.menuX.addEventListener('click', () => this.close())
-        game.mainDiv.addEventListener('boxopen', () => this.close())
     }
 }

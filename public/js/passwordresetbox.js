@@ -19,6 +19,7 @@ export const passwordResetBox = {
         this.$passwordResetForm = document.getElementById('box-password-reset-form')
         this.$boxErrorMessage = document.getElementById('box-error-message')
 
+        this.$passwordResetForm.email.value = ''
         this.$passwordResetForm.email.focus()
 
         this.$passwordResetForm.onsubmit = async (e) => {

@@ -9,86 +9,92 @@ import { passwordResetChangePasswordBox } from './passwordresetchangepasswordbox
 import { profileBox } from './profilebox.js'
 
 export class Menu extends Box {
-    constructor(parentElement) {
 
+    constructor(parentElement) {
         super(parentElement)
 
         this.container.className = 'menu-container'
-        
-        this.menuX.classList.toggle('menu-x')
-
+        this.menuX.classList.remove('menu-x')
         this.content.className = 'menu-content'
-
-        this.items = [{
-            text: 'LOGIN',
-            enabled: true,
-            click: loginBox.openBox
-        }, {
-            text: 'PROFILE',
-            enabled: false,
-            click: profileBox.openBox
-        }, {
-            text: 'PREFERENCES',
-            enabled: true,
-            click: preferencesBox.openBox
-        }, {
-        }, {
-            text: 'FULLSCREEN',
-            enabled: true
-        }, {
-            text: 'EXIT FS',
-            enabled: false
-        }, {
-            text: 'CHAT',
-            enabled: true,
-            click: chat.openBox
-        }, {
-            text: 'HOW TO PLAY',
-            enabled: true,
-            click: this.openHowToPlay
-        }, {
-        }, {
-            text: 'ABOUT',
-            enabled: true,
-            click: this.openAbout
-        }]    
-
-        this.initializeMenuItems()
-
-        this.parentElement.appendChild(this.container)
 
         Menu.boxHowToPlay = new Box(parentElement, pages.get('HOW TO PLAY'))
         Menu.boxAbout = new Box(parentElement, pages.get('ABOUT'))
         Menu.box404 = new Box(parentElement, pages.get('404'))
 
-        const urlParams = new URLSearchParams(window.location.search)
-        if (urlParams.has('q')) {
+        this.assignMenuItems()
+        this.initializeMenuItems()
 
-            const qParam = urlParams.get('q')
-            if (qParam !== '') {
-                if (qParam === '404') Menu.box404.open()
-                else passwordResetChangePasswordBox.openBox(qParam)
-            }
-        }
-        window.history.pushState({}, document.title, '/')
+        this.checkUrlParams()
+
+        this.parentElement.appendChild(this.container)
     }
 
-    openHowToPlay() {
-        Menu.boxHowToPlay.open()
+    // overwriting parent method Box.initializeEvents
+    initializeEvents() {
+        this.menuX.addEventListener('click', () => this.menuXClick())
+
+        this.content.addEventListener('click', (e) => {
+            const target = e.target.id
+            if (target.startsWith('menu-item-')) this.menuItemClick(parseInt(target.replace('menu-item-', '')))
+        })
+
+        document.addEventListener('fullscreenchange', () => this.initializeMenuItems())
+        game.mainDiv.addEventListener('login', () => this.initializeMenuItems())
+        game.mainDiv.addEventListener('logout', () => this.initializeMenuItems())
     }
 
-    openAbout() {
-        Menu.boxAbout.open()
+    assignMenuItems() {
+        this.items = [{
+            id: 'login',
+            text: 'LOGIN',
+            enabled: true,
+            click: loginBox.openBox
+        }, {
+            id: 'profile',
+            text: 'PROFILE',
+            enabled: false,
+            click: profileBox.openBox
+        }, {
+            id: 'preferences',
+            text: 'PREFERENCES',
+            enabled: true,
+            click: preferencesBox.openBox
+        }, {
+            id: 'fullscreen',
+            text: 'FULLSCREEN',
+            enabled: true,
+            click: this.makeFullscreen
+        }, {
+            id: 'exit fullscreen',
+            text: 'EXIT FS',
+            enabled: false,
+            click: this.exitFullscreen
+        }, {
+            id: 'chat',
+            text: 'CHAT',
+            enabled: true,
+            click: chat.openBox
+        }, {
+            id: 'how to play',
+            text: 'HOW TO PLAY',
+            enabled: true,
+            click: this.openHowToPlay
+        }, {
+            id: 'about',
+            text: 'ABOUT',
+            enabled: true,
+            click: this.openAbout
+        }]   
     }
 
     initializeMenuItems() {
-        const stateUser = (api.user !== undefined) 
-        this.items.find(item => item.text === 'LOGIN').enabled = !stateUser
-        this.items.find(item => item.text === 'PROFILE').enabled = stateUser
+        const isUserLogged = (api.user !== undefined) 
+        this.items.find(item => item.id === 'login').enabled = !isUserLogged
+        this.items.find(item => item.id === 'profile').enabled = isUserLogged
 
-        const stateFs = (document.fullscreenElement !== null) 
-        this.items.find(item => item.text === 'FULLSCREEN').enabled = !stateFs
-        this.items.find(item => item.text === 'EXIT FS').enabled = stateFs
+        const isFullscreen = (document.fullscreenElement !== null) 
+        this.items.find(item => item.id === 'fullscreen').enabled = !isFullscreen
+        this.items.find(item => item.id === 'exit fullscreen').enabled = isFullscreen
 
         this.content.innerHTML = ''
 
@@ -102,54 +108,52 @@ export class Menu extends Box {
         })       
     }
 
+    openHowToPlay() {
+        Menu.boxHowToPlay.open()
+    }
+
+    openAbout() {
+        Menu.boxAbout.open()
+    }
+
+    async makeFullscreen() {
+        try {
+            await document.body.requestFullscreen()
+        } catch { }
+    }
+
+    async exitFullscreen() {
+        try {
+            await document.exitFullscreen()
+        } catch { }
+    }
+
+    checkUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search)
+        
+        if (urlParams.has('q')) {
+            const qParam = urlParams.get('q')
+            if (qParam === '404') Menu.box404.open()
+            else if (qParam !== '') passwordResetChangePasswordBox.openBox(qParam)
+        }
+
+        window.history.pushState({}, document.title, '/')
+    }
+
     menuXClick() {
         this.menuX.classList.toggle('menu-x')
         this.content.classList.toggle('menu-content-show')
 
         if (this.content.classList.length === 2) {
-            game.mainDiv.dispatchEvent(new CustomEvent('boxopen', { detail: { name: 'MENU' } }))
+            game.mainDiv.dispatchEvent(new CustomEvent('boxopen', { detail: { name: 'Menu' } }))
         }
         else {
-            game.mainDiv.dispatchEvent(new CustomEvent('boxclose', { detail: { name: 'MENU' } }))
+            game.mainDiv.dispatchEvent(new CustomEvent('boxclose', { detail: { name: 'Menu' } }))
         }
     }
 
-    async menuItemClick(itemId) {
+    menuItemClick(itemId) {
         this.menuXClick()
-
-        if (this.items[itemId].click) {
-            this.items[itemId].click()
-        } else {
-            if (this.items[itemId].text === 'FULLSCREEN') {
-                try {
-                    await document.body.requestFullscreen()
-                } catch { }
-            } else if(this.items[itemId].text === 'EXIT FS') {
-                try {
-                    await document.exitFullscreen()
-                } catch { }     
-            }
-        }  
-    }
-
-    initializeEvents() {
-        this.menuX.addEventListener('click', () => this.menuXClick())
-
-        this.content.addEventListener('click', (event) => {
-            const target = event.target.id
-            if (target.startsWith('menu-item-')) this.menuItemClick(parseInt(target.replace('menu-item-', '')))
-        })
-
-        document.addEventListener('fullscreenchange', () => {
-            this.initializeMenuItems()
-        })
-
-        game.mainDiv.addEventListener('login', () => {
-            this.initializeMenuItems()
-        })
-
-        game.mainDiv.addEventListener('logout', () => {
-            this.initializeMenuItems()
-        })
+        if (this.items[itemId].click) this.items[itemId].click()
     }
 }
