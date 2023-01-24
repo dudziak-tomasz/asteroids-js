@@ -48,3 +48,5 @@ if (httpsPort) {
     })
 
 }
+
+process.on('SIGTERM', () => console.log((new Date()).toLocaleString(), 'SIGTERM'))
