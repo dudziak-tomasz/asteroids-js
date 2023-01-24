@@ -37,6 +37,7 @@ test('Should create box and assign default data', () => {
     assert.deepEqual(box.content.id.startsWith('box-content'), true)
     assert.deepEqual(box.content.className, 'box-content')
 
+    assert.deepEqual(box.isOpen, false)
     assert.deepEqual(box.content.innerHTML, '')
 })
 
@@ -59,18 +60,20 @@ test('Should open box', () => {
 
     const $content = document.getElementById(box.content.id)
     assert.deepEqual($content, box.content)
+
+    assert.deepEqual(box.isOpen, true)
 })
 
 
 test('Should send "boxopen" event', () => {
     // Prepare mocks
-    let boxOpenMock = false
-    game.mainDiv.addEventListener('boxopen', (e) => boxOpenMock = true)
+    let boxOpenMock = ''
+    game.mainDiv.addEventListener('boxopen', (e) => boxOpenMock = e.detail.name)
 
     const box = new Box(global.document.body, '<p>test HTML</p>')
     box.open()
 
-    assert.deepEqual(boxOpenMock, true)
+    assert.deepEqual(boxOpenMock, 'Box')
 })
 
 test('Should close box', () => {
@@ -80,19 +83,21 @@ test('Should close box', () => {
 
     const $container = document.getElementById(box.container.id)
     assert.deepEqual($container, null)
+
+    assert.deepEqual(box.isOpen, false)
 })
 
 
 test('Should sent "boxclose" event', () => {
     // Prepare mocks
-    let boxCloseMock = false
-    game.mainDiv.addEventListener('boxclose', (e) => boxCloseMock = true)
+    let boxCloseMock = ''
+    game.mainDiv.addEventListener('boxclose', (e) => boxCloseMock = e.detail.name)
 
     const box = new Box(global.document.body, '<p>test HTML</p>')
     box.open()
     box.close()
 
-    assert.deepEqual(boxCloseMock, true)
+    assert.deepEqual(boxCloseMock, 'Box')
 })
 
 
