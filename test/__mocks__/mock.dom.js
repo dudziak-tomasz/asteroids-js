@@ -30,6 +30,7 @@ global.Audio = class {
     constructor(src) {
         this.src = src
         this.isPlaying = false
+        this.volume = 1
     }
     play() {
         this.isPlaying = true

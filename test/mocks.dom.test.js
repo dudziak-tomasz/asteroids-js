@@ -64,6 +64,12 @@ test('Should assign src for new Audio', () => {
 })
 
 
+test('Should assign volume = 1 for new Audio', () => {
+    const audio = new Audio('test.mp3')
+    assert.deepEqual(audio.volume, 1)
+})
+
+
 test('Should not play after create', () => {
     const audio = new Audio()
     assert.deepEqual(audio.isPlaying, false)
