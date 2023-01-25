@@ -66,7 +66,7 @@ Initialize production database (optional):
     
 ---
 
-## RUN / TEST
+## RUN
 
 Developer mode:
 
@@ -76,9 +76,17 @@ Production mode:
 
     npm start
 
-Testing mode:
+---
+
+## TEST
+
+Run all tests:
 
     npm test
+
+Starting the server in test mode for REST API testing:
+
+    npm run devtest
     
 ---
 
