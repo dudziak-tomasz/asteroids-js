@@ -16,35 +16,35 @@ export const passwordResetBox = {
     },
 
     handlePasswordReset() {
-        this.$passwordResetForm = document.getElementById('box-password-reset-form')
         this.$boxErrorMessage = document.getElementById('box-error-message')
 
-        this.$passwordResetForm.email.value = ''
-        this.$passwordResetForm.email.focus()
+        this.$passwordResetForm = document.getElementById('box-password-reset-form')
+        this.$passwordResetForm.onsubmit = (e) => this.resetFormSubmit(e)
 
-        this.$passwordResetForm.onsubmit = async (e) => {
-            e.preventDefault()
+        this.$email = document.getElementById('email')
+        this.$email.value = ''
+        this.$email.focus()
+    },
 
-            const user = {
-                email: this.$passwordResetForm.email.value
-            }
+    async resetFormSubmit(event) {
+        event.preventDefault()
 
-            this.$boxErrorMessage.innerHTML = 'SENDING...'
-            this.$passwordResetForm.submit.disabled = true
+        const user = { email: this.$email.value }
 
-            const res = await api.passwordReset(user)
+        this.$boxErrorMessage.innerHTML = 'SENDING...'
+        this.$passwordResetForm.submit.disabled = true
 
-            this.$passwordResetForm.submit.disabled = false
+        const res = await api.passwordReset(user)
 
-            if (res.status === 200) {
-                this.boxPasswordResetInfo.open()
-            } else if (res.status === 400) {
-                this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
-            } else if (res.status === 403) {
-                this.$boxErrorMessage.innerHTML = 'PASSWORD RESET FAILED. PLEASE TRY AGAIN LATER.'
-            } else {
-                this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
-            }
-        }
+        this.$passwordResetForm.submit.disabled = false
+
+        if (res.status === 200)
+            this.boxPasswordResetInfo.open()
+        else if (res.status === 400)
+            this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
+        else if (res.status === 403) 
+            this.$boxErrorMessage.innerHTML = 'PASSWORD RESET FAILED. PLEASE TRY AGAIN LATER.'
+        else 
+            this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
     }
 }

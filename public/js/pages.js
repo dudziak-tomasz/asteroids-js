@@ -58,7 +58,7 @@ pages.set('PASSWORD RESET', `
     <form id="box-password-reset-form">
         <p>
             EMAIL<br>
-            <input type="text" name="email" autocomplete="off">
+            <input type="text" name="email" id="email" autocomplete="off">
         </p>
         <p class="top-10"><button name="submit">SEND EMAIL</button></p>
         <p id="box-error-message"></p>
