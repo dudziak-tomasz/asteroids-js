@@ -150,19 +150,19 @@ pages.set('PREFERENCES', `
     <p class="box-title-small">BACKGROUND MUSIC TRACK</p>
     <p>
         <label class="radio-label">
-            <input type="radio" id="box-radio-background1" name="box-radio-background" value="background1.mp3" class="radio">
+            <input type="radio" name="box-radio-track" value="background1.mp3" class="radio">
             BACKGROUND1
         </label>
     <p>
     </p>
         <label class="radio-label">
-            <input type="radio" id="box-radio-background2" name="box-radio-background" value="background2.mp3" class="radio">
+            <input type="radio" name="box-radio-track" value="background2.mp3" class="radio">
             BACKGROUND2
         </label>
         <p>
         </p>
             <label class="radio-label">
-            <input type="radio" id="box-radio-background3" name="box-radio-background" value="background3.mp3" class="radio">
+            <input type="radio" name="box-radio-track" value="background3.mp3" class="radio">
             BACKGROUND3
         </label>
     </p>
