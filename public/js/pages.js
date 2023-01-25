@@ -1,20 +1,9 @@
 export const pages = new Map()
 
+
 pages.set('404', `
     <p class="box-title">404: PAGE NOT FOUND</p>
     <p>BUT A LOT OF ASTEROIDS FOUND HERE</p>
-`)
-
-pages.set('CHAT', `
-    <div class="box-chat-title"><p class="box-title">CHAT</p></div>
-    <div id="box-chat-messages" class="box-chat-messages">
-    </div>
-    <div class="box-chat-form">
-        <form id="box-chat-form">
-            <input type="text" name="message" maxlength="255" autocomplete="off" class="box-chat-input">
-            <button name="submit">SEND</button>
-        </form>
-    </div>
 `)
 
 pages.set('LOGIN', `
@@ -32,6 +21,36 @@ pages.set('LOGIN', `
         <p id="box-error-message"></p>
         <p class="top-30"><a id="box-register-button">REGISTER</a> <a id="box-password-reset-button">PASSWORD RESET</a></p>
     </form>
+`)
+
+pages.set('REGISTER', `
+    <p class="box-title">REGISTER</p>
+    <form id="box-register-form">
+        <p>
+            USERNAME<br>
+            <input type="text" name="username" maxlength="20" autocomplete="off"><br>
+            <span id="box-username-info" class="font-75"></span>
+        </p>
+        <p class="top-10">
+            PASSWORD<br>
+            <input type="password" name="password"><br>
+            <span id="box-password-info" class="font-75"></span>
+        </p>
+        <p class="top-10">
+            EMAIL (OPTIONAL)<br>
+            <input type="text" name="email" autocomplete="off"><br>
+            <span id="box-email-info" class="font-75"></span>
+        </p>
+        <p class="top-10"><button name="submit">REGISTER</button></p>
+        <p id="box-error-message"></p>
+    </form>
+`)
+
+pages.set('REGISTER OK', `
+    <p class="box-title">REGISTER</p>
+    <p>THANKS FOR SIGNING UP!</p> 
+    <p>WELCOME TO OUR COMMUNITY!</p> 
+    <p>WE ARE HAPPY TO HAVE YOU ON BOARD!</p>
 `)
 
 pages.set('PASSWORD RESET', `
@@ -69,56 +88,6 @@ pages.set('PASSWORD RESET CHANGE PASSWORD', `
     </form>
 `)
 
-pages.set('REGISTER', `
-    <p class="box-title">REGISTER</p>
-    <form id="box-register-form">
-        <p>
-            USERNAME<br>
-            <input type="text" name="username" maxlength="20" autocomplete="off"><br>
-            <span id="box-username-info" class="font-75"></span>
-        </p>
-        <p class="top-10">
-            PASSWORD<br>
-            <input type="password" name="password"><br>
-            <span id="box-password-info" class="font-75"></span>
-        </p>
-        <p class="top-10">
-            EMAIL (OPTIONAL)<br>
-            <input type="text" name="email" autocomplete="off"><br>
-            <span id="box-email-info" class="font-75"></span>
-        </p>
-        <p class="top-10"><button name="submit">REGISTER</button></p>
-        <p id="box-error-message"></p>
-    </form>
-`)
-
-pages.set('REGISTER OK', `
-    <p class="box-title">REGISTER</p>
-    <p>THANKS FOR SIGNING UP!</p> 
-    <p>WELCOME TO OUR COMMUNITY!</p> 
-    <p>WE ARE HAPPY TO HAVE YOU ON BOARD!</p>
-`)
-
-pages.set('CHANGE PASSWORD', `
-    <p class="box-title">CHANGE PASSWORD</p>
-    <form id="box-change-password-form">
-        <p>
-            CURRENT PASSWORD<br>
-            <input type="password" name="currentPassword">
-        </p>
-        <p>
-            NEW PASSWORD<br>
-            <input type="password" name="newPassword">
-        </p>
-        <p>
-            RETYPE NEW PASSWORD<br>
-            <input type="password" name="retypeNewPassword">
-        </p>
-        <p class="top-10"><button name="submit">CHANGE PASSWORD</button></p>
-        <p id="box-error-message"></p>
-    </form>
-`)
-
 pages.set('PROFILE', `
     <p class="box-title">PROFILE</p>
     <p id="box-profile-error-message"></p>
@@ -141,6 +110,27 @@ pages.set('PROFILE', `
     </div>
 `)
 
+pages.set('CHANGE PASSWORD', `
+    <p class="box-title">CHANGE PASSWORD</p>
+    <form id="box-change-password-form">
+        <p>
+            CURRENT PASSWORD<br>
+            <input type="password" name="currentPassword">
+        </p>
+        <p>
+            NEW PASSWORD<br>
+            <input type="password" name="newPassword">
+        </p>
+        <p>
+            RETYPE NEW PASSWORD<br>
+            <input type="password" name="retypeNewPassword">
+        </p>
+        <p class="top-10"><button name="submit">CHANGE PASSWORD</button></p>
+        <p id="box-error-message"></p>
+    </form>
+`)
+
+
 pages.set('PREFERENCES', `
     <p class="box-title">PREFERENCES</p>
     <p class="box-title-small">SOUND VOLUME</p>
@@ -159,13 +149,25 @@ pages.set('PREFERENCES', `
             <input type="radio" name="box-radio-track" value="background2.mp3" class="radio">
             BACKGROUND2
         </label>
-        <p>
-        </p>
-            <label class="radio-label">
+    <p>
+    </p>
+        <label class="radio-label">
             <input type="radio" name="box-radio-track" value="background3.mp3" class="radio">
             BACKGROUND3
         </label>
     </p>
+`)
+
+pages.set('CHAT', `
+    <div class="box-chat-title"><p class="box-title">CHAT</p></div>
+    <div id="box-chat-messages" class="box-chat-messages">
+    </div>
+    <div class="box-chat-form">
+        <form id="box-chat-form">
+            <input type="text" name="message" maxlength="255" autocomplete="off" class="box-chat-input">
+            <button name="submit">SEND</button>
+        </form>
+    </div>
 `)
 
 pages.set('HOW TO PLAY', `

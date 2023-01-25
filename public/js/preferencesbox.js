@@ -17,32 +17,38 @@ export const preferencesBox = {
     },
 
     handlePreferences() {
-        this.$boxSliderMusic = document.getElementById('box-slider-music')
         this.$boxSliderSound = document.getElementById('box-slider-sound')
-        this.$boxRadios = document.querySelectorAll('input[name="box-radio-background"]')
-
-        this.$boxSliderMusic.value = game.getAudioVolume()
-        this.$boxSliderMusic.oninput = () => {
-            const volume = parseFloat(this.$boxSliderMusic.value)
-            game.setAudioVolume(volume)
-            game.playAudio()
-        }
-
         this.$boxSliderSound.value = Spacetime.getAudioVolume()
-        this.$boxSliderSound.oninput = () => {
-            const volume = parseFloat(this.$boxSliderSound.value)
-            Spacetime.setAudioVolume(volume)
-            this.audio.volume = Spacetime.audioVolume
-            this.audio.play()
-        }
+        this.$boxSliderSound.oninput = () => this.sliderSoundInput()
 
-        const track = game.audioTrack
-        this.$boxRadios.forEach((radio) => {
-            if (radio.value === track) radio.checked = true
-            radio.oninput = (e) => {
-                game.setAudioTrack(e.target.value)
-                game.playAudio()
-            }
-        })
+        this.$boxSliderMusic = document.getElementById('box-slider-music')
+        this.$boxSliderMusic.value = game.getAudioVolume()
+        this.$boxSliderMusic.oninput = () => this.sliderMusicInput()
+
+        this.$boxRadioTracks = document.getElementsByName('box-radio-track')
+        this.$boxRadioTracks.forEach(radioTrack => this.setRadioTrack(radioTrack))
+    },
+
+    sliderSoundInput() {
+        const volume = parseFloat(this.$boxSliderSound.value)
+        Spacetime.setAudioVolume(volume)
+        this.audio.volume = Spacetime.audioVolume
+        this.audio.play()
+    },
+
+    sliderMusicInput() {
+        const volume = parseFloat(this.$boxSliderMusic.value)
+        game.setAudioVolume(volume)
+        game.playAudio()
+    },
+
+    setRadioTrack(radioTrack) {
+        radioTrack.checked = radioTrack.value === game.audioTrack
+        radioTrack.oninput = (e) => this.radioTrackInput(e.target.value)
+    },
+
+    radioTrackInput(audioTrack) {
+        game.setAudioTrack(audioTrack)
+        game.playAudio()
     }
 }
