@@ -28,17 +28,17 @@ pages.set('REGISTER', `
     <form id="box-register-form">
         <p>
             USERNAME<br>
-            <input type="text" name="username" maxlength="20" autocomplete="off"><br>
+            <input type="text" name="username" id="username" maxlength="20" autocomplete="off"><br>
             <span id="box-username-info" class="font-75"></span>
         </p>
         <p class="top-10">
             PASSWORD<br>
-            <input type="password" name="password"><br>
+            <input type="password" name="password" id="password"><br>
             <span id="box-password-info" class="font-75"></span>
         </p>
         <p class="top-10">
             EMAIL (OPTIONAL)<br>
-            <input type="text" name="email" autocomplete="off"><br>
+            <input type="text" name="email" id="email" autocomplete="off"><br>
             <span id="box-email-info" class="font-75"></span>
         </p>
         <p class="top-10"><button name="submit">REGISTER</button></p>
@@ -47,7 +47,7 @@ pages.set('REGISTER', `
 `)
 
 pages.set('REGISTER OK', `
-    <p class="box-title">REGISTER</p>
+    <p class="box-title">WELCOME</p>
     <p>THANKS FOR SIGNING UP!</p> 
     <p>WELCOME TO OUR COMMUNITY!</p> 
     <p>WE ARE HAPPY TO HAVE YOU ON BOARD!</p>

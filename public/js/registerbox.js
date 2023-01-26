@@ -7,58 +7,65 @@ export const registerBox = {
 
     createBox(parentElement) {
         this.box = new Box(parentElement, pages.get('REGISTER'))
-        this.boxRegisterOK = new Box(parentElement, pages.get('REGISTER OK'))
+        this.boxWelcome = new Box(parentElement, pages.get('REGISTER OK'))
     },
 
     openBox() {
         registerBox.box.open()
-        registerBox.handleRegister()
+        registerBox.handleElements()
     },
 
-    handleRegister() {
-        this.$registerForm = document.getElementById('box-register-form')
+    handleElements() {
         this.$boxErrorMessage = document.getElementById('box-error-message')
+        this.$boxErrorMessage.innerHTML = ''
+
         this.$boxUsernameInfo = document.getElementById('box-username-info')
-        this.$boxPasswordInfo = document.getElementById('box-password-info')
-        this.$boxEmailInfo = document.getElementById('box-email-info')
-
         this.$boxUsernameInfo.innerHTML = errors.UsernameInvalid
+
+        this.$boxPasswordInfo = document.getElementById('box-password-info')
         this.$boxPasswordInfo.innerHTML = errors.PasswordInvalid
-        this.$boxEmailInfo.innerHTML = 'FOR PASSWORD RESET ONLY'
 
-        this.$registerForm.username.value = ''
-        this.$registerForm.password.value = ''
-        this.$registerForm.email.value = ''
+        this.$boxEmailInfo = document.getElementById('box-email-info')
+        this.$boxEmailInfo.innerHTML = errors.ForPasswordResetOnly
 
-        this.$registerForm.username.focus()
+        this.$registerForm = document.getElementById('box-register-form')
+        this.$registerForm.onsubmit = (e) => this.registerFormSubmit(e)
 
-        this.$registerForm.onsubmit = async (e) => {
-            e.preventDefault()
+        this.$username = document.getElementById('username')
+        this.$username.value = ''
+        this.$username.focus()
+        this.$username.oninput = () => this.$boxErrorMessage.innerHTML = ''
 
-            const user = {
-                username: this.$registerForm.username.value,
-                password: this.$registerForm.password.value,
-                email: this.$registerForm.email.value
-            }
+        this.$password = document.getElementById('password')
+        this.$password.value = ''
+        this.$password.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
 
-            this.$boxErrorMessage.innerHTML = 'LOGIN...'
-            this.$registerForm.submit.disabled = true
+        this.$email = document.getElementById('email')
+        this.$email.value = ''
+        this.$email.oninput = () => this.$boxErrorMessage.innerHTML = ''
+    },
 
-            const res = await api.newUser(user)
+    async registerFormSubmit(event) {
+        event.preventDefault()
 
-            this.$registerForm.submit.disabled = false
-
-            if (res.status === 201) {
-                this.boxRegisterOK.open()
-            } else if (res.status === 400) {
-                this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
-            } else {
-                this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
-            }
+        const user = {
+            username: this.$username.value,
+            password: this.$password.value,
+            email: this.$email.value
         }
 
-        this.$registerForm.password.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
-        this.$registerForm.username.oninput = () => this.$boxErrorMessage.innerHTML = ''
-        this.$registerForm.email.oninput = () => this.$boxErrorMessage.innerHTML = ''
+        this.$boxErrorMessage.innerHTML = 'USER REGISTRATION...'
+        this.$registerForm.submit.disabled = true
+
+        const res = await api.newUser(user)
+
+        this.$registerForm.submit.disabled = false
+
+        if (res.status === 201)
+            this.boxWelcome.open()
+        else if (res.status === 400)
+            this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
+        else
+            this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
     }
 }

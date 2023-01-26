@@ -7,6 +7,7 @@ export const errors = {
     UsernameOrPasswordIncorect: 'USERNAME OR PASSWORD IS INCORECT. PLEASE TRY AGAIN.',
     PasswordResetFail: 'PASSWORD RESET FAILED. PLEASE TRY AGAIN LATER.',
     NewPasswordNotMatchRetyped: 'NEW PASSWORD DOES NOT MATCH RETYPED PASSWORD',
+    ForPasswordResetOnly: 'FOR PASSWORD RESET ONLY',
     CapsLock: 'CAPS LOCK IS ON!',
 
     getCapsLockError(event) {
