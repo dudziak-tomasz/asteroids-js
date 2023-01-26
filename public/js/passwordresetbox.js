@@ -43,7 +43,7 @@ export const passwordResetBox = {
         else if (res.status === 400)
             this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
         else if (res.status === 403) 
-            this.$boxErrorMessage.innerHTML = 'PASSWORD RESET FAILED. PLEASE TRY AGAIN LATER.'
+            this.$boxErrorMessage.innerHTML = errors.PasswordResetFail
         else 
             this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
     }

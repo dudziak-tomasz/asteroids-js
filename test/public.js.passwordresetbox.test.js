@@ -101,7 +101,7 @@ test('Should show 403 error', async () => {
 
     await passwordResetBox.$passwordResetForm.dispatchEvent(new CustomEvent('submit'))
 
-    assert.deepEqual(passwordResetBox.$boxErrorMessage.innerHTML, 'PASSWORD RESET FAILED. PLEASE TRY AGAIN LATER.')
+    assert.deepEqual(passwordResetBox.$boxErrorMessage.innerHTML, errors.PasswordResetFail)
 })
 
 
