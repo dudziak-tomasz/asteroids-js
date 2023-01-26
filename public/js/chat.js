@@ -109,6 +109,8 @@ export const chat = {
         this.$chatMessages = document.getElementById('box-chat-messages')
         this.$chatForm = document.getElementById('box-chat-form')
 
+        this.$chatMessages.innerHTML = ''
+
         this.loginChatServer()
 
         this.messages.forEach(message => this.renderMessage(message))
