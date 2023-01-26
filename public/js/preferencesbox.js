@@ -13,10 +13,10 @@ export const preferencesBox = {
 
     openBox() {
         preferencesBox.box.open()
-        preferencesBox.handlePreferences()
+        preferencesBox.handleElements()
     },
 
-    handlePreferences() {
+    handleElements() {
         this.$boxSliderSound = document.getElementById('box-slider-sound')
         this.$boxSliderSound.value = Spacetime.getAudioVolume()
         this.$boxSliderSound.oninput = () => this.sliderSoundInput()

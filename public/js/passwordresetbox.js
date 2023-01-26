@@ -12,10 +12,10 @@ export const passwordResetBox = {
 
     openBox() {
         passwordResetBox.box.open()
-        passwordResetBox.handlePasswordReset()
+        passwordResetBox.handleElements()
     },
 
-    handlePasswordReset() {
+    handleElements() {
         this.$boxErrorMessage = document.getElementById('box-error-message')
 
         this.$passwordResetForm = document.getElementById('box-password-reset-form')
