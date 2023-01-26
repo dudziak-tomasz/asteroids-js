@@ -10,48 +10,50 @@ export const passwordResetChangePasswordBox = {
         this.box = new Box(parentElement, pages.get('PASSWORD RESET CHANGE PASSWORD'))
     },
 
-    openBox(token) {
+    openBox(tokenFromURL) {
+        this.token = tokenFromURL
         passwordResetChangePasswordBox.box.open()
-        passwordResetChangePasswordBox.handlePasswordResetChangePassword(token)
+        passwordResetChangePasswordBox.handleElements()
     },
 
-    handlePasswordResetChangePassword(token) {
-        this.$changePasswordForm = document.getElementById('box-change-password-form')
+    handleElements() {
         this.$boxErrorMessage = document.getElementById('box-error-message')
 
-        this.$changePasswordForm.newPassword.focus()
+        this.$changePasswordForm = document.getElementById('box-change-password-form')
+        this.$changePasswordForm.onsubmit = (e) => this.changePasswordFormSubmit(e)
 
-        this.$changePasswordForm.onsubmit = async (e) => {
-            e.preventDefault()
+        this.$newPassword = document.getElementById('new-password')
+        this.$newPassword.value = ''
+        this.$newPassword.focus()
+        this.$newPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
 
-            const newPassword = this.$changePasswordForm.newPassword.value
-            const retypeNewPassword = this.$changePasswordForm.retypeNewPassword.value
+        this.$retypeNewPassword = document.getElementById('retype-new-password')
+        this.$retypeNewPassword.value = ''
+        this.$retypeNewPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
+    },
 
-            if (newPassword !== retypeNewPassword) return this.$boxErrorMessage.innerHTML = 'NEW PASSWORD DOES NOT MATCH RETYPED PASSWORD'
+    async changePasswordFormSubmit(event) {
+        event.preventDefault()
 
-            const user = {
-                password: newPassword
-            }
+        if (this.$newPassword.value !== this.$retypeNewPassword.value) 
+            return this.$boxErrorMessage.innerHTML = errors.NewPasswordNotMatchRetyped
 
-            this.$boxErrorMessage.innerHTML = 'CHANGING PASSWORD...'
-            this.$changePasswordForm.submit.disabled = true
+        const user = { password: this.$newPassword.value }
 
-            const res = await api.passwordUpdate(user, token)
+        this.$boxErrorMessage.innerHTML = 'CHANGING PASSWORD...'
+        this.$changePasswordForm.submit.disabled = true
 
-            this.$changePasswordForm.submit.disabled = false
+        const res = await api.passwordUpdate(user, this.token)
 
-            if (res.status === 200) {
-                loginBox.openBox('PASSWORD CHANGED. YOU CAN LOG IN.')
-            } else if (res.status === 400) {
-                this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
-            } else if (res.status === 403) {
-                this.$boxErrorMessage.innerHTML = 'PASSWORD RESET FAILED. PLEASE TRY AGAIN LATER.'
-            } else {
-                this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
-            }
-        }
+        this.$changePasswordForm.submit.disabled = false
 
-        this.$changePasswordForm.newPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
-        this.$changePasswordForm.retypeNewPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
+        if (res.status === 200)
+            loginBox.openBox('PASSWORD CHANGED. YOU CAN LOG IN.')
+        else if (res.status === 400)
+            this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
+        else if (res.status === 403)
+            this.$boxErrorMessage.innerHTML = errors.PasswordResetFail
+        else
+            this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
     }
 }

@@ -77,11 +77,11 @@ pages.set('PASSWORD RESET CHANGE PASSWORD', `
     <form id="box-change-password-form">
         <p>
             NEW PASSWORD<br>
-            <input type="password" name="newPassword">
+            <input type="password" name="newPassword" id="new-password">
         </p>
         <p>
             RETYPE NEW PASSWORD<br>
-            <input type="password" name="retypeNewPassword">
+            <input type="password" name="retypeNewPassword" id="retype-new-password">
         </p>
         <p class="top-10"><button name="submit">CHANGE PASSWORD</button></p>
         <p id="box-error-message"></p>
