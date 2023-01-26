@@ -11,11 +11,11 @@ pages.set('LOGIN', `
     <form id="box-login-form">
         <p>
             USERNAME<br>
-            <input type="text" name="username" maxlength="20" autocomplete="off">
+            <input type="text" name="username" id="username" maxlength="20" autocomplete="off">
         </p>
         <p>
             PASSWORD<br>
-            <input type="password" name="password">
+            <input type="password" name="password" id="password">
         </p>
         <p class="top-10"><button name="submit">LOGIN</button></p>
         <p id="box-error-message"></p>
