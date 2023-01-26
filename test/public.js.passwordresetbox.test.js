@@ -31,7 +31,7 @@ test('Should open password reset box', () => {
 
 
 test('Should handle HTML elements', () => {
-    passwordResetBox.handlePasswordReset()
+    passwordResetBox.handleElements()
 
     assert.deepEqual(passwordResetBox.$boxErrorMessage.constructor.name, 'HTMLParagraphElement')
     assert.deepEqual(passwordResetBox.$boxErrorMessage.id, 'box-error-message')
@@ -57,6 +57,7 @@ test('Should show a message and disable submit button after submit', async () =>
         disabled = passwordResetBox.$passwordResetForm.submit.disabled
     }
 
+    passwordResetBox.openBox()
     await passwordResetBox.$passwordResetForm.dispatchEvent(new CustomEvent('submit'))
 
     assert.deepEqual(innerHTML, 'SENDING...')
@@ -71,6 +72,7 @@ test('Should close box and open boxPasswordResetInfo after status 200', async ()
         return { status: 200 }
     }
 
+    passwordResetBox.openBox()
     await passwordResetBox.$passwordResetForm.dispatchEvent(new CustomEvent('submit'))
 
     assert.deepEqual(passwordResetBox.box.isOpen, false)
@@ -87,6 +89,7 @@ test('Should show 400 error', async () => {
         }
     }
 
+    passwordResetBox.openBox()
     await passwordResetBox.$passwordResetForm.dispatchEvent(new CustomEvent('submit'))
 
     assert.deepEqual(passwordResetBox.$boxErrorMessage.innerHTML, 'TEST ERROR MESSAGE')
@@ -99,6 +102,7 @@ test('Should show 403 error', async () => {
         return { status: 403 }
     }
 
+    passwordResetBox.openBox()
     await passwordResetBox.$passwordResetForm.dispatchEvent(new CustomEvent('submit'))
 
     assert.deepEqual(passwordResetBox.$boxErrorMessage.innerHTML, errors.PasswordResetFail)
@@ -111,6 +115,7 @@ test('Should show conection problem error', async () => {
         return { status: 500 }
     }
 
+    passwordResetBox.openBox()
     await passwordResetBox.$passwordResetForm.dispatchEvent(new CustomEvent('submit'))
 
     assert.deepEqual(passwordResetBox.$boxErrorMessage.innerHTML, errors.ConnectionProblem)

@@ -29,7 +29,7 @@ test('Should open preferences box', () => {
 
 
 test('Should handle HTML elements', () => {
-    preferencesBox.handlePreferences()
+    preferencesBox.handleElements()
 
     assert.deepEqual(preferencesBox.$boxSliderSound.constructor.name, 'HTMLInputElement')
     assert.deepEqual(preferencesBox.$boxSliderSound.id, 'box-slider-sound')
