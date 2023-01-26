@@ -97,17 +97,19 @@ export class Spacetime {
         this.missiles.forEach(missile => {
             missile.move()
 
-            if (missile.id.startsWith('alien-')) {
-                if (this.spaceship && this.spaceship.isHitByMissile(missile)) {
-                    this.spaceship.hit()
-                    this.removeMissile(missile)
-                }
-            } else {
-                if (this.saucer && this.saucer.isHitByMissile(missile)) {
-                    this.sendEvent('saucerhit', {size: this.saucer.size})
-                    this.saucer.hit()
-                    this.removeMissile(missile)
-                }    
+            const isAlienMissile = missile.id.startsWith('alien-')
+            const isSpaceshipHitByMissile = isAlienMissile && this.spaceship && this.spaceship.isHitByMissile(missile)
+            const isSaucerHitByMissile = !isAlienMissile && this.saucer && this.saucer.isHitByMissile(missile)
+
+            if (isSpaceshipHitByMissile) {
+                this.spaceship.hit()
+                this.removeMissile(missile)                
+            }
+
+            if (isSaucerHitByMissile) {
+                this.sendEvent('saucerhit', {size: this.saucer.size})
+                this.saucer.hit()
+                this.removeMissile(missile)
             }
         })
     }
