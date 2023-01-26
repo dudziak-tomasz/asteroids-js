@@ -112,7 +112,7 @@ test('Should show error 403', async () => {
 })
 
 
-test('Should show conection problem error', async () => {
+test('Should show connection problem error', async () => {
     // Prepare mocks
     api.login = () => { 
         return { status: 500 }

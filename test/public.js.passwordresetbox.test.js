@@ -109,7 +109,7 @@ test('Should show 403 error', async () => {
 })
 
 
-test('Should show conection problem error', async () => {
+test('Should show connection problem error', async () => {
     // Prepare mocks
     api.passwordReset = () => { 
         return { status: 500 }
