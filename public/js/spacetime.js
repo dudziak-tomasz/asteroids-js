@@ -97,9 +97,8 @@ export class Spacetime {
         this.missiles.forEach(missile => {
             missile.move()
 
-            const isAlienMissile = missile.id.startsWith('alien-')
-            const isSpaceshipHitByMissile = isAlienMissile && this.spaceship && this.spaceship.isHitByMissile(missile)
-            const isSaucerHitByMissile = !isAlienMissile && this.saucer && this.saucer.isHitByMissile(missile)
+            const isSpaceshipHitByMissile = missile.isAlien && this.spaceship && this.spaceship.isHitByMissile(missile)
+            const isSaucerHitByMissile = !missile.isAlien && this.saucer && this.saucer.isHitByMissile(missile)
 
             if (isSpaceshipHitByMissile) {
                 this.spaceship.hit()
@@ -116,31 +115,27 @@ export class Spacetime {
 
     static moveAsteroidsAndCheckAsteroidHit() {
         this.asteroids.forEach(asteroid => {
-            let isAsteroidHit = false
 
             asteroid.move()
 
-            this.missiles.forEach(missile => {
-                if (asteroid.isHitByMissile(missile)) {
-                    isAsteroidHit = true
-
-                    if (!missile.id.startsWith('alien-')) this.sendEvent('asteroidhit', {size: asteroid.size})
-
-                    asteroid.hit()
-                    this.removeMissile(missile)
-                }                
-            })
-
-            if (this.saucer && !isAsteroidHit && this.saucer.isHitBy(asteroid)) {             
-                this.saucer.hit()
+            for (let missile of this.missiles.values()) if (asteroid.isHitByMissile(missile)) {
+                if (!missile.isAlien) this.sendEvent('asteroidhit', {size: asteroid.size})
                 asteroid.hit()
+                this.removeMissile(missile)            
+                return
             }
 
-            if (this.spaceship && !isAsteroidHit && this.spaceship.isHitBy(asteroid)) {
-                this.sendEvent('asteroidhit', {size: asteroid.size})
+            if (this.saucer && this.saucer.isHitBy(asteroid)) {             
+                this.saucer.hit()
+                asteroid.hit()
+                return
+            }
 
+            if (this.spaceship && this.spaceship.isHitBy(asteroid)) {
+                this.sendEvent('asteroidhit', {size: asteroid.size})
                 this.spaceship.hit()
                 asteroid.hit()
+                return
             }
         })
     }
