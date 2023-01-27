@@ -62,6 +62,22 @@ test('Should handle HTML elements', () => {
 })
 
 
+test('Should reset element values after reopen box', () => {
+    passwordResetChangePasswordBox.openBox()
+
+    passwordResetChangePasswordBox.$boxErrorMessage.innerHTML = 'testing'
+    passwordResetChangePasswordBox.$newPassword.value = 'testing'
+    passwordResetChangePasswordBox.$retypeNewPassword.value = 'testing'
+
+    passwordResetChangePasswordBox.box.close()
+    passwordResetChangePasswordBox.openBox()
+
+    assert.deepEqual(passwordResetChangePasswordBox.$boxErrorMessage.innerHTML, '')
+    assert.deepEqual(passwordResetChangePasswordBox.$newPassword.value, '')
+    assert.deepEqual(passwordResetChangePasswordBox.$retypeNewPassword.value, '')
+})
+
+
 test('Should show a message and disable submit button after submit', async () => {
     // Prepare mocks
     let innerHTML, disabled

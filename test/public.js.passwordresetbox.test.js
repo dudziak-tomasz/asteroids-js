@@ -43,9 +43,24 @@ test('Should handle HTML elements', () => {
 
     assert.deepEqual(passwordResetBox.$email.constructor.name, 'HTMLInputElement')
     assert.deepEqual(passwordResetBox.$email.id, 'email')
+    assert.deepEqual(passwordResetBox.$email.value, '')
     
     const isFocused = document.activeElement === passwordResetBox.$email
     assert.deepEqual(isFocused, true)
+})
+
+
+test('Should reset element values after reopen box', () => {
+    passwordResetBox.openBox()
+
+    passwordResetBox.$boxErrorMessage.innerHTML = 'testing'
+    passwordResetBox.$email.value  = 'testing'
+
+    passwordResetBox.box.close()
+    passwordResetBox.openBox()
+
+    assert.deepEqual(passwordResetBox.$boxErrorMessage.innerHTML, '')
+    assert.deepEqual(passwordResetBox.$email.value, '')
 })
 
 

@@ -73,6 +73,24 @@ test('Should handle HTML elements', () => {
 })
 
 
+test('Should reset element values after reopen box', () => {
+    registerBox.openBox()
+
+    registerBox.$boxErrorMessage.innerHTML = 'testing'
+    registerBox.$username.value = 'testing'
+    registerBox.$password.value = 'testing'
+    registerBox.$email.value = 'testing'
+
+    registerBox.box.close()
+    registerBox.openBox()
+
+    assert.deepEqual(registerBox.$boxErrorMessage.innerHTML, '')
+    assert.deepEqual(registerBox.$username.value, '')
+    assert.deepEqual(registerBox.$password.value, '')
+    assert.deepEqual(registerBox.$email.value, '')
+})
+
+
 test('Should show a message and disable submit button after submit', async () => {
     // Prepare mocks
     let innerHTML, disabled

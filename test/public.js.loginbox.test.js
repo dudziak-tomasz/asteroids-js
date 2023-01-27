@@ -63,6 +63,22 @@ test('Should handle HTML elements', () => {
 })
 
 
+test('Should reset element values after reopen box', () => {
+    loginBox.openBox()
+
+    loginBox.$boxErrorMessage.innerHTML = 'testing'
+    loginBox.$username.value = 'testing'
+    loginBox.$password.value = 'testing'
+
+    loginBox.box.close()
+    loginBox.openBox()
+
+    assert.deepEqual(loginBox.$boxErrorMessage.innerHTML, '')
+    assert.deepEqual(loginBox.$username.value, '')
+    assert.deepEqual(loginBox.$password.value, '')
+})
+
+
 test('Should handle HTML elements and assign message text', () => {
     loginBox.handleElements('test message')
     assert.deepEqual(loginBox.$boxErrorMessage.innerHTML, 'test message')
