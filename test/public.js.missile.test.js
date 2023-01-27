@@ -12,6 +12,7 @@ test('Should create new missile and assign default data', () => {
     const missile = new Missile()
     assert.deepEqual(missile.id.startsWith('missile'), true)
     assert.deepEqual(missile.canvas.id, missile.id)
+    assert.deepEqual(missile.isAlien, false)
     assert.deepEqual(missile.maxSpeed, 6)
     assert.deepEqual(missile.timeOfDestruction, 144)
     assert.deepEqual(missile.counterOfDestruction, 1)
@@ -40,6 +41,7 @@ test('Should create new missile and assign given data', () => {
     }
 
     const missile = new Missile(startPoint, direction, options)
+    assert.deepEqual(missile.isAlien, true)
     assert.deepEqual(missile.maxSpeed, 3)
     assert.deepEqual(missile.timeOfDestruction, 144)
     assert.deepEqual(missile.counterOfDestruction, 1)
