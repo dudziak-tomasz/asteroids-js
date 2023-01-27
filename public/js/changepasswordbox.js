@@ -7,78 +7,84 @@ export const changePasswordBox = {
     
     createBox(parentElement) {
         this.box = new Box(parentElement, pages.get('CHANGE PASSWORD'))
+        this.boxPasswordChangedInfo = new Box(parentElement, pages.get('NEW PASSWORD'))
     },
 
     openBox() {
         changePasswordBox.box.open()
-        changePasswordBox.handleChangePassword()
+        changePasswordBox.handleElements()
     },
 
-    handleChangePassword() {
-        this.$changePasswordForm = document.getElementById('box-change-password-form')
+    handleElements() {
         this.$boxErrorMessage = document.getElementById('box-error-message')
+        this.$boxErrorMessage.innerHTML = ''
 
-        this.$changePasswordForm.currentPassword.value = ''
-        this.$changePasswordForm.newPassword.value = ''
-        this.$changePasswordForm.retypeNewPassword.value = ''
+        this.$boxPasswordInfo = document.getElementById('box-password-info')
+        this.$boxPasswordInfo.innerHTML = errors.PasswordInvalid
 
-        this.$changePasswordForm.currentPassword.focus()
+        this.$changePasswordForm = document.getElementById('box-change-password-form')
+        this.$changePasswordForm.onsubmit = (e) => this.changePasswordFormSubmit(e)
+        this.$changePasswordForm.submit.disabled = false
 
-        this.$changePasswordForm.onsubmit = async (e) => {
-            e.preventDefault()
+        this.$currentPassword = document.getElementById('current-password')
+        this.$currentPassword.value = ''
+        this.$currentPassword.focus()
+        this.$currentPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
 
-            let user = {}
+        this.$newPassword = document.getElementById('new-password')
+        this.$newPassword.value = ''
+        this.$newPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
 
-            const currentPassword = this.$changePasswordForm.currentPassword.value
-            const newPassword = this.$changePasswordForm.newPassword.value
-            const retypeNewPassword = this.$changePasswordForm.retypeNewPassword.value
+        this.$retypeNewPassword = document.getElementById('retype-new-password')
+        this.$retypeNewPassword.value = ''
+        this.$retypeNewPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
+    },
 
-            if (newPassword !== retypeNewPassword) return this.$boxErrorMessage.innerHTML = 'NEW PASSWORD DOES NOT MATCH RETYPED PASSWORD'
-            if (newPassword === currentPassword) return this.$boxErrorMessage.innerHTML = 'NEW PASSWORD SHOULD BE DIFFERENT FROM CURRENT PASSWORD'
+    async changePasswordFormSubmit(event) {
+        event.preventDefault()
 
-            this.$boxErrorMessage.innerHTML = 'CHANGING PASSWORD...'
-            this.$changePasswordForm.submit.disabled = true
+        if (this.$newPassword.value !== this.$retypeNewPassword.value) 
+            return this.$boxErrorMessage.innerHTML = errors.NewPasswordNotMatchRetyped
+        if (this.$newPassword.value === this.$currentPassword.value) 
+            return this.$boxErrorMessage.innerHTML = errors.NewPasswordShouldBeDifferent
 
-            user.username = api.user.username
-            user.password = currentPassword
-            user.checkPasswordOnly = true
+        this.$boxErrorMessage.innerHTML = 'CHANGING PASSWORD...'
+        this.$changePasswordForm.submit.disabled = true
 
-            // currentPassword matches?
-            let res = await api.login(user)
+        const res = await this.checkCurrentPassword()
 
-            if (res.status === 200) {
-                    delete user.username
-                    user.password = newPassword
+        if (res.status === 200)
+            await this.changePassword()
+        else if (res.status === 403)
+            this.$boxErrorMessage.innerHTML = errors.IncorrectCurrentPassword
+        else
+            this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
 
-                    // change password
-                    res = await api.updateUser(user)
-    
-                    if (res.status === 200) {
-                        this.$boxErrorMessage.innerHTML = 'PASSWORD CHANGED'
+        this.$changePasswordForm.submit.disabled = false
+    },
 
-                        this.$changePasswordForm.currentPassword.value = ''
-                        this.$changePasswordForm.newPassword.value = ''
-                        this.$changePasswordForm.retypeNewPassword.value = ''
-                    } else if (res.status === 400) {
-                        this.$boxErrorMessage.innerHTML = res.error.toUpperCase() + `: ${errors.PasswordInvalid}`
-                    } else if (res.status === 403) {
-                        this.$boxErrorMessage.innerHTML = errors.NotLogged
-                    } 
-                    else {
-                        this.$boxErrorMessage.innerHTML = errors.ConnectionProblem   
-                    }
-
-            } else if (res.status === 403) {
-                this.$boxErrorMessage.innerHTML = 'INCORRECT CURRENT PASSWORD...'
-            } else {
-                this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
-            }
-
-            this.$changePasswordForm.submit.disabled = false
+    async checkCurrentPassword() {
+        const user = {
+            username: api.user.username,
+            password: this.$currentPassword.value,
+            checkPasswordOnly: true
         }
 
-        this.$changePasswordForm.currentPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
-        this.$changePasswordForm.newPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
-        this.$changePasswordForm.retypeNewPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
+        return await api.login(user)
+    },
+
+    async changePassword() {
+        const user = { password: this.$newPassword.value }
+
+        const res = await api.updateUser(user)
+
+        if (res.status === 200)
+            this.boxPasswordChangedInfo.open()
+        else if (res.status === 400)
+            this.$boxErrorMessage.innerHTML = res.error.toUpperCase() + `: ${errors.PasswordInvalid}`
+        else if (res.status === 403)
+            this.$boxErrorMessage.innerHTML = errors.NotLogged
+        else
+            this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
     }
 }

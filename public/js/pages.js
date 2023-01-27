@@ -115,21 +115,26 @@ pages.set('CHANGE PASSWORD', `
     <form id="box-change-password-form">
         <p>
             CURRENT PASSWORD<br>
-            <input type="password" name="currentPassword">
+            <input type="password" name="currentPassword" id="current-password">
         </p>
         <p>
             NEW PASSWORD<br>
-            <input type="password" name="newPassword">
+            <input type="password" name="newPassword" id="new-password"><br>
+            <span id="box-password-info" class="font-75"></span>
         </p>
         <p>
             RETYPE NEW PASSWORD<br>
-            <input type="password" name="retypeNewPassword">
+            <input type="password" name="retypeNewPassword" id="retype-new-password">
         </p>
         <p class="top-10"><button name="submit">CHANGE PASSWORD</button></p>
         <p id="box-error-message"></p>
     </form>
 `)
 
+pages.set('NEW PASSWORD', `
+    <p class="box-title">CHANGE PASSWORD</p>
+    <p>PASSWORD HAS BEEN CHANGED</p>
+`)
 
 pages.set('PREFERENCES', `
     <p class="box-title">PREFERENCES</p>
