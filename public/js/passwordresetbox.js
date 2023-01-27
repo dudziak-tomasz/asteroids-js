@@ -17,6 +17,7 @@ export const passwordResetBox = {
 
     handleElements() {
         this.$boxErrorMessage = document.getElementById('box-error-message')
+        this.$boxErrorMessage.innerHTML = ''
 
         this.$passwordResetForm = document.getElementById('box-password-reset-form')
         this.$passwordResetForm.onsubmit = (e) => this.resetFormSubmit(e)
