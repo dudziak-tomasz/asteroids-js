@@ -108,7 +108,7 @@ test('Should show a message and disable submit button after submit', async () =>
 })
 
 
-test('Should close register box and open welcome box after status 200', async () => {
+test('Should close register box and open welcome box after status 201', async () => {
     // Prepare mocks
     api.newUser = () => { 
         return { status: 201 }
