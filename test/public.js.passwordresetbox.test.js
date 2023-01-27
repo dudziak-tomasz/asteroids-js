@@ -44,6 +44,7 @@ test('Should handle HTML elements', () => {
     assert.deepEqual(passwordResetBox.$email.constructor.name, 'HTMLInputElement')
     assert.deepEqual(passwordResetBox.$email.id, 'email')
     assert.deepEqual(passwordResetBox.$email.value, '')
+    assert.deepEqual(typeof passwordResetBox.$email.oninput, 'function')
     
     const isFocused = document.activeElement === passwordResetBox.$email
     assert.deepEqual(isFocused, true)
