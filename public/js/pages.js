@@ -91,11 +91,11 @@ pages.set('PASSWORD RESET CHANGE PASSWORD', `
 pages.set('PROFILE', `
     <p class="box-title">PROFILE</p>
     <p id="box-profile-error-message"></p>
-    <div id="box-profile-div" style="display: none">
+    <div id="box-profile-div">
         <form id="box-profile-form">
-            <p><span class="profile-label">USERNAME</span><span><input type="text" name="username" maxlength="20" autocomplete="off"></span></p>
-            <p><span class="profile-label">EMAIL</span><span><input type="text" name="email" autocomplete="off"></span></p>
-            <p><span class="profile-label">HIGSCORE</span><span><input type="text" name="highscore" disabled></span></p>
+            <p><span class="profile-label">USERNAME</span><span><input type="text" name="username" id="username" maxlength="20" autocomplete="off"></span></p>
+            <p><span class="profile-label">EMAIL</span><span><input type="text" name="email" id="email" autocomplete="off"></span></p>
+            <p><span class="profile-label">HIGSCORE</span><span><input type="text" name="highscore" id="highscore" disabled></span></p>
             <p><button type="submit" name="submit">SAVE</button> <button id="box-logout-button">LOGOUT</button></p>
             <p id="box-error-message"></p>
         </form>
@@ -105,7 +105,7 @@ pages.set('PROFILE', `
         <p id="box-logoutall-error-message"></p>
         <p class="box-title-small">MANAGE ACCOUT</p>
         <p><a id="box-close-account-button">CLOSE MY ACCOUNT</a></p>
-        <p id="box-close-message" style="display: none" class="left-20 font-75">ARE YOU SURE? <a id="box-close-yes">YES</a> <a id="box-close-no">NO</a></p>
+        <p id="box-close-message" class="left-20 font-75">ARE YOU SURE? <a id="box-close-yes-button">YES</a> <a id="box-close-no-button">NO</a></p>
         <p id="box-close-error-message"></p>
     </div>
 `)

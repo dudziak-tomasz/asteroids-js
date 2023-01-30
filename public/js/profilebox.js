@@ -10,127 +10,167 @@ export const profileBox = {
         this.box = new Box(parentElement, pages.get('PROFILE'))
     },
 
-    openBox() {
+    async openBox() {
         profileBox.box.open()
-        profileBox.handleProfile()
+        profileBox.handleElements()
+        await profileBox.loadProfile()
     },
 
-    async handleProfile() {
+    handleElements() {
         this.$boxProfileErrorMessage = document.getElementById('box-profile-error-message')
-        this.$boxProfileDiv = document.getElementById('box-profile-div')
-
-        this.$boxProfileForm = document.getElementById('box-profile-form')
-        this.$boxErrorMessage = document.getElementById('box-error-message')
-        this.$logoutButton = document.getElementById('box-logout-button')
-        this.$changePasswordButton = document.getElementById('box-change-password-button')
-        this.$logoutAllButton = document.getElementById('box-logoutall-button')
-        this.$boxLogoutAllErrorMessage = document.getElementById('box-logoutall-error-message')
-        this.$closeAccountButton = document.getElementById('box-close-account-button')
-        this.$boxCloseMessage = document.getElementById('box-close-message')
-        this.$boxCloseYes = document.getElementById('box-close-yes')
-        this.$boxCloseNo = document.getElementById('box-close-no')
-        this.$boxCloseErrorMessage = document.getElementById('box-close-error-message')
-
-        const closeMessages = () => {
-            this.$boxProfileErrorMessage.innerHTML = ''
-            this.$boxErrorMessage.innerHTML = ''
-            this.$boxLogoutAllErrorMessage.innerHTML = ''
-            this.$boxCloseErrorMessage.innerHTML = ''
-            this.$boxCloseMessage.style.display = 'none'
-        }
-
         this.$boxProfileErrorMessage.innerHTML = 'LOADING PROFILE...'
+
+        this.$boxProfileDiv = document.getElementById('box-profile-div')
+        this.$boxProfileDiv.style.display = 'none'
+
+        this.$profileForm = document.getElementById('box-profile-form')
+        this.$profileForm.onsubmit = (e) => this.profileFormSubmit(e)
+
+        this.$username = document.getElementById('username')
+        this.$username.value = ''
+
+        this.$email = document.getElementById('email')
+        this.$email.value = ''
+
+        this.$highscore = document.getElementById('highscore')
+        this.$highscore.value = ''
+
+        this.$boxErrorMessage = document.getElementById('box-error-message')
+
+
+        this.$logoutButton = document.getElementById('box-logout-button')
+        this.$logoutButton.onclick = () => this.logoutButtonClick()
+
+
+        this.$changePasswordButton = document.getElementById('box-change-password-button')
+        this.$changePasswordButton.onclick = () => changePasswordBox.openBox()
+
+        this.$logoutAllButton = document.getElementById('box-logoutall-button')
+        this.$logoutAllButton.onclick = () => this.logoutAllButtonClick()
+
+        this.$boxLogoutAllErrorMessage = document.getElementById('box-logoutall-error-message')
+
+
+        this.$closeAccountButton = document.getElementById('box-close-account-button')
+        this.$closeAccountButton.onclick = () => this.closeAccountButtonClick()
+
+        this.$boxCloseMessage = document.getElementById('box-close-message')
+        this.$boxCloseMessage.style.display = 'none'
+
+        this.$closeYesButton = document.getElementById('box-close-yes-button')
+        this.$closeYesButton.onclick = () => this.closeYesButtonClick()
+
+        this.$closeNoButton = document.getElementById('box-close-no-button')
+        this.$closeNoButton.onclick = () => this.closeNoButtonClick()
+
+        this.$boxCloseErrorMessage = document.getElementById('box-close-error-message')
+    },
+
+    async loadProfile() {
         await api.updateUser()
         const res = await api.profile()
 
         if (res.status === 200) {
-            closeMessages()
+            this.clearMessages()
             this.$boxProfileDiv.style.display = 'block'
 
-            this.$boxProfileForm.username.value = api.user.username
-            this.$boxProfileForm.email.value = api.user.email
-            this.$boxProfileForm.highscore.value = api.user.highscore
+            this.$username.value = api.user.username
+            this.$email.value = api.user.email
+            this.$highscore.value = api.user.highscore
 
-        } else if (res.status === 403) {
+        } else if (res.status === 403)
             this.$boxProfileErrorMessage.innerHTML = errors.NotLogged
-        } else {
+        else
             this.$boxProfileErrorMessage.innerHTML = errors.ConnectionProblem
-        }
+    },
+
+    async profileFormSubmit(event) {
+        event.preventDefault()
+
+        this.clearMessages()
+
+        const user = {}
+        const username = this.$username.value.toLowerCase()
+        const email = this.$email.value.toLowerCase()
+
+        if (username !== api.user.username) user.username = username
+        else if (email !== api.user.email) user.email = email
+        else return this.$boxErrorMessage.innerHTML = 'NO CHANGE, NO SAVE'
+
+        this.$boxErrorMessage.innerHTML = 'SAVING...'
+        this.$profileForm.submit.disabled = true
+
+        const res = await api.updateUser(user)
+
+        this.$profileForm.submit.disabled = false
         
-        this.$boxProfileForm.onsubmit = async (e) => {
-            e.preventDefault()
+        if (res.status === 200)
+            this.$boxErrorMessage.innerHTML = 'SAVED'
+        else if (res.status === 400) {
+            this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
+            if (res.error === 'username is invalid') this.$boxErrorMessage.innerHTML += `: ${errors.UsernameInvalid}`
+        } else if (res.status === 403)
+            this.$boxErrorMessage.innerHTML = errors.NotLogged
+        else
+            this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
+    },
 
-            const user = {}
-            const username = this.$boxProfileForm.username.value.toLowerCase()
-            const email = this.$boxProfileForm.email.value.toLowerCase()
+    async logoutButtonClick() {
+        this.clearMessages()
 
-            if (username !== api.user.username) user.username = username
-            else if (email !== api.user.email) user.email = email
-            else return this.$boxErrorMessage.innerHTML = 'NO CHANGE, NO SAVE'
+        this.$boxErrorMessage.innerHTML = 'LOGOUT...'
+        this.$logoutButton.disabled = true
 
-            closeMessages()
-            this.$boxErrorMessage.innerHTML = 'SAVING... '
-            this.$boxProfileForm.submit.disabled = true
+        const res = await api.logout()
 
-            const res = await api.updateUser(user)
+        this.$logoutButton.disabled = false
+        
+        if (res.status === 200 || res.status === 403) this.box.close() 
+        else this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
+    },
 
-            this.$boxProfileForm.submit.disabled = false
-            
-            if (res.status === 200) {
-                this.$boxErrorMessage.innerHTML = 'SAVED'
-            } else if (res.status === 400) {
-                this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
-                if (res.error === 'username is invalid') this.$boxErrorMessage.innerHTML += `: ${errors.UsernameInvalid}`
-            } else if (res.status === 403) {
-                this.$boxErrorMessage.innerHTML = errors.NotLogged
-            } else {
-                this.$boxErrorMessage.innerHTML = errors.ConnectionProblem    
-            }
-        }
+    async logoutAllButtonClick() {
+        if (this.$logoutAllButton.disabled) return
+        this.clearMessages()
 
-        this.$logoutButton.onclick = async () => {
-            closeMessages()
-            this.$boxErrorMessage.innerHTML = 'LOGOUT...'
-            this.$logoutButton.disabled = true
+        this.$boxLogoutAllErrorMessage.innerHTML = 'LOGOUT...'
+        this.$logoutAllButton.disabled = true
 
-            const res = await api.logout()
+        const res = await api.logoutAll()
 
-            this.$logoutButton.disabled = false
-            
-            res.status === 200 || res.status === 403 ? this.box.close() : this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
-        }
+        this.$logoutAllButton.disabled = false
+        
+        if (res.status === 200 || res.status === 403) this.box.close() 
+        else this.$boxLogoutAllErrorMessage.innerHTML = errors.ConnectionProblem
+    },
 
-        this.$logoutAllButton.onclick = async () => {
-            if (this.$logoutAllButton.disabled) return
-            closeMessages()
-            this.$boxLogoutAllErrorMessage.innerHTML = 'LOGOUT...'
-            this.$logoutAllButton.disabled = true
+    closeAccountButtonClick() {
+        this.clearMessages()
+        this.$boxCloseMessage.style.display = 'block'
+    },
 
-            const res = await api.logoutAll()
+    async closeYesButtonClick() {
+        this.clearMessages()
 
-            this.$logoutAllButton.disabled = false
-            
-            res.status === 200 || res.status === 403 ? this.box.close() : this.$boxLogoutAllErrorMessage.innerHTML = errors.ConnectionProblem
-        }
+        this.$boxCloseErrorMessage.innerHTML = 'CLOSING ACCOUNT...'
 
-        this.$changePasswordButton.onclick = () => changePasswordBox.openBox()
+        const res = await api.deleteUser()
 
-        this.$closeAccountButton.onclick = () => {
-            closeMessages()
-            this.$boxCloseMessage.style.display = 'block'
+        if (res.status === 200) this.box.close()
+        else if (res.status === 403) this.$boxCloseErrorMessage.innerHTML = errors.NotLogged
+        else this.$boxCloseErrorMessage.innerHTML = errors.ConnectionProblem
+    },
 
-            this.$boxCloseNo.onclick = () => closeMessages()
+    closeNoButtonClick() {
+        this.clearMessages()
+    },
 
-            this.$boxCloseYes.onclick = async () => {
-                closeMessages()
-                this.$boxCloseErrorMessage.innerHTML = 'CLOSING ACCOUNT...'
-
-                const res = await api.deleteUser()
-
-                if (res.status === 200) this.box.close()
-                else if (res.status === 403) this.$boxCloseErrorMessage.innerHTML = errors.NotLogged
-                else this.$boxCloseErrorMessage.innerHTML = errors.ConnectionProblem
-            }
-        }
+    clearMessages () {
+        this.$boxProfileErrorMessage.innerHTML = ''
+        this.$boxErrorMessage.innerHTML = ''
+        this.$boxLogoutAllErrorMessage.innerHTML = ''
+        this.$boxCloseErrorMessage.innerHTML = ''
+        this.$boxCloseMessage.style.display = 'none'
     }
+
 }
