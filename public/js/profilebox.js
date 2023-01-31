@@ -1,5 +1,5 @@
 import { api } from './api.js'
-import { errors } from './errors.js'
+import { messages } from './messages.js'
 import { Box} from './box.js'
 import { pages } from './pages.js'
 import { changePasswordBox } from './changepasswordbox.js'
@@ -79,9 +79,9 @@ export const profileBox = {
             this.$highscore.value = api.user.highscore
 
         } else if (res.status === 403)
-            this.$boxProfileErrorMessage.innerHTML = errors.NotLogged
+            this.$boxProfileErrorMessage.innerHTML = messages.NotLogged
         else
-            this.$boxProfileErrorMessage.innerHTML = errors.ConnectionProblem
+            this.$boxProfileErrorMessage.innerHTML = messages.ConnectionProblem
     },
 
     async profileFormSubmit(event) {
@@ -108,11 +108,11 @@ export const profileBox = {
             this.$boxErrorMessage.innerHTML = 'SAVED'
         else if (res.status === 400) {
             this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
-            if (res.error === 'username is invalid') this.$boxErrorMessage.innerHTML += `: ${errors.UsernameInvalid}`
+            if (res.error === 'username is invalid') this.$boxErrorMessage.innerHTML += `: ${messages.UsernameInvalid}`
         } else if (res.status === 403)
-            this.$boxErrorMessage.innerHTML = errors.NotLogged
+            this.$boxErrorMessage.innerHTML = messages.NotLogged
         else
-            this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
+            this.$boxErrorMessage.innerHTML = messages.ConnectionProblem
     },
 
     async logoutButtonClick() {
@@ -126,7 +126,7 @@ export const profileBox = {
         this.$logoutButton.disabled = false
         
         if (res.status === 200 || res.status === 403) this.box.close() 
-        else this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
+        else this.$boxErrorMessage.innerHTML = messages.ConnectionProblem
     },
 
     async logoutAllButtonClick() {
@@ -141,7 +141,7 @@ export const profileBox = {
         this.$logoutAllButton.disabled = false
         
         if (res.status === 200 || res.status === 403) this.box.close() 
-        else this.$boxLogoutAllErrorMessage.innerHTML = errors.ConnectionProblem
+        else this.$boxLogoutAllErrorMessage.innerHTML = messages.ConnectionProblem
     },
 
     closeAccountButtonClick() {
@@ -157,8 +157,8 @@ export const profileBox = {
         const res = await api.deleteUser()
 
         if (res.status === 200) this.box.close()
-        else if (res.status === 403) this.$boxCloseErrorMessage.innerHTML = errors.NotLogged
-        else this.$boxCloseErrorMessage.innerHTML = errors.ConnectionProblem
+        else if (res.status === 403) this.$boxCloseErrorMessage.innerHTML = messages.NotLogged
+        else this.$boxCloseErrorMessage.innerHTML = messages.ConnectionProblem
     },
 
     closeNoButtonClick() {

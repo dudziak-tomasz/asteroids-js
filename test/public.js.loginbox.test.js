@@ -6,7 +6,7 @@ import './__mocks__/mock.spacetime.js'
 
 import { game } from '../public/js/game.js'
 import { api } from '../public/js/api.js'
-import { errors } from '../public/js/errors.js'
+import { messages } from '../public/js/messages.js'
 import { registerBox } from '../public/js/registerbox.js'
 import { passwordResetBox } from '../public/js/passwordresetbox.js'
 import { loginBox } from '../public/js/loginbox.js'
@@ -124,7 +124,7 @@ test('Should show error 403', async () => {
     loginBox.openBox()
     await loginBox.$loginForm.dispatchEvent(new CustomEvent('submit'))
 
-    assert.deepEqual(loginBox.$boxErrorMessage.innerHTML, errors.UsernameOrPasswordIncorect)
+    assert.deepEqual(loginBox.$boxErrorMessage.innerHTML, messages.UsernameOrPasswordIncorect)
 })
 
 
@@ -137,24 +137,24 @@ test('Should show connection problem error', async () => {
     loginBox.openBox()
     await loginBox.$loginForm.dispatchEvent(new CustomEvent('submit'))
 
-    assert.deepEqual(loginBox.$boxErrorMessage.innerHTML, errors.ConnectionProblem)
+    assert.deepEqual(loginBox.$boxErrorMessage.innerHTML, messages.ConnectionProblem)
 })
 
 
 test('Should show CapsLock message', async () => {
     //Prepare mocks
-    errors.getCapsLockError = () => errors.CapsLock
+    messages.getCapsLockError = () => messages.CapsLock
 
     loginBox.openBox()
     await loginBox.$password.dispatchEvent(new CustomEvent('keydown'))
 
-    assert.deepEqual(loginBox.$boxErrorMessage.innerHTML, errors.CapsLock)
+    assert.deepEqual(loginBox.$boxErrorMessage.innerHTML, messages.CapsLock)
 })
 
 
 test('Should hide CapsLock message', async () => {
     //Prepare mocks
-    errors.getCapsLockError = () => errors.CapsLock
+    messages.getCapsLockError = () => messages.CapsLock
 
     loginBox.openBox()
     await loginBox.$password.dispatchEvent(new CustomEvent('keydown'))

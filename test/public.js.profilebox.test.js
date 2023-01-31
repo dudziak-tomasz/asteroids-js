@@ -6,7 +6,7 @@ import './__mocks__/mock.spacetime.js'
 
 import { game } from '../public/js/game.js'
 import { api } from '../public/js/api.js'
-import { errors } from '../public/js/errors.js'
+import { messages } from '../public/js/messages.js'
 import { changePasswordBox } from '../public/js/changepasswordbox.js'
 import { profileBox } from '../public/js/profilebox.js'
 
@@ -171,7 +171,7 @@ test('Should not load profile, not show profile DIV and show 403 error', async (
     assert.deepEqual(profileBox.$highscore.value, '')
 
     assert.deepEqual(profileBox.$boxProfileDiv.style.display, 'none')
-    assert.deepEqual(profileBox.$boxProfileErrorMessage.innerHTML, errors.NotLogged)
+    assert.deepEqual(profileBox.$boxProfileErrorMessage.innerHTML, messages.NotLogged)
 })
 
 
@@ -194,7 +194,7 @@ test('Should not load profile, not show profile DIV and show connection problem 
     assert.deepEqual(profileBox.$highscore.value, '')
 
     assert.deepEqual(profileBox.$boxProfileDiv.style.display, 'none')
-    assert.deepEqual(profileBox.$boxProfileErrorMessage.innerHTML, errors.ConnectionProblem)
+    assert.deepEqual(profileBox.$boxProfileErrorMessage.innerHTML, messages.ConnectionProblem)
 })
 
 
@@ -286,7 +286,7 @@ test('Should show error message #1 after status 400', async () => {
     profileBox.$username.value = 'testing1'
     await profileBox.profileFormSubmit(new CustomEvent('submit'))
 
-    assert.deepEqual(profileBox.$boxErrorMessage.innerHTML, `USERNAME IS INVALID: ${errors.UsernameInvalid}`)
+    assert.deepEqual(profileBox.$boxErrorMessage.innerHTML, `USERNAME IS INVALID: ${messages.UsernameInvalid}`)
 })
 
 
@@ -333,7 +333,7 @@ test('Should show connection problem error', async () => {
     profileBox.$email.value = 'testing1@'
     await profileBox.profileFormSubmit(new CustomEvent('submit'))
 
-    assert.deepEqual(profileBox.$boxErrorMessage.innerHTML, errors.ConnectionProblem)
+    assert.deepEqual(profileBox.$boxErrorMessage.innerHTML, messages.ConnectionProblem)
 })
 
 
@@ -456,7 +456,7 @@ test('Should show connection problem error after logout with status 500', async 
     await profileBox.openBox()
     await profileBox.logoutButtonClick()
 
-    assert.deepEqual(profileBox.$boxErrorMessage.innerHTML, errors.ConnectionProblem)
+    assert.deepEqual(profileBox.$boxErrorMessage.innerHTML, messages.ConnectionProblem)
 })
 
 
@@ -556,7 +556,7 @@ test('Should show connection problem error after logoutAll with status 499', asy
     await profileBox.openBox()
     await profileBox.logoutAllButtonClick()
 
-    assert.deepEqual(profileBox.$boxLogoutAllErrorMessage.innerHTML, errors.ConnectionProblem)
+    assert.deepEqual(profileBox.$boxLogoutAllErrorMessage.innerHTML, messages.ConnectionProblem)
 })
 
 
@@ -676,7 +676,7 @@ test('Should show error after close account with code 403', async () => {
     profileBox.closeAccountButtonClick()
     await profileBox.closeYesButtonClick()
 
-    assert.deepEqual(profileBox.$boxCloseErrorMessage.innerHTML, errors.NotLogged)
+    assert.deepEqual(profileBox.$boxCloseErrorMessage.innerHTML, messages.NotLogged)
 })
 
 
@@ -701,7 +701,7 @@ test('Should show connection problem error after close account with code 500', a
     profileBox.closeAccountButtonClick()
     await profileBox.closeYesButtonClick()
 
-    assert.deepEqual(profileBox.$boxCloseErrorMessage.innerHTML, errors.ConnectionProblem)
+    assert.deepEqual(profileBox.$boxCloseErrorMessage.innerHTML, messages.ConnectionProblem)
 })
 
 

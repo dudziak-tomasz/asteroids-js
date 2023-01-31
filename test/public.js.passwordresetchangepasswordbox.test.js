@@ -6,7 +6,7 @@ import './__mocks__/mock.spacetime.js'
 
 import { game } from '../public/js/game.js'
 import { api } from '../public/js/api.js'
-import { errors } from '../public/js/errors.js'
+import { messages } from '../public/js/messages.js'
 import { loginBox } from '../public/js/loginbox.js'
 import { passwordResetChangePasswordBox } from '../public/js/passwordresetchangepasswordbox.js'
 
@@ -138,7 +138,7 @@ test('Should show error 403', async () => {
     passwordResetChangePasswordBox.openBox()
     await passwordResetChangePasswordBox.$changePasswordForm.dispatchEvent(new CustomEvent('submit'))
 
-    assert.deepEqual(passwordResetChangePasswordBox.$boxErrorMessage.innerHTML, errors.PasswordResetFail)
+    assert.deepEqual(passwordResetChangePasswordBox.$boxErrorMessage.innerHTML, messages.PasswordResetFail)
 })
 
 
@@ -151,5 +151,5 @@ test('Should show connection problem', async () => {
     passwordResetChangePasswordBox.openBox()
     await passwordResetChangePasswordBox.$changePasswordForm.dispatchEvent(new CustomEvent('submit'))
 
-    assert.deepEqual(passwordResetChangePasswordBox.$boxErrorMessage.innerHTML, errors.ConnectionProblem)
+    assert.deepEqual(passwordResetChangePasswordBox.$boxErrorMessage.innerHTML, messages.ConnectionProblem)
 })

@@ -6,7 +6,7 @@ import './__mocks__/mock.spacetime.js'
 
 import { game } from '../public/js/game.js'
 import { api } from '../public/js/api.js'
-import { errors } from '../public/js/errors.js'
+import { messages } from '../public/js/messages.js'
 import { registerBox } from '../public/js/registerbox.js'
 
 
@@ -41,15 +41,15 @@ test('Should handle HTML elements', () => {
 
     assert.deepEqual(registerBox.$boxUsernameInfo.constructor.name, 'HTMLSpanElement')
     assert.deepEqual(registerBox.$boxUsernameInfo.id, 'box-username-info')
-    assert.deepEqual(registerBox.$boxUsernameInfo.innerHTML, errors.UsernameInvalid)
+    assert.deepEqual(registerBox.$boxUsernameInfo.innerHTML, messages.UsernameInvalid)
 
     assert.deepEqual(registerBox.$boxPasswordInfo.constructor.name, 'HTMLSpanElement')
     assert.deepEqual(registerBox.$boxPasswordInfo.id, 'box-password-info')
-    assert.deepEqual(registerBox.$boxPasswordInfo.innerHTML, errors.PasswordInvalid)
+    assert.deepEqual(registerBox.$boxPasswordInfo.innerHTML, messages.PasswordInvalid)
 
     assert.deepEqual(registerBox.$boxEmailInfo.constructor.name, 'HTMLSpanElement')
     assert.deepEqual(registerBox.$boxEmailInfo.id, 'box-email-info')
-    assert.deepEqual(registerBox.$boxEmailInfo.innerHTML, errors.ForPasswordResetOnly)
+    assert.deepEqual(registerBox.$boxEmailInfo.innerHTML, messages.ForPasswordResetOnly)
 
     assert.deepEqual(registerBox.$registerForm.constructor.name, 'HTMLFormElement')
     assert.deepEqual(registerBox.$registerForm.id, 'box-register-form')
@@ -147,5 +147,5 @@ test('Should show connection problem error', async () => {
     registerBox.openBox()
     await registerBox.$registerForm.dispatchEvent(new CustomEvent('submit'))
 
-    assert.deepEqual(registerBox.$boxErrorMessage.innerHTML, errors.ConnectionProblem)
+    assert.deepEqual(registerBox.$boxErrorMessage.innerHTML, messages.ConnectionProblem)
 })

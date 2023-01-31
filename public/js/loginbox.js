@@ -1,5 +1,5 @@
 import { api } from './api.js'
-import { errors } from './errors.js'
+import { messages } from './messages.js'
 import { Box } from './box.js'
 import { pages } from './pages.js'
 import { registerBox } from './registerbox.js'
@@ -36,7 +36,7 @@ export const loginBox = {
 
         this.$password = document.getElementById('password')
         this.$password.value = ''
-        this.$password.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
+        this.$password.onkeydown = (e) => this.$boxErrorMessage.innerHTML = messages.getCapsLockError(e)
     },
 
     async loginFormSubmit(event) {
@@ -57,8 +57,8 @@ export const loginBox = {
         if (res.status === 200)
             this.box.close()
         else if (res.status === 403)
-            this.$boxErrorMessage.innerHTML = errors.UsernameOrPasswordIncorect
+            this.$boxErrorMessage.innerHTML = messages.UsernameOrPasswordIncorect
         else
-            this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
+            this.$boxErrorMessage.innerHTML = messages.ConnectionProblem
     }
 }

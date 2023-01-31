@@ -1,5 +1,5 @@
 import { api } from './api.js'
-import { errors } from './errors.js'
+import { messages } from './messages.js'
 import { Box} from './box.js'
 import { pages } from './pages.js'
 
@@ -20,7 +20,7 @@ export const changePasswordBox = {
         this.$boxErrorMessage.innerHTML = ''
 
         this.$boxPasswordInfo = document.getElementById('box-password-info')
-        this.$boxPasswordInfo.innerHTML = errors.PasswordInvalid
+        this.$boxPasswordInfo.innerHTML = messages.PasswordInvalid
 
         this.$changePasswordForm = document.getElementById('box-change-password-form')
         this.$changePasswordForm.onsubmit = (e) => this.changePasswordFormSubmit(e)
@@ -29,24 +29,24 @@ export const changePasswordBox = {
         this.$currentPassword = document.getElementById('current-password')
         this.$currentPassword.value = ''
         this.$currentPassword.focus()
-        this.$currentPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
+        this.$currentPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = messages.getCapsLockError(e)
 
         this.$newPassword = document.getElementById('new-password')
         this.$newPassword.value = ''
-        this.$newPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
+        this.$newPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = messages.getCapsLockError(e)
 
         this.$retypeNewPassword = document.getElementById('retype-new-password')
         this.$retypeNewPassword.value = ''
-        this.$retypeNewPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
+        this.$retypeNewPassword.onkeydown = (e) => this.$boxErrorMessage.innerHTML = messages.getCapsLockError(e)
     },
 
     async changePasswordFormSubmit(event) {
         event.preventDefault()
 
         if (this.$newPassword.value !== this.$retypeNewPassword.value) 
-            return this.$boxErrorMessage.innerHTML = errors.NewPasswordNotMatchRetyped
+            return this.$boxErrorMessage.innerHTML = messages.NewPasswordNotMatchRetyped
         if (this.$newPassword.value === this.$currentPassword.value) 
-            return this.$boxErrorMessage.innerHTML = errors.NewPasswordShouldBeDifferent
+            return this.$boxErrorMessage.innerHTML = messages.NewPasswordShouldBeDifferent
 
         this.$boxErrorMessage.innerHTML = 'CHANGING PASSWORD...'
         this.$changePasswordForm.submit.disabled = true
@@ -56,9 +56,9 @@ export const changePasswordBox = {
         if (res.status === 200)
             await this.changePassword()
         else if (res.status === 403)
-            this.$boxErrorMessage.innerHTML = errors.IncorrectCurrentPassword
+            this.$boxErrorMessage.innerHTML = messages.IncorrectCurrentPassword
         else
-            this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
+            this.$boxErrorMessage.innerHTML = messages.ConnectionProblem
 
         this.$changePasswordForm.submit.disabled = false
     },
@@ -81,10 +81,10 @@ export const changePasswordBox = {
         if (res.status === 200)
             this.boxPasswordChangedInfo.open()
         else if (res.status === 400)
-            this.$boxErrorMessage.innerHTML = res.error.toUpperCase() + `: ${errors.PasswordInvalid}`
+            this.$boxErrorMessage.innerHTML = res.error.toUpperCase() + `: ${messages.PasswordInvalid}`
         else if (res.status === 403)
-            this.$boxErrorMessage.innerHTML = errors.NotLogged
+            this.$boxErrorMessage.innerHTML = messages.NotLogged
         else
-            this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
+            this.$boxErrorMessage.innerHTML = messages.ConnectionProblem
     }
 }

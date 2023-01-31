@@ -1,4 +1,4 @@
-export const errors = {
+export const messages = {
 
     CapsLock: 'CAPS LOCK IS ON!',
     ConnectionProblem: 'CONNECTION PROBLEM... PLEASE TRY AGAIN LATER',

@@ -6,7 +6,7 @@ import './__mocks__/mock.spacetime.js'
 
 import { game } from '../public/js/game.js'
 import { api } from '../public/js/api.js'
-import { errors } from '../public/js/errors.js'
+import { messages } from '../public/js/messages.js'
 import { changePasswordBox } from '../public/js/changepasswordbox.js'
 
 
@@ -38,7 +38,7 @@ test('Should handle HTML elements', () => {
 
     assert.deepEqual(changePasswordBox.$boxPasswordInfo.constructor.name, 'HTMLSpanElement')
     assert.deepEqual(changePasswordBox.$boxPasswordInfo.id, 'box-password-info')
-    assert.deepEqual(changePasswordBox.$boxPasswordInfo.innerHTML, errors.PasswordInvalid)
+    assert.deepEqual(changePasswordBox.$boxPasswordInfo.innerHTML, messages.PasswordInvalid)
 
     assert.deepEqual(changePasswordBox.$changePasswordForm.constructor.name, 'HTMLFormElement')
     assert.deepEqual(changePasswordBox.$changePasswordForm.id, 'box-change-password-form')
@@ -93,7 +93,7 @@ test('Should show error message NEW PASSWORD DOES NOT MATCH RETYPED PASSWORD', a
     changePasswordBox.$retypeNewPassword.value = 'qwerty'
     await changePasswordBox.changePasswordFormSubmit(new CustomEvent('submit'))
 
-    assert.deepEqual(changePasswordBox.$boxErrorMessage.innerHTML, errors.NewPasswordNotMatchRetyped)
+    assert.deepEqual(changePasswordBox.$boxErrorMessage.innerHTML, messages.NewPasswordNotMatchRetyped)
 })
 
 
@@ -108,7 +108,7 @@ test('Should show error message NEW PASSWORD SHOULD BE DIFFERENT FROM CURRENT PA
     changePasswordBox.$retypeNewPassword.value = 'testing'
     await changePasswordBox.changePasswordFormSubmit(new CustomEvent('submit'))
 
-    assert.deepEqual(changePasswordBox.$boxErrorMessage.innerHTML, errors.NewPasswordShouldBeDifferent)
+    assert.deepEqual(changePasswordBox.$boxErrorMessage.innerHTML, messages.NewPasswordShouldBeDifferent)
 })
 
 
@@ -179,7 +179,7 @@ test('Should show error 403 #1: incorrect current password', async () => {
     changePasswordBox.$retypeNewPassword.value = 'testing2'
     await changePasswordBox.changePasswordFormSubmit(new CustomEvent('submit'))
   
-    assert.deepEqual(changePasswordBox.$boxErrorMessage.innerHTML, errors.IncorrectCurrentPassword)
+    assert.deepEqual(changePasswordBox.$boxErrorMessage.innerHTML, messages.IncorrectCurrentPassword)
 })
 
 
@@ -201,7 +201,7 @@ test('Should show connection problem error #1', async () => {
     changePasswordBox.$retypeNewPassword.value = 'testing2'
     await changePasswordBox.changePasswordFormSubmit(new CustomEvent('submit'))
   
-    assert.deepEqual(changePasswordBox.$boxErrorMessage.innerHTML, errors.ConnectionProblem)
+    assert.deepEqual(changePasswordBox.$boxErrorMessage.innerHTML, messages.ConnectionProblem)
 })
 
 
@@ -223,7 +223,7 @@ test('Should show connection problem error #2', async () => {
     changePasswordBox.$retypeNewPassword.value = 'testing2'
     await changePasswordBox.changePasswordFormSubmit(new CustomEvent('submit'))
   
-    assert.deepEqual(changePasswordBox.$boxErrorMessage.innerHTML, errors.ConnectionProblem)
+    assert.deepEqual(changePasswordBox.$boxErrorMessage.innerHTML, messages.ConnectionProblem)
 })
 
 
@@ -248,7 +248,7 @@ test('Should show error 400', async () => {
     changePasswordBox.$retypeNewPassword.value = 'testing2'
     await changePasswordBox.changePasswordFormSubmit(new CustomEvent('submit'))
   
-    assert.deepEqual(changePasswordBox.$boxErrorMessage.innerHTML, `TESTING: ${errors.PasswordInvalid}`)
+    assert.deepEqual(changePasswordBox.$boxErrorMessage.innerHTML, `TESTING: ${messages.PasswordInvalid}`)
 })
 
 
@@ -270,7 +270,7 @@ test('Should show error 403 #2: not logged', async () => {
     changePasswordBox.$retypeNewPassword.value = 'testing2'
     await changePasswordBox.changePasswordFormSubmit(new CustomEvent('submit'))
   
-    assert.deepEqual(changePasswordBox.$boxErrorMessage.innerHTML, errors.NotLogged)
+    assert.deepEqual(changePasswordBox.$boxErrorMessage.innerHTML, messages.NotLogged)
 })
 
 

@@ -6,7 +6,7 @@ import './__mocks__/mock.spacetime.js'
 
 import { game } from '../public/js/game.js'
 import { api } from '../public/js/api.js'
-import { errors } from '../public/js/errors.js'
+import { messages } from '../public/js/messages.js'
 import { passwordResetBox } from '../public/js/passwordresetbox.js'
 
 
@@ -121,7 +121,7 @@ test('Should show 403 error', async () => {
     passwordResetBox.openBox()
     await passwordResetBox.$passwordResetForm.dispatchEvent(new CustomEvent('submit'))
 
-    assert.deepEqual(passwordResetBox.$boxErrorMessage.innerHTML, errors.PasswordResetFail)
+    assert.deepEqual(passwordResetBox.$boxErrorMessage.innerHTML, messages.PasswordResetFail)
 })
 
 
@@ -134,5 +134,5 @@ test('Should show connection problem error', async () => {
     passwordResetBox.openBox()
     await passwordResetBox.$passwordResetForm.dispatchEvent(new CustomEvent('submit'))
 
-    assert.deepEqual(passwordResetBox.$boxErrorMessage.innerHTML, errors.ConnectionProblem)
+    assert.deepEqual(passwordResetBox.$boxErrorMessage.innerHTML, messages.ConnectionProblem)
 })

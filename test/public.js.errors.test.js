@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { errors } from '../public/js/errors.js'
+import { messages } from '../public/js/messages.js'
 
 
 test('Should return empty string', () => {
@@ -10,7 +10,7 @@ test('Should return empty string', () => {
         getModifierState: () => false
     }
 
-    const res = errors.getCapsLockError(event)
+    const res = messages.getCapsLockError(event)
     assert.deepEqual(res, '')
 })
 
@@ -21,6 +21,6 @@ test('Should return CapsLock message', () => {
         getModifierState: () => true
     }
 
-    const res = errors.getCapsLockError(event)
+    const res = messages.getCapsLockError(event)
     assert.deepEqual(res, 'CAPS LOCK IS ON!')
 })

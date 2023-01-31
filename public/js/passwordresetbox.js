@@ -1,5 +1,5 @@
 import { api } from './api.js'
-import { errors } from './errors.js'
+import { messages } from './messages.js'
 import { Box} from './box.js'
 import { pages } from './pages.js'
 
@@ -45,8 +45,8 @@ export const passwordResetBox = {
         else if (res.status === 400)
             this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
         else if (res.status === 403) 
-            this.$boxErrorMessage.innerHTML = errors.PasswordResetFail
+            this.$boxErrorMessage.innerHTML = messages.PasswordResetFail
         else 
-            this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
+            this.$boxErrorMessage.innerHTML = messages.ConnectionProblem
     }
 }

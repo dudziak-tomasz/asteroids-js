@@ -1,5 +1,5 @@
 import { api } from './api.js'
-import { errors } from './errors.js'
+import { messages } from './messages.js'
 import { Box} from './box.js'
 import { pages } from './pages.js'
 
@@ -20,13 +20,13 @@ export const registerBox = {
         this.$boxErrorMessage.innerHTML = ''
 
         this.$boxUsernameInfo = document.getElementById('box-username-info')
-        this.$boxUsernameInfo.innerHTML = errors.UsernameInvalid
+        this.$boxUsernameInfo.innerHTML = messages.UsernameInvalid
 
         this.$boxPasswordInfo = document.getElementById('box-password-info')
-        this.$boxPasswordInfo.innerHTML = errors.PasswordInvalid
+        this.$boxPasswordInfo.innerHTML = messages.PasswordInvalid
 
         this.$boxEmailInfo = document.getElementById('box-email-info')
-        this.$boxEmailInfo.innerHTML = errors.ForPasswordResetOnly
+        this.$boxEmailInfo.innerHTML = messages.ForPasswordResetOnly
 
         this.$registerForm = document.getElementById('box-register-form')
         this.$registerForm.onsubmit = (e) => this.registerFormSubmit(e)
@@ -38,7 +38,7 @@ export const registerBox = {
 
         this.$password = document.getElementById('password')
         this.$password.value = ''
-        this.$password.onkeydown = (e) => this.$boxErrorMessage.innerHTML = errors.getCapsLockError(e)
+        this.$password.onkeydown = (e) => this.$boxErrorMessage.innerHTML = messages.getCapsLockError(e)
 
         this.$email = document.getElementById('email')
         this.$email.value = ''
@@ -66,6 +66,6 @@ export const registerBox = {
         else if (res.status === 400)
             this.$boxErrorMessage.innerHTML = res.error.toUpperCase()
         else
-            this.$boxErrorMessage.innerHTML = errors.ConnectionProblem
+            this.$boxErrorMessage.innerHTML = messages.ConnectionProblem
     }
 }
