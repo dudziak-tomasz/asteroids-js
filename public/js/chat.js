@@ -9,23 +9,24 @@ export const chat = {
 
     messages: [],
     messagesMaxNumber: 100,
-    showChatTime: 15000,
-    timeoutHideID: undefined,
+    showChatInGameTime: 15000,
+    hideChatInGameTimeoutID: undefined,
 
     createChat(parentElement) {
         this.parentElement = parentElement
 
         this.initializeContainerInGame()
         this.initializeBox()
-        this.initializeCustomEventListeners()
         this.initializeSocket()
+        this.initializeCustomEventListeners()
     },
 
     initializeContainerInGame() {
-        this.container = document.createElement('div')
-        this.container.classList.add('chat-container')
-        this.container.id = getRandomID('chat')
-        this.parentElement.appendChild(this.container)
+        this.containerInGame = document.createElement('div')
+        this.containerInGame.classList.add('chat-container')
+        this.containerInGame.classList.add('chat-container-hidden')
+        this.containerInGame.id = getRandomID('chat')
+        this.parentElement.appendChild(this.containerInGame)
     },
 
     initializeBox() {
@@ -51,11 +52,13 @@ export const chat = {
             token: api.getToken()
         }
 
-        this.socket.emit('loginserver', authorization, (error, response) => {
-            this.deleteAdminMessages()
-            if (error) this.renderAndScrollMessageInBox(error)
-            else this.messages.push(response)
-        })
+        this.socket.emit('loginserver', authorization, this.loginChatServerCallback)
+    },
+
+    loginChatServerCallback(error, response) {
+        chat.deleteAdminMessages()
+        if (error) chat.renderAndScrollMessageInBox(error)
+        else chat.messages.push(response)
     },
 
     logoutChatServer() {
@@ -82,29 +85,22 @@ export const chat = {
     renderAndScrollMessageInGame(message) {
         if (message.username === 'admin') return 
 
-        const html = `<p>${this.getTime(message.time)} ${message.username}: ${message.text}</p>`
-        this.container.insertAdjacentHTML('beforeend', html)
-        this.container.scrollTop = this.container.scrollHeight
+        const html = `<p>${this.getFormattedTime(message.time)} ${message.username}: ${message.text}</p>`
+        this.containerInGame.insertAdjacentHTML('beforeend', html)
+        this.containerInGame.scrollTop = this.containerInGame.scrollHeight
 
-        this.showChatInGameIfHidden()
-        this.hideChatInGameAfterTime()
+        this.showChatInGameAndHideAfterTime()
     },
 
-    showChatInGameIfHidden() {
-        if (!this.timeoutHideID) this.container.classList.remove('chat-container-hidden')
-        else {
-            clearTimeout(this.timeoutHideID)
-            this.timeoutHideID = undefined
-        }
-    },
+    showChatInGameAndHideAfterTime() {
+        this.containerInGame.classList.remove('chat-container-hidden')
 
-    hideChatInGameAfterTime() {
-        if (this.timeoutHideID) return
+        if (this.hideChatInGameTimeoutID) clearTimeout(this.hideChatInGameTimeoutID)
 
-        this.timeoutHideID = setTimeout(() => {
-            this.timeoutHideID = undefined
-            this.container.classList.add('chat-container-hidden')
-        }, this.showChatTime)
+        this.hideChatInGameTimeoutID = setTimeout(() => {
+            this.containerInGame.classList.add('chat-container-hidden')
+            this.hideChatInGameTimeoutID = undefined
+        }, this.showChatInGameTime)
     },
 
     renderAndScrollMessageInBox(message) {
@@ -117,7 +113,7 @@ export const chat = {
     renderMessageInBox(message) {
         const html = `
             <p>
-                <span class="box-dark-gray">${this.getTime(message.time)}</span>
+                <span class="box-dark-gray">${this.getFormattedTime(message.time)}</span>
                 <span class="box-light-gray">${message.username}</span>: 
                 <span ${message.username === 'admin'? 'class="box-light-gray"': ''}>${message.text}</span>
             </p>
@@ -130,7 +126,7 @@ export const chat = {
         this.$chatMessages.scrollTop = this.$chatMessages.scrollHeight
     },
 
-    getTime(time) {
+    getFormattedTime(time) {
         const date = new Date(time)
         const hours = date.getHours()
         let minutes = date.getMinutes()
