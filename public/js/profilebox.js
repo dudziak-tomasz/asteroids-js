@@ -28,9 +28,11 @@ export const profileBox = {
 
         this.$username = document.getElementById('username')
         this.$username.value = ''
+        this.$username.oninput = () => this.clearMessages()
 
         this.$email = document.getElementById('email')
         this.$email.value = ''
+        this.$email.oninput = () => this.clearMessages()
 
         this.$highscore = document.getElementById('highscore')
         this.$highscore.value = ''
