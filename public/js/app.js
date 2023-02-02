@@ -22,7 +22,7 @@ const app = () => {
     changePasswordBox.createBox(document.body)
     preferencesBox.createBox(document.body)
     
-    chat.createChat(game.mainDiv)
+    chat.createChat(document.body)
 
     new Menu(document.body)
 

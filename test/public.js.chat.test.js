@@ -28,7 +28,8 @@ test('Should prepare chat and assign data', () => {
     assert.deepEqual(chat.messagesMaxNumber, 100)
     assert.deepEqual(chat.showChatInGameTime, 15000)
     assert.deepEqual(chat.hideChatInGameTimeoutID, undefined)
-    assert.deepEqual(chat.parentElement, document.body)
+    assert.deepEqual(chat.parentElementForBox, document.body)
+    assert.deepEqual(chat.parentElementForInGame, game.mainDiv)
 
     assert.deepEqual(chat.containerInGame.constructor.name, 'HTMLDivElement')
     assert.deepEqual(chat.containerInGame.classList.contains('chat-container'), true)

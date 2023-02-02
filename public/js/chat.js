@@ -12,8 +12,9 @@ export const chat = {
     showChatInGameTime: 15000,
     hideChatInGameTimeoutID: undefined,
 
-    createChat(parentElement) {
-        this.parentElement = parentElement
+    createChat(parentElementForBox) {
+        this.parentElementForBox = parentElementForBox
+        this.parentElementForInGame = game.mainDiv
 
         this.initializeContainerInGame()
         this.initializeBox()
@@ -26,11 +27,11 @@ export const chat = {
         this.containerInGame.classList.add('chat-container')
         this.containerInGame.classList.add('chat-container-hidden')
         this.containerInGame.id = getRandomID('chat')
-        this.parentElement.appendChild(this.containerInGame)
+        this.parentElementForInGame.appendChild(this.containerInGame)
     },
 
     initializeBox() {
-        this.box = new Box(this.parentElement, pages.get('CHAT'))
+        this.box = new Box(this.parentElementForBox, pages.get('CHAT'))
         this.box.container.classList.add('box-chat-container')
         this.box.content.classList.add('box-chat-content')
     },
