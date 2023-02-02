@@ -206,16 +206,16 @@ button:disabled {
 }
  
 ::-webkit-scrollbar-track {
-   background: var(--gray);
+   background: var(--light-gray-bg);
 }
   
 ::-webkit-scrollbar-thumb {
    background: var(--light-gray);
 }
  
-/* ::-webkit-scrollbar-thumb:hover {
-   background: var(--light-gray);
-} */
+::-webkit-scrollbar-thumb:hover {
+   background: var(--gray);
+}
 
 .box-container {
    position: absolute;
