@@ -49,10 +49,12 @@ test('Should handle HTML elements', () => {
     assert.deepEqual(profileBox.$username.constructor.name, 'HTMLInputElement')
     assert.deepEqual(profileBox.$username.id, 'username')
     assert.deepEqual(profileBox.$username.value, '')
+    assert.deepEqual(typeof profileBox.$username.oninput, 'function')
 
     assert.deepEqual(profileBox.$email.constructor.name, 'HTMLInputElement')
     assert.deepEqual(profileBox.$email.id, 'email')
     assert.deepEqual(profileBox.$email.value, '')
+    assert.deepEqual(typeof profileBox.$email.oninput, 'function')
 
     assert.deepEqual(profileBox.$highscore.constructor.name, 'HTMLInputElement')
     assert.deepEqual(profileBox.$highscore.id, 'highscore')
@@ -728,6 +730,70 @@ test('Should hide all messages', async () => {
     profileBox.$boxCloseMessage.style.display = 'block'
 
     profileBox.clearMessages()
+
+    assert.deepEqual(profileBox.$boxProfileErrorMessage.innerHTML, '')
+    assert.deepEqual(profileBox.$boxErrorMessage.innerHTML, '')
+    assert.deepEqual(profileBox.$boxLogoutAllErrorMessage.innerHTML, '')
+    assert.deepEqual(profileBox.$boxCloseErrorMessage.innerHTML, '')
+    assert.deepEqual(profileBox.$boxCloseMessage.style.display, 'none')
+})
+
+
+test('Should hide all messages after username input', async () => {
+    // Prepare mocks
+    api.user = {
+        username: 'testing',
+        email: 'testing@',
+        highscore: 999
+    }
+    api.updateUser = () => {
+        return { status: 200 }
+    }
+    api.profile = () => {
+        return { status: 200 }
+    }
+
+    await profileBox.openBox()
+
+    profileBox.$boxProfileErrorMessage.innerHTML = 'testing'
+    profileBox.$boxErrorMessage.innerHTML = 'testing'
+    profileBox.$boxLogoutAllErrorMessage.innerHTML = 'testing'
+    profileBox.$boxCloseErrorMessage.innerHTML = 'testing'
+    profileBox.$boxCloseMessage.style.display = 'block'
+
+    profileBox.$username.dispatchEvent(new CustomEvent('input'))
+
+    assert.deepEqual(profileBox.$boxProfileErrorMessage.innerHTML, '')
+    assert.deepEqual(profileBox.$boxErrorMessage.innerHTML, '')
+    assert.deepEqual(profileBox.$boxLogoutAllErrorMessage.innerHTML, '')
+    assert.deepEqual(profileBox.$boxCloseErrorMessage.innerHTML, '')
+    assert.deepEqual(profileBox.$boxCloseMessage.style.display, 'none')
+})
+
+
+test('Should hide all messages after email input', async () => {
+    // Prepare mocks
+    api.user = {
+        username: 'testing',
+        email: 'testing@',
+        highscore: 999
+    }
+    api.updateUser = () => {
+        return { status: 200 }
+    }
+    api.profile = () => {
+        return { status: 200 }
+    }
+
+    await profileBox.openBox()
+
+    profileBox.$boxProfileErrorMessage.innerHTML = 'testing'
+    profileBox.$boxErrorMessage.innerHTML = 'testing'
+    profileBox.$boxLogoutAllErrorMessage.innerHTML = 'testing'
+    profileBox.$boxCloseErrorMessage.innerHTML = 'testing'
+    profileBox.$boxCloseMessage.style.display = 'block'
+
+    profileBox.$email.dispatchEvent(new CustomEvent('input'))
 
     assert.deepEqual(profileBox.$boxProfileErrorMessage.innerHTML, '')
     assert.deepEqual(profileBox.$boxErrorMessage.innerHTML, '')
