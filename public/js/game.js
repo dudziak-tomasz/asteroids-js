@@ -4,21 +4,14 @@ import { api } from './api.js'
 import { chat } from './chat.js'
 
 export const game = {
-    parentElement: undefined,
-    mainDiv: undefined,
-    canvasAlert: undefined,
-    canvasScore: undefined,
-    canvasHighScore: undefined,
-    canvasLeaderboard: undefined,
-    leaderboard: undefined,
     level: 0,
     score: 0,
-    highScore: 0,
+    highscore: 0,
     seconds: 0,
-    highScoreAchieved: false,
+    highscoreAchieved: false,
     scoreForAsteroids: [0, 100, 50, 20],
     scoreForSaucers: [0, 1000, 200],
-    scoreForNewLife: 10000,  // 10000
+    scoreForNewLife: 10000, 
     lives: [],
     numberOfLives: 3,
     pause: false,
@@ -27,15 +20,14 @@ export const game = {
     fire: [],
     hyperspace: [],
     timeBetweenLevels: 3000,
-    timeBlikScore: 1000,
-    timeBetweenSaucers: 15, // 15 sec
-    probabilityMinCreateSaucer: 0.3,
+    timeBlinkScore: 1000,
+    timeBetweenSaucers: 15,
+    probabilityCreateSaucerInit: 0.3,
     probabilityCreateSaucer: 0.3,
-    typeOfSaucer: [2000, 10000, 40000],   // 0 - no saucer - 2000 - large saucer - 10000 - random saucer - 40000 - small saucer
-    startingLevel: false,
-    pressFireTo: '',
+    typeOfSaucer: [2000, 10000, 40000],   // 0 < no saucer - 2000 < large saucer - 10000 < random size saucer < 40000 < small saucer
+    isLevelStarting: false,
+    pressFireTo: 'fire',
     isTouch: false,
-    audio: undefined,
     audioTrack: 'background2.mp3',
     audioVolume: 0.3,
     openBoxes: 0,
@@ -44,175 +36,63 @@ export const game = {
         this.parentElement = parentElement
 
         this.initializeMainDiv()
-
         this.initializeCanvasAlert()
         this.initializeCanvasScore()
-        this.initializeCanvasHighScore()
+        this.initializeCanvasHighscore()
         this.initializeCanvasLeaderboard()
 
-        this.refreshScore()
-
-        this.getHighScore()
-        this.refreshHighScore()
+        this.initializeScoreAndHighscore()
 
         this.initializeEvents()
         this.initializeCustomEvents()
 
-        Spacetime.createSpacetime(this.mainDiv)
+        this.initializeSpacetime()
 
-        Spacetime.createAsteroids(2,3)
-        Spacetime.createAsteroids(2,2)
-        Spacetime.createAsteroids(3,1)
-
-        this.audio = new Audio()
-        this.audio.loop = true
-        this.getAudioTrack()
-        this.getAudioVolume()
+        this.initializeAudio()
 
         this.initializeGame()
     },
 
-    getAudioTrack() {
-        const track = localStorage.getItem('audioTrack')
-        track ? this.audioTrack = track : this.setAudioTrack()
-        this.audio.src = `/audio/${this.audioTrack}`
-        return this.audioTrack
+    initializeMainDiv() {
+        this.mainDiv = document.createElement('div')
+        this.mainDiv.id = 'spacetime'
+        this.mainDiv.style.position = 'fixed'
+        this.mainDiv.style.width = '100vw'
+        this.mainDiv.style.height = '100vh'
+        this.mainDiv.style.backgroundColor = 'black'
+        this.mainDiv.style.top = '0'
+        this.mainDiv.style.left = '0'
+        this.parentElement.appendChild(this.mainDiv)
     },
 
-    setAudioTrack(track) {
-        if (track !== undefined) this.audioTrack = track
-        localStorage.setItem('audioTrack', this.audioTrack)
-        this.audio.src = `/audio/${this.audioTrack}`
+    initializeCanvasAlert() {
+        this.canvasAlert = document.createElement('div')
+        this.canvasAlert.className = 'alert'
+        this.mainDiv.appendChild(this.canvasAlert)    
     },
 
-    getAudioVolume() {
-        const volume = localStorage.getItem('musicVolume')
-        volume ? this.audioVolume = parseFloat(volume) : this.setAudioVolume()
-        this.audio.volume = this.audioVolume
-        return this.audioVolume
+    initializeCanvasScore() {
+        this.canvasScore = document.createElement('div')
+        this.canvasScore.className = 'score'
+        this.mainDiv.appendChild(this.canvasScore)    
     },
 
-    setAudioVolume(volume) {
-        if (volume !== undefined) this.audioVolume = volume
-        localStorage.setItem('musicVolume', this.audioVolume)
-        this.audio.volume = this.audioVolume
+    initializeCanvasHighscore() {
+        this.canvasHighscore = document.createElement('div')
+        this.canvasHighscore.className = 'high-score'
+        this.mainDiv.appendChild(this.canvasHighscore)    
     },
 
-    playAudio() {
-        if (this.audioVolume === 0) return
-        this.audio.play()
-    },
-
-    stopAudio() {
-        this.audio.pause()
-    },
-
-    async showLeaderboard() {
-        this.leaderboard = await api.getLeaderboard()
-
-        if (this.leaderboard) {
-            if (this.pressFireTo === 'startgame' || this.pressFireTo === 'initializegame') {
-                let innerHTML = '<table class="leaderboard-table">'
-
-                this.leaderboard.forEach((leader) => {
-                    innerHTML += `<tr><td class="leader-score box-light-gray">${leader.highscore}</td><td class="leader-name">${leader.username.toUpperCase()}</td></tr>`
-                })
-    
-                innerHTML += '</table>'
-                this.canvasLeaderboard.innerHTML = innerHTML
-                this.canvasLeaderboard.className = 'leaderboard'    
-            }
-        }    
-    },
-
-    hideLeaderBoard() {
+    initializeCanvasLeaderboard() {
+        this.canvasLeaderboard = document.createElement('div')
         this.canvasLeaderboard.className = 'leaderboard-hidden'
+        this.mainDiv.appendChild(this.canvasLeaderboard)    
     },
 
-    pressFireNoSpaceship() {
-        switch (this.pressFireTo) {
-            case 'initializegame':
-                this.initializeGame()
-                break
-            case 'startgame':
-                this.startGame()
-                break
-            case 'startspaceship':
-                if (this.openBoxes === 0) this.startSpaceship()
-                break
-        }
-    },
-
-    initializeGame() {
-        this.pressFireTo = 'startgame'
-        this.showAlert('PRESS FIRE TO START GAME')
-        this.showLeaderboard()
-    },
-
-    startGame() {
-        this.pressFireTo = ''
-        this.hideAlert()
-        this.hideLeaderBoard()
-
-        this.level = 0
-        this.score = 0
-        this.seconds = 0
-        this.probabilityCreateSaucer = this.probabilityMinCreateSaucer
-
-        this.initializeLives()
+    initializeScoreAndHighscore() {
         this.refreshScore()
-
-        this.highScoreAchieved = false
-        this.getHighScore()
-        this.refreshHighScore()
-
-        this.playAudio()
-
-        Spacetime.removeAllAsteroid()
-
-        this.startLevel()
-
-        chat.loginChatServer()
-        chat.updateScore(0)
-    },
-
-    startLevel() {
-        if (this.lives.length === 0 && !Spacetime.spaceship) return
-        this.level++
-        this.showAlert(`LEVEL ${this.level}`)    
-        this.startingLevel = true
-        setTimeout(() => {
-            this.hideAlert()
-            this.startingLevel = false
-            Spacetime.createAsteroids(this.level + 1)
-            if (!Spacetime.spaceship) this.newSpaceship()
-        }, this.timeBetweenLevels)
-    },
-
-    startSpaceship() {
-        this.pressFireTo = ''
-        this.hideAlert() 
-
-        this.lives.shift().canvas.remove()
-        this.refreshScore()
-        Spacetime.createSpaceship()    
-    },
-
-    newSpaceship() {
-        if (this.lives.length > 0) {
-            if (this.startingLevel) return
-            this.showAlert('PRESS FIRE TO PLAY')
-            this.pressFireTo = 'startspaceship'
-        } else {
-            this.gameOver()
-        } 
-    },
-
-    gameOver() {
-        this.showAlert('GAME OVER')
-        this.pressFireTo = 'initializegame'
-
-        if (api.user) api.updateUser()
+        this.getHighscore()
+        this.refreshHighscore()
     },
 
     initializeEvents() {
@@ -260,25 +140,181 @@ export const game = {
         })
 
         this.mainDiv.addEventListener('login', () => {
-            this.getHighScore()
-            this.refreshHighScore()
+            this.getHighscore()
+            this.refreshHighscore()
         })
 
         this.mainDiv.addEventListener('logout', () => {
-            this.getHighScore()
-            this.refreshHighScore()
+            this.getHighscore()
+            this.refreshHighscore()
         })
 
         this.mainDiv.addEventListener('username', () => {
-            this.getHighScore()
-            this.refreshHighScore()
+            this.getHighscore()
+            this.refreshHighscore()
             if (this.pressFireTo === 'startgame') this.showLeaderboard()
         })
 
     },
 
+    initializeSpacetime() {
+        Spacetime.createSpacetime(this.mainDiv)
+        Spacetime.createAsteroids(2,3)
+        Spacetime.createAsteroids(2,2)
+        Spacetime.createAsteroids(3,1)
+    },
+
+    initializeAudio() {
+        this.audio = new Audio()
+        this.audio.loop = true
+        this.getAudioTrack()
+        this.getAudioVolume()
+    },
+
+    initializeGame() {
+        this.pressFireTo = 'startgame'
+        this.showAlert('PRESS FIRE TO START GAME')
+        this.showLeaderboard()
+    },
+
+    getAudioTrack() {
+        const track = localStorage.getItem('audioTrack')
+        if (track) this.audioTrack = track
+        else this.setAudioTrack()
+
+        this.audio.src = `/audio/${this.audioTrack}`
+        return this.audioTrack
+    },
+
+    setAudioTrack(track) {
+        if (track !== undefined) this.audioTrack = track
+        localStorage.setItem('audioTrack', this.audioTrack)
+        this.audio.src = `/audio/${this.audioTrack}`
+    },
+
+    getAudioVolume() {
+        const volume = localStorage.getItem('musicVolume')
+        if (volume) this.audioVolume = parseFloat(volume)
+        else this.setAudioVolume()
+
+        this.audio.volume = this.audioVolume
+        return this.audioVolume
+    },
+
+    setAudioVolume(volume) {
+        if (volume !== undefined) this.audioVolume = volume
+        localStorage.setItem('musicVolume', this.audioVolume)
+        this.audio.volume = this.audioVolume
+    },
+
+    playAudio() {
+        if (this.audioVolume === 0) return
+        this.audio.play()
+    },
+
+    stopAudio() {
+        this.audio.pause()
+    },
+
+    async showLeaderboard() {
+        if (this.pressFireTo !== 'startgame' && this.pressFireTo !== 'initializegame') return
+
+        this.leaderboard = await api.getLeaderboard()
+        if (!this.leaderboard) return
+
+        let innerHTML = '<table class="leaderboard-table">'
+
+        this.leaderboard.forEach((leader) => innerHTML += `
+            <tr>
+            <td class="leader-score box-light-gray">${leader.highscore}</td>
+            <td class="leader-name">${leader.username.toUpperCase()}</td>
+            </tr>
+        `)
+
+        innerHTML += '</table>'
+        this.canvasLeaderboard.innerHTML = innerHTML
+        this.canvasLeaderboard.className = 'leaderboard'    
+    },
+
+    hideLeaderboard() {
+        this.canvasLeaderboard.className = 'leaderboard-hidden'
+    },
+
+    pressFireIfNoSpaceship() {
+        if (this.pressFireTo === 'initializegame') this.initializeGame()
+        else if (this.pressFireTo === 'startgame') this.startGame()
+        else if (this.pressFireTo === 'startspaceship') this.startSpaceship()
+    },
+
+    startGame() {
+        this.pressFireTo = 'fire'
+        this.hideAlert()
+        this.hideLeaderboard()
+
+        this.level = 0
+        this.score = 0
+        this.seconds = 0
+        this.probabilityCreateSaucer = this.probabilityCreateSaucerInit
+
+        this.initializeLives()
+        this.refreshScore()
+
+        this.highscoreAchieved = false
+        this.getHighscore()
+        this.refreshHighscore()
+
+        this.playAudio()
+
+        Spacetime.removeAllAsteroid()
+
+        this.startLevel()
+
+        chat.loginChatServer()
+        chat.updateScore(0)
+    },
+
+    startLevel() {
+        const noSpaceshipAndNoExtraLives = !Spacetime.spaceship && this.lives.length === 0
+        if ( noSpaceshipAndNoExtraLives ) return
+
+        this.level++
+        this.showAlert(`LEVEL ${this.level}`)    
+        this.isLevelStarting = true
+
+        setTimeout(() => {
+            this.hideAlert()
+            this.isLevelStarting = false
+            Spacetime.createAsteroids(this.level + 1)
+            if (!Spacetime.spaceship) this.newSpaceship()
+        }, this.timeBetweenLevels)
+    },
+
+    startSpaceship() {
+        this.pressFireTo = 'fire'
+        this.hideAlert() 
+
+        this.lives.shift().canvas.remove()
+        this.refreshScore()
+        Spacetime.createSpaceship()    
+    },
+
+    newSpaceship() {
+        if (this.lives.length === 0) return this.gameOver()
+        if (this.isLevelStarting) return
+
+        this.showAlert('PRESS FIRE TO PLAY')
+        this.pressFireTo = 'startspaceship'
+    },
+
+    gameOver() {
+        this.showAlert('GAME OVER')
+        this.pressFireTo = 'initializegame'
+
+        if (api.user) api.updateUser()
+    },
+
     generateSaucer() {
-        if (!Spacetime.spaceship || Spacetime.saucer || this.pause || this.startingLevel || this.score < this.typeOfSaucer[0]) return
+        if (!Spacetime.spaceship || Spacetime.saucer || this.pause || this.isLevelStarting || this.score < this.typeOfSaucer[0]) return
 
         if (this.score < this.typeOfSaucer[1]) this.createSaucer(2)
         else if (this.score < this.typeOfSaucer[2]) Math.random() < 0.5 ? this.createSaucer(1) : this.createSaucer(2)
@@ -323,49 +359,46 @@ export const game = {
             this.canvasScore.appendChild(this.lives[i].canvas)
         }
 
-        if (this.score > this.highScore) {
-            this.highScore = this.score
-            this.refreshHighScore()
-            this.setHighScore()
-            if (!this.highScoreAchieved) {
-                this.blinkScore()
-                this.highScoreAchieved = true    
-            }
-        }
+        if (this.score <= this.highscore) return 
+
+        this.highscore = this.score
+        this.refreshHighscore()
+        this.setHighscore()
+
+        if (this.highscoreAchieved) return 
+
+        this.blinkScore()
+        this.highscoreAchieved = true    
     },
 
     blinkScore() {
         this.canvasScore.className = 'score-blink'
         setTimeout(() => {
             this.canvasScore.className = 'score'
-        }, this.timeBlikScore)
+        }, this.timeBlinkScore)
     },
 
-    refreshHighScore() {
-        this.canvasHighScore.innerHTML = `${this.highScore} ${api.user ? api.user.username.toUpperCase() : ''}`
+    refreshHighscore() {
+        this.canvasHighscore.innerHTML = `${this.highscore} ${api.user ? api.user.username.toUpperCase() : ''}`
     },
 
-    getHighScore() {
-        if (api.user) {
-            this.highScore = api.user.highscore
-        } else {
-            const hs = localStorage.getItem('highScore')
-            if (hs) this.highScore = parseInt(hs)
-            else this.setHighScore()    
-        }
+    getHighscore() {
+        if (api.user) return this.highscore = api.user.highscore
+
+        const hs = localStorage.getItem('highScore')
+        if (hs) this.highscore = parseInt(hs)
+        else this.setHighscore()    
     },
 
-    setHighScore() {
-        if (api.user) {
-            api.user.highscore = this.highScore
-        } else {
-            localStorage.setItem('highScore', this.highScore)
-        }
+    setHighscore() {
+        if (api.user) return api.user.highscore = this.highscore
+
+        localStorage.setItem('highScore', this.highscore)
     },
 
     showAlert(alertHTML) {
-        this.canvasAlert.className = 'alert'
         this.canvasAlert.innerHTML = alertHTML
+        this.canvasAlert.className = 'alert'
     },
 
     hideAlert() {
@@ -373,30 +406,25 @@ export const game = {
     },
 
     switchPause() {
-
         if (!Spacetime.spaceship) return
 
-        if (game.pause) {
-            if (this.openBoxes === 0) {
-                Spacetime.start()
-                this.playAudio()
-    
-                this.checkSwitches()    
-                game.pause = !game.pause
-            }
-        } else {
+        if (!game.pause) {
             Spacetime.stop()
             this.stopAudio()
+            game.pause = !game.pause
+        } else if (this.openBoxes === 0) {
+            Spacetime.start()
+            this.playAudio()
+            this.checkSwitches()    
             game.pause = !game.pause
         }
     },
 
     checkSwitches() {
-
-        if (this.openBoxes !== 0) return
+        if (this.openBoxes > 0) return
         
         if (!Spacetime.spaceship) {            
-            if (this.fire.length > 0) this.pressFireNoSpaceship()
+            if (this.fire.length > 0) this.pressFireIfNoSpaceship()
             return
         }
 
@@ -404,11 +432,9 @@ export const game = {
         this.fire.length > 0 ? Spacetime.spaceship.startFire() : Spacetime.spaceship.stopFire()
         this.rotation.length > 0 ? Spacetime.spaceship.startRotation(this.rotation[0]) : Spacetime.spaceship.stopRotation()
         this.accelerate ? Spacetime.spaceship.startAccelerate() : Spacetime.spaceship.stopAccelerate()
-
     },
 
     eventKeyDown(event) {
-
         switch(event.code) {
             case 'KeyP':
                 this.switchPause()
@@ -437,7 +463,6 @@ export const game = {
     },
 
     eventKeyUp(event) {
-
         switch(event.code) {
             case 'KeyA':
             case 'ArrowLeft':
@@ -467,7 +492,6 @@ export const game = {
     },
 
     eventMouseDown(event) {
-
         if (this.isTouch) return
 
         switch(event.button) {
@@ -483,7 +507,6 @@ export const game = {
     },
 
     eventMouseUp(event) {
-
         if (this.isTouch) return this.isTouch = false
 
         switch(event.button) {
@@ -501,7 +524,6 @@ export const game = {
     },
 
     eventTouchStart(event) {
-
         this.isTouch = true
 
         this.touchStart = []
@@ -521,7 +543,6 @@ export const game = {
     },
 
     eventTouchMove(event) {
-
         this.touchEnd = []
 
         for (let i = 0; i < event.targetTouches.length; i++) {
@@ -558,7 +579,6 @@ export const game = {
     },
 
     eventTouchEnd() {
-
         this.accelerate = false
         this.fire = []
         this.hyperspace = []
@@ -566,39 +586,4 @@ export const game = {
         if (!this.pause) this.checkSwitches()
     },
 
-    initializeMainDiv() {
-        this.mainDiv = document.createElement('div')
-        this.mainDiv.id = 'spacetime'
-        this.mainDiv.style.position = 'fixed'
-        this.mainDiv.style.width = '100vw'
-        this.mainDiv.style.height = '100vh'
-        this.mainDiv.style.backgroundColor = 'black'
-        this.mainDiv.style.top = '0'
-        this.mainDiv.style.left = '0'
-        this.parentElement.appendChild(this.mainDiv)
-    },
-
-    initializeCanvasAlert() {
-        this.canvasAlert = document.createElement('div')
-        this.canvasAlert.className = 'alert'
-        this.mainDiv.appendChild(this.canvasAlert)    
-    },
-
-    initializeCanvasLeaderboard() {
-        this.canvasLeaderboard = document.createElement('div')
-        this.canvasLeaderboard.className = 'leaderboard-hidden'
-        this.mainDiv.appendChild(this.canvasLeaderboard)    
-    },
-
-    initializeCanvasScore() {
-        this.canvasScore = document.createElement('div')
-        this.canvasScore.className = 'score'
-        this.mainDiv.appendChild(this.canvasScore)    
-    },
-
-    initializeCanvasHighScore() {
-        this.canvasHighScore = document.createElement('div')
-        this.canvasHighScore.className = 'high-score'
-        this.mainDiv.appendChild(this.canvasHighScore)    
-    }
 }
