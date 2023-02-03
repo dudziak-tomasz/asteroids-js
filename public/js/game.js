@@ -2,8 +2,10 @@ import { Spacetime } from './spacetime.js'
 import { Spaceship } from './spaceship.js'
 import { api } from './api.js'
 import { chat } from './chat.js'
+import { controls } from './controls.js'
 
 export const game = {
+
     level: 0,
     score: 0,
     highscore: 0,
@@ -15,10 +17,6 @@ export const game = {
     lives: [],
     numberOfLives: 3,
     pause: false,
-    rotation: [],
-    accelerate: false,
-    fire: [],
-    hyperspace: [],
     timeBetweenLevels: 3000,
     timeBlinkScore: 1000,
     timeBetweenSaucers: 15,
@@ -27,7 +25,6 @@ export const game = {
     typeOfSaucer: [2000, 10000, 40000],   // 0 < no saucer - 2000 < large saucer - 10000 < random size saucer < 40000 < small saucer
     isLevelStarting: false,
     pressFireTo: 'fire',
-    isTouch: false,
     audioTrack: 'background2.mp3',
     audioVolume: 0.3,
     openBoxes: 0,
@@ -42,15 +39,12 @@ export const game = {
         this.initializeCanvasLeaderboard()
 
         this.initializeScoreAndHighscore()
-
-        this.initializeEvents()
         this.initializeCustomEvents()
-
         this.initializeSpacetime()
-
         this.initializeAudio()
-
         this.initializeGame()
+
+        controls.initializeEvents()
     },
 
     initializeMainDiv() {
@@ -93,18 +87,6 @@ export const game = {
         this.refreshScore()
         this.getHighscore()
         this.refreshHighscore()
-    },
-
-    initializeEvents() {
-        this.parentElement.addEventListener('keydown', (event) => this.eventKeyDown(event))
-        this.parentElement.addEventListener('keyup', (event) => this.eventKeyUp(event))
-    
-        this.mainDiv.addEventListener('mousedown', (event) => this.eventMouseDown(event))
-        this.mainDiv.addEventListener('mouseup', (event) => this.eventMouseUp(event))
-
-        this.mainDiv.addEventListener('touchstart', (event) => this.eventTouchStart(event))
-        this.mainDiv.addEventListener('touchmove', (event) => this.eventTouchMove(event))
-        this.mainDiv.addEventListener('touchend', (event) => this.eventTouchEnd(event))
     },
 
     initializeCustomEvents () {
@@ -309,7 +291,6 @@ export const game = {
     gameOver() {
         this.showAlert('GAME OVER')
         this.pressFireTo = 'initializegame'
-
         if (api.user) api.updateUser()
     },
 
@@ -343,9 +324,7 @@ export const game = {
     },
 
     initializeLives() {
-        for (let i = 0; i < this.numberOfLives; i++) {
-            this.addLives()
-        }
+        for (let i = 0; i < this.numberOfLives; i++) this.addLives()
     },
 
     addLives() {
@@ -408,182 +387,36 @@ export const game = {
     switchPause() {
         if (!Spacetime.spaceship) return
 
-        if (!game.pause) {
+        if (game.pause === false) {
+            game.pause = true
             Spacetime.stop()
             this.stopAudio()
-            game.pause = !game.pause
         } else if (this.openBoxes === 0) {
+            game.pause = false
             Spacetime.start()
             this.playAudio()
-            this.checkSwitches()    
-            game.pause = !game.pause
+            this.checkControls()    
         }
     },
 
-    checkSwitches() {
-        if (this.openBoxes > 0) return
+    checkControls() {
+        if (this.openBoxes > 0 || this.pause) return
         
         if (!Spacetime.spaceship) {            
-            if (this.fire.length > 0) this.pressFireIfNoSpaceship()
+            if (controls.isFire()) this.pressFireIfNoSpaceship()
             return
         }
 
-        this.hyperspace.length > 0 ? Spacetime.spaceship.startHyperspace() : 0
-        this.fire.length > 0 ? Spacetime.spaceship.startFire() : Spacetime.spaceship.stopFire()
-        this.rotation.length > 0 ? Spacetime.spaceship.startRotation(this.rotation[0]) : Spacetime.spaceship.stopRotation()
-        this.accelerate ? Spacetime.spaceship.startAccelerate() : Spacetime.spaceship.stopAccelerate()
-    },
+        if (controls.isHyperspace()) Spacetime.spaceship.startHyperspace()
 
-    eventKeyDown(event) {
-        switch(event.code) {
-            case 'KeyP':
-                this.switchPause()
-                break
-            case 'KeyA':
-            case 'ArrowLeft':
-                if (!this.rotation.includes('left')) this.rotation.unshift('left')
-                break
-            case 'KeyD':
-            case 'ArrowRight':
-                if (!this.rotation.includes('right')) this.rotation.unshift('right')
-                break
-            case 'KeyW':
-            case 'ArrowUp':
-                this.accelerate = true
-                break
-            case 'Space':
-                if (!this.fire.includes('keyboard')) this.fire.unshift('keyboard')
-                break
-            case 'KeyH':
-                if (!this.hyperspace.includes('keyboard')) this.hyperspace.unshift('keyboard')
-                break
-        }        
+        if (controls.isFire()) Spacetime.spaceship.startFire()
+        else Spacetime.spaceship.stopFire()
 
-        if (!this.pause) this.checkSwitches()
-    },
+        if (controls.isRotation()) Spacetime.spaceship.startRotation(controls.rotationDirection())
+        else Spacetime.spaceship.stopRotation()
 
-    eventKeyUp(event) {
-        switch(event.code) {
-            case 'KeyA':
-            case 'ArrowLeft':
-                const indexLeft = this.rotation.findIndex(r => r === 'left')
-                this.rotation.splice(indexLeft, 1)
-                break
-            case 'KeyD':
-            case 'ArrowRight':
-                const indexRight = this.rotation.findIndex(r => r === 'right')
-                this.rotation.splice(indexRight, 1)
-                break
-            case 'KeyW':
-            case 'ArrowUp':
-                this.accelerate = false
-                break
-            case 'Space':
-                const indexFire = this.fire.findIndex(f => f === 'keyboard')
-                this.fire.splice(indexFire, 1)
-                break
-            case 'KeyH':
-                const indexHyperspace = this.hyperspace.findIndex(h => h === 'keyboard')
-                this.hyperspace.splice(indexHyperspace, 1)
-                break
-        }    
-
-        if (!this.pause) this.checkSwitches()
-    },
-
-    eventMouseDown(event) {
-        if (this.isTouch) return
-
-        switch(event.button) {
-            case 0:
-                if (!this.fire.includes('mouse')) this.fire.unshift('mouse')
-                break
-            case 2:
-                if (!this.hyperspace.includes('mouse')) this.hyperspace.unshift('mouse')
-                break
-        }
-        
-        if (!this.pause) this.checkSwitches()
-    },
-
-    eventMouseUp(event) {
-        if (this.isTouch) return this.isTouch = false
-
-        switch(event.button) {
-            case 0:
-                const indexFire = this.fire.findIndex(f => f === 'mouse')
-                this.fire.splice(indexFire,1)
-                break
-            case 2:
-                const indexHyperspace = this.hyperspace.findIndex(h => h === 'mouse')
-                this.hyperspace.splice(indexHyperspace,1)
-                break
-        }
-        
-        if (!this.pause) this.checkSwitches()
-    },
-
-    eventTouchStart(event) {
-        this.isTouch = true
-
-        this.touchStart = []
-        this.touchEnd = []
-
-        for (let i = 0; i < event.targetTouches.length; i++) {
-            this.touchStart.push({ x: event.targetTouches[0].clientX, y: event.targetTouches[0].clientY})
-        }
-
-        this.touchEnd = this.touchStart
-
-        if (!this.fire.includes('touch')) this.fire.unshift('touch')
-
-        this.rotation = []
-
-        if (!this.pause) this.checkSwitches()
-    },
-
-    eventTouchMove(event) {
-        this.touchEnd = []
-
-        for (let i = 0; i < event.targetTouches.length; i++) {
-            this.touchEnd.push({ x: event.targetTouches[0].clientX, y: event.targetTouches[0].clientY})
-        }
-
-        const moveSensitivity = 30
-        const accelerationSensitivity = 50
-        const hyperspaceSensitivity = 100
-        let newRotation = ''
-        let newAcclerate = false
-        let newHyperspace = false
-
-        for (let i = 0; i < event.targetTouches.length; i++) {
-            if (this.touchEnd[i].x - this.touchStart[i].x < - moveSensitivity) newRotation = 'left'
-            else if (this.touchEnd[i].x - this.touchStart[i].x > moveSensitivity) newRotation = 'right'
-
-            if (this.touchEnd[i].y - this.touchStart[i].y < - accelerationSensitivity) newAcclerate = true
-
-            if (this.touchEnd[i].y - this.touchStart[i].y > hyperspaceSensitivity) newHyperspace = true
-        }
-
-        if (newRotation === 'left' && !this.rotation.includes('left')) this.rotation.unshift('left')
-        if (newRotation === 'right' && !this.rotation.includes('right')) this.rotation.unshift('right')
-
-        this.accelerate = newAcclerate
-
-        if (newHyperspace && !this.hyperspace.includes('touch')) {
-            this.hyperspace.unshift('touch')
-            this.rotation = []
-        } 
-
-        if (!this.pause) this.checkSwitches()
-    },
-
-    eventTouchEnd() {
-        this.accelerate = false
-        this.fire = []
-        this.hyperspace = []
-
-        if (!this.pause) this.checkSwitches()
+        if (controls.isAccelerate()) Spacetime.spaceship.startAccelerate() 
+        else Spacetime.spaceship.stopAccelerate()
     },
 
 }
