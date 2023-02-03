@@ -11,9 +11,9 @@ export const profileBox = {
     },
 
     async openBox() {
-        profileBox.box.open()
-        profileBox.handleElements()
-        await profileBox.loadProfile()
+        this.box.open()
+        this.handleElements()
+        await this.loadProfile()
     },
 
     handleElements() {

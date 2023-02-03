@@ -11,8 +11,8 @@ export const registerBox = {
     },
 
     openBox() {
-        registerBox.box.open()
-        registerBox.handleElements()
+        this.box.open()
+        this.handleElements()
     },
 
     handleElements() {

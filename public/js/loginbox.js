@@ -12,8 +12,8 @@ export const loginBox = {
     },
 
     openBox(message = '') {
-        loginBox.box.open()
-        loginBox.handleElements(message)
+        this.box.open()
+        this.handleElements(message)
     },
 
     handleElements(message = '') {

@@ -12,8 +12,8 @@ export const passwordResetChangePasswordBox = {
 
     openBox(tokenFromURL) {
         this.token = tokenFromURL
-        passwordResetChangePasswordBox.box.open()
-        passwordResetChangePasswordBox.handleElements()
+        this.box.open()
+        this.handleElements()
     },
 
     handleElements() {

@@ -141,10 +141,10 @@ export const chat = {
     },
 
     openBox() {
-        chat.box.open()
-        chat.handleElements()
-        chat.loadAllMessagesInBox()
-        chat.loginChatServer()
+        this.box.open()
+        this.handleElements()
+        this.loadAllMessagesInBox()
+        this.loginChatServer()
     },
 
     loadAllMessagesInBox() {

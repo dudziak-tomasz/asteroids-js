@@ -48,42 +48,42 @@ export class Menu extends Box {
             id: 'login',
             text: 'LOGIN',
             enabled: true,
-            click: loginBox.openBox
+            click: () => loginBox.openBox()
         }, {
             id: 'profile',
             text: 'PROFILE',
             enabled: false,
-            click: profileBox.openBox
+            click: () => profileBox.openBox()
         }, {
             id: 'preferences',
             text: 'PREFERENCES',
             enabled: true,
-            click: preferencesBox.openBox
+            click: () => preferencesBox.openBox()
         }, {
             id: 'fullscreen',
             text: 'FULLSCREEN',
             enabled: true,
-            click: this.makeFullscreen
+            click: () => this.makeFullscreen()
         }, {
             id: 'exit fullscreen',
             text: 'EXIT FS',
             enabled: false,
-            click: this.exitFullscreen
+            click: () => this.exitFullscreen()
         }, {
             id: 'chat',
             text: 'CHAT',
             enabled: true,
-            click: chat.openBox
+            click: () => chat.openBox()
         }, {
             id: 'how to play',
             text: 'HOW TO PLAY',
             enabled: true,
-            click: this.openHowToPlay
+            click: () => this.openHowToPlay()
         }, {
             id: 'about',
             text: 'ABOUT',
             enabled: true,
-            click: this.openAbout
+            click: () => this.openAbout()
         }]   
     }
 

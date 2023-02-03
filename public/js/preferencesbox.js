@@ -12,8 +12,8 @@ export const preferencesBox = {
     },
 
     openBox() {
-        preferencesBox.box.open()
-        preferencesBox.handleElements()
+        this.box.open()
+        this.handleElements()
     },
 
     handleElements() {

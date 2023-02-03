@@ -11,8 +11,8 @@ export const passwordResetBox = {
     },
 
     openBox() {
-        passwordResetBox.box.open()
-        passwordResetBox.handleElements()
+        this.box.open()
+        this.handleElements()
     },
 
     handleElements() {

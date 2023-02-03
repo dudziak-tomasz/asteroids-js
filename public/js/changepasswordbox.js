@@ -11,8 +11,8 @@ export const changePasswordBox = {
     },
 
     openBox() {
-        changePasswordBox.box.open()
-        changePasswordBox.handleElements()
+        this.box.open()
+        this.handleElements()
     },
 
     handleElements() {
