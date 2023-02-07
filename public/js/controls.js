@@ -7,6 +7,9 @@ export const controls = {
     fire: [],
     hyperspace: [],
     isTouch: false,
+    touchMoveSensitivity: 30,
+    touchAccelerationSensitivity: 50,
+    touchHyperspaceSensitivity: 100,
 
     initializeEvents() {
         document.addEventListener('keydown', (event) => this.eventKeyDown(event))
@@ -111,15 +114,10 @@ export const controls = {
 
     eventTouchStart(event) {
         this.isTouch = true
+        if (event.targetTouches.length === 0) return
 
         this.touchStart = []
-        this.touchEnd = []
-
-        for (let i = 0; i < event.targetTouches.length; i++) {
-            this.touchStart.push({ x: event.targetTouches[0].clientX, y: event.targetTouches[0].clientY})
-        }
-
-        this.touchEnd = this.touchStart
+        this.touchStart.push({ x: event.targetTouches[0].clientX, y: event.targetTouches[0].clientY})
 
         if (!this.fire.includes('touch')) this.fire.unshift('touch')
 
@@ -129,37 +127,29 @@ export const controls = {
     },
 
     eventTouchMove(event) {
+        if (event.targetTouches.length === 0) return
+
         this.touchEnd = []
+        this.touchEnd.push({ x: event.targetTouches[0].clientX, y: event.targetTouches[0].clientY})
 
-        for (let i = 0; i < event.targetTouches.length; i++) {
-            this.touchEnd.push({ x: event.targetTouches[0].clientX, y: event.targetTouches[0].clientY})
-        }
-
-        const moveSensitivity = 30
-        const accelerationSensitivity = 50
-        const hyperspaceSensitivity = 100
         let newRotation = ''
         let newAcclerate = false
         let newHyperspace = false
 
-        for (let i = 0; i < event.targetTouches.length; i++) {
-            if (this.touchEnd[i].x - this.touchStart[i].x < - moveSensitivity) newRotation = 'left'
-            else if (this.touchEnd[i].x - this.touchStart[i].x > moveSensitivity) newRotation = 'right'
+        const swipeLeft = this.touchEnd[0].x - this.touchStart[0].x < - this.touchMoveSensitivity
+        const swipeRight = this.touchEnd[0].x - this.touchStart[0].x > this.touchMoveSensitivity
+        const swipeUp = this.touchEnd[0].y - this.touchStart[0].y < - this.touchAccelerationSensitivity
+        const swipeDown = this.touchEnd[0].y - this.touchStart[0].y > this.touchHyperspaceSensitivity
 
-            if (this.touchEnd[i].y - this.touchStart[i].y < - accelerationSensitivity) newAcclerate = true
-
-            if (this.touchEnd[i].y - this.touchStart[i].y > hyperspaceSensitivity) newHyperspace = true
-        }
+        if (swipeLeft) newRotation = 'left'
+        else if (swipeRight) newRotation = 'right'
+        if (swipeUp) newAcclerate = true
+        if (swipeDown) newHyperspace = true
 
         if (newRotation === 'left' && !this.rotation.includes('left')) this.rotation.unshift('left')
         if (newRotation === 'right' && !this.rotation.includes('right')) this.rotation.unshift('right')
-
         this.accelerate = newAcclerate
-
-        if (newHyperspace && !this.hyperspace.includes('touch')) {
-            this.hyperspace.unshift('touch')
-            this.rotation = []
-        } 
+        if (newHyperspace && !this.hyperspace.includes('touch')) this.hyperspace.unshift('touch')
 
         game.checkControls()
     },
