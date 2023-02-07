@@ -132,6 +132,5 @@ Game background music:
 
 ## TODOS
 
-- Improve support for mobile devices
 - Some new ideas for the game: more saucers after reaching 100,000 points; the ability to play with two players
 - Use neural networks to make alien saucer learn to fire accurately
