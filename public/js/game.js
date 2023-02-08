@@ -5,14 +5,13 @@ import { chat } from './chat.js'
 import { controls } from './controls.js'
 import { leaderboard } from './leaderboard.js'
 import { alert } from './alert.js'
+import { highscore } from './highscore.js'
 
 export const game = {
 
     level: 0,
     score: 0,
-    highscore: 0,
     seconds: 0,
-    highscoreAchieved: false,
     scoreForAsteroids: [0, 100, 50, 20],
     scoreForSaucers: [0, 1000, 200],
     scoreForNewLife: 10000, 
@@ -36,12 +35,11 @@ export const game = {
 
         this.initializeMainDiv()
         this.initializeCanvasScore()
-        this.initializeCanvasHighscore()
 
+        highscore.initialize(this.mainDiv)
         alert.initialize(this.mainDiv)
         leaderboard.initialize(this.mainDiv)
 
-        this.initializeScoreAndHighscore()
         this.initializeCustomEvents()
         this.initializeSpacetime()
         this.initializeAudio()
@@ -60,18 +58,7 @@ export const game = {
         this.canvasScore = document.createElement('div')
         this.canvasScore.className = 'score'
         this.mainDiv.appendChild(this.canvasScore)    
-    },
-
-    initializeCanvasHighscore() {
-        this.canvasHighscore = document.createElement('div')
-        this.canvasHighscore.className = 'high-score'
-        this.mainDiv.appendChild(this.canvasHighscore)    
-    },
-
-    initializeScoreAndHighscore() {
         this.refreshScore()
-        this.getHighscore()
-        this.refreshHighscore()
     },
 
     initializeCustomEvents () {
@@ -106,20 +93,9 @@ export const game = {
             if (this.openBoxes === 0 && game.pause) this.switchPause()
         })
 
-        this.mainDiv.addEventListener('login', () => {
-            this.getHighscore()
-            this.refreshHighscore()
-        })
-
-        this.mainDiv.addEventListener('logout', () => {
-            this.getHighscore()
-            this.refreshHighscore()
-        })
-
         this.mainDiv.addEventListener('username', () => {
-            this.getHighscore()
-            this.refreshHighscore()
-            if (this.pressFireTo === 'startgame') leaderboard.show()
+            const isLeaderboardVisible = this.pressFireTo === 'startgame'
+            if (isLeaderboardVisible) leaderboard.show()
         })
 
     },
@@ -202,9 +178,8 @@ export const game = {
         this.initializeLives()
         this.refreshScore()
 
-        this.highscoreAchieved = false
-        this.getHighscore()
-        this.refreshHighscore()
+        highscore.achieved = false
+        highscore.getAndRefresh()
 
         this.playAudio()
 
@@ -299,16 +274,15 @@ export const game = {
             this.canvasScore.appendChild(this.lives[i].canvas)
         }
 
-        if (this.score <= this.highscore) return 
+        if (this.score <= highscore.highscore) return 
 
-        this.highscore = this.score
-        this.refreshHighscore()
-        this.setHighscore()
+        highscore.highscore = this.score
+        highscore.setAndRefresh()
 
-        if (this.highscoreAchieved) return 
+        if (highscore.achieved) return 
 
         this.blinkScore()
-        this.highscoreAchieved = true    
+        highscore.achieved = true    
     },
 
     blinkScore() {
@@ -316,24 +290,6 @@ export const game = {
         setTimeout(() => {
             this.canvasScore.className = 'score'
         }, this.timeBlinkScore)
-    },
-
-    refreshHighscore() {
-        this.canvasHighscore.innerHTML = `${this.highscore} ${api.user ? api.user.username.toUpperCase() : ''}`
-    },
-
-    getHighscore() {
-        if (api.user) return this.highscore = api.user.highscore
-
-        const hs = localStorage.getItem('highScore')
-        if (hs) this.highscore = parseInt(hs)
-        else this.setHighscore()    
-    },
-
-    setHighscore() {
-        if (api.user) return api.user.highscore = this.highscore
-
-        localStorage.setItem('highScore', this.highscore)
     },
 
     switchPause() {
