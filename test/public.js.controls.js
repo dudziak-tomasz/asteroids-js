@@ -30,7 +30,7 @@ test('Should add mouse and keyboard event listeners', () => {
     let checkMock
     game.checkControls = () =>  checkMock = true
 
-    controls.initializeEvents()
+    controls.initialize()
 
     checkMock = false
     document.dispatchEvent(new CustomEvent('keydown'))
