@@ -11,7 +11,7 @@ export const controls = {
     touchAccelerationSensitivity: 50,
     touchHyperspaceSensitivity: 100,
 
-    initializeEvents() {
+    initialize() {
         document.addEventListener('keydown', (event) => this.eventKeyDown(event))
         document.addEventListener('keyup', (event) => this.eventKeyUp(event))
     
