@@ -52,6 +52,13 @@ test('Should remove value from localStorage', () => {
 })
 
 
+test('Should clear localStorage', () => {
+    assert.deepEqual(localStorage.storage.size, 3)
+    localStorage.clear()
+    assert.deepEqual(localStorage.storage.size, 0)
+})
+
+
 test('Should create instance of Audio', () => {
     const audio = new Audio()
     assert.ok(audio)

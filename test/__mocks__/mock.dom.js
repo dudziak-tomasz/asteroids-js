@@ -23,6 +23,9 @@ global.localStorage = {
     },
     removeItem(key) {
         this.storage.delete(key)
+    },
+    clear() {
+        this.storage = new Map()
     }
 }
 
