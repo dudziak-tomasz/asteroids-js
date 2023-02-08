@@ -41,14 +41,6 @@ test('Should assign data for mainDiv', () => {
 })
 
 
-test('Should assign data for canvasAlert', () => {
-    assert.deepEqual(game.canvasAlert.constructor.name, 'HTMLDivElement')
-    assert.deepEqual(game.canvasAlert.className, 'alert')
-    const $canvasAlert = document.querySelector('.alert')
-    assert.deepEqual($canvasAlert, game.canvasAlert)
-})
-
-
 test('Should assign data for canvasScore', () => {
     assert.deepEqual(game.canvasScore.constructor.name, 'HTMLDivElement')
     assert.deepEqual(game.canvasScore.className, 'score')
@@ -77,5 +69,4 @@ test('Should assign data for background audio', () => {
 
 test('Should assign data for state of game', () => {
     assert.deepEqual(game.pressFireTo, 'startgame')
-    assert.deepEqual(game.canvasAlert.innerHTML, 'PRESS FIRE TO START GAME')
 })

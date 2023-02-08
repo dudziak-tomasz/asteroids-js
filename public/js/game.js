@@ -4,6 +4,7 @@ import { api } from './api.js'
 import { chat } from './chat.js'
 import { controls } from './controls.js'
 import { leaderboard } from './leaderboard.js'
+import { alert } from './alert.js'
 
 export const game = {
 
@@ -34,9 +35,11 @@ export const game = {
         this.parentElement = parentElement
 
         this.initializeMainDiv()
-        this.initializeCanvasAlert()
         this.initializeCanvasScore()
         this.initializeCanvasHighscore()
+
+        alert.initialize(this.mainDiv)
+        leaderboard.initialize(this.mainDiv)
 
         this.initializeScoreAndHighscore()
         this.initializeCustomEvents()
@@ -44,7 +47,6 @@ export const game = {
         this.initializeAudio()
         this.initializeGame()
 
-        leaderboard.initialize(this.mainDiv)
         controls.initialize()
     },
 
@@ -52,12 +54,6 @@ export const game = {
         this.mainDiv = document.createElement('div')
         this.mainDiv.id = 'spacetime'
         this.parentElement.appendChild(this.mainDiv)
-    },
-
-    initializeCanvasAlert() {
-        this.canvasAlert = document.createElement('div')
-        this.canvasAlert.className = 'alert'
-        this.mainDiv.appendChild(this.canvasAlert)    
     },
 
     initializeCanvasScore() {
@@ -144,7 +140,7 @@ export const game = {
 
     initializeGame() {
         this.pressFireTo = 'startgame'
-        this.showAlert('PRESS FIRE TO START GAME')
+        alert.show('PRESS FIRE TO START GAME')
         leaderboard.show()
     },
 
@@ -195,7 +191,7 @@ export const game = {
 
     startGame() {
         this.pressFireTo = 'fire'
-        this.hideAlert()
+        alert.hide()
         leaderboard.hide()
 
         this.level = 0
@@ -225,11 +221,11 @@ export const game = {
         if ( noSpaceshipAndNoExtraLives ) return
 
         this.level++
-        this.showAlert(`LEVEL ${this.level}`)    
+        alert.show(`LEVEL ${this.level}`)    
         this.isLevelStarting = true
 
         setTimeout(() => {
-            this.hideAlert()
+            alert.hide()
             this.isLevelStarting = false
             Spacetime.createAsteroids(this.level + 1)
             if (!Spacetime.spaceship) this.newSpaceship()
@@ -238,7 +234,7 @@ export const game = {
 
     startSpaceship() {
         this.pressFireTo = 'fire'
-        this.hideAlert() 
+        alert.hide() 
 
         this.lives.shift().canvas.remove()
         this.refreshScore()
@@ -249,12 +245,12 @@ export const game = {
         if (this.lives.length === 0) return this.gameOver()
         if (this.isLevelStarting) return
 
-        this.showAlert('PRESS FIRE TO PLAY')
+        alert.show('PRESS FIRE TO PLAY')
         this.pressFireTo = 'startspaceship'
     },
 
     gameOver() {
-        this.showAlert('GAME OVER')
+        alert.show('GAME OVER')
         this.pressFireTo = 'initializegame'
         if (api.user) api.updateUser()
     },
@@ -338,15 +334,6 @@ export const game = {
         if (api.user) return api.user.highscore = this.highscore
 
         localStorage.setItem('highScore', this.highscore)
-    },
-
-    showAlert(alertHTML) {
-        this.canvasAlert.innerHTML = alertHTML
-        this.canvasAlert.className = 'alert'
-    },
-
-    hideAlert() {
-        this.canvasAlert.className = 'alert-hidden'
     },
 
     switchPause() {
