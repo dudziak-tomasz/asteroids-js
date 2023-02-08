@@ -72,14 +72,6 @@ test('Should assign data for canvasHighscore', () => {
 })
 
 
-test('Should assign data for canvasLeaderboard', () => {
-    assert.deepEqual(game.canvasLeaderboard.constructor.name, 'HTMLDivElement')
-    assert.deepEqual(game.canvasLeaderboard.className, 'leaderboard-hidden')
-    const $canvasLeaderboard = document.querySelector('.leaderboard-hidden')
-    assert.deepEqual($canvasLeaderboard, game.canvasLeaderboard)
-})
-
-
 test('Should assign data for background audio', () => {
     assert.deepEqual(game.audioTrack, 'background2.mp3')
     assert.deepEqual(game.audioVolume, 0.3)
@@ -93,5 +85,4 @@ test('Should assign data for background audio', () => {
 test('Should assign data for state of game', () => {
     assert.deepEqual(game.pressFireTo, 'startgame')
     assert.deepEqual(game.canvasAlert.innerHTML, 'PRESS FIRE TO START GAME')
-    assert.deepEqual(game.canvasLeaderboard.innerHTML, '')
 })

@@ -3,6 +3,7 @@ import { Spaceship } from './spaceship.js'
 import { api } from './api.js'
 import { chat } from './chat.js'
 import { controls } from './controls.js'
+import { leaderboard } from './leaderboard.js'
 
 export const game = {
 
@@ -36,7 +37,6 @@ export const game = {
         this.initializeCanvasAlert()
         this.initializeCanvasScore()
         this.initializeCanvasHighscore()
-        this.initializeCanvasLeaderboard()
 
         this.initializeScoreAndHighscore()
         this.initializeCustomEvents()
@@ -44,7 +44,8 @@ export const game = {
         this.initializeAudio()
         this.initializeGame()
 
-        controls.initializeEvents()
+        leaderboard.initialize(this.mainDiv)
+        controls.initialize()
     },
 
     initializeMainDiv() {
@@ -75,12 +76,6 @@ export const game = {
         this.canvasHighscore = document.createElement('div')
         this.canvasHighscore.className = 'high-score'
         this.mainDiv.appendChild(this.canvasHighscore)    
-    },
-
-    initializeCanvasLeaderboard() {
-        this.canvasLeaderboard = document.createElement('div')
-        this.canvasLeaderboard.className = 'leaderboard-hidden'
-        this.mainDiv.appendChild(this.canvasLeaderboard)    
     },
 
     initializeScoreAndHighscore() {
@@ -134,7 +129,7 @@ export const game = {
         this.mainDiv.addEventListener('username', () => {
             this.getHighscore()
             this.refreshHighscore()
-            if (this.pressFireTo === 'startgame') this.showLeaderboard()
+            if (this.pressFireTo === 'startgame') leaderboard.show()
         })
 
     },
@@ -156,7 +151,7 @@ export const game = {
     initializeGame() {
         this.pressFireTo = 'startgame'
         this.showAlert('PRESS FIRE TO START GAME')
-        this.showLeaderboard()
+        leaderboard.show()
     },
 
     getAudioTrack() {
@@ -198,30 +193,6 @@ export const game = {
         this.audio.pause()
     },
 
-    async showLeaderboard() {
-        if (this.pressFireTo !== 'startgame' && this.pressFireTo !== 'initializegame') return
-
-        this.leaderboard = await api.getLeaderboard()
-        if (!this.leaderboard) return
-
-        let innerHTML = '<table class="leaderboard-table">'
-
-        this.leaderboard.forEach((leader) => innerHTML += `
-            <tr>
-            <td class="leader-score box-light-gray">${leader.highscore}</td>
-            <td class="leader-name">${leader.username.toUpperCase()}</td>
-            </tr>
-        `)
-
-        innerHTML += '</table>'
-        this.canvasLeaderboard.innerHTML = innerHTML
-        this.canvasLeaderboard.className = 'leaderboard'    
-    },
-
-    hideLeaderboard() {
-        this.canvasLeaderboard.className = 'leaderboard-hidden'
-    },
-
     pressFireIfNoSpaceship() {
         if (this.pressFireTo === 'initializegame') this.initializeGame()
         else if (this.pressFireTo === 'startgame') this.startGame()
@@ -231,7 +202,7 @@ export const game = {
     startGame() {
         this.pressFireTo = 'fire'
         this.hideAlert()
-        this.hideLeaderboard()
+        leaderboard.hide()
 
         this.level = 0
         this.score = 0
