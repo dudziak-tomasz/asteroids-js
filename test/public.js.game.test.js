@@ -36,13 +36,6 @@ test('Should prepare game and assign main data', () => {
 test('Should assign data for mainDiv', () => {
     assert.deepEqual(game.mainDiv.constructor.name, 'HTMLDivElement')
     assert.deepEqual(game.mainDiv.id, 'spacetime')
-    assert.deepEqual(game.mainDiv.style.position, 'fixed')
-    assert.deepEqual(game.mainDiv.style.width, '100vw')
-    assert.deepEqual(game.mainDiv.style.height, '100vh')
-    assert.deepEqual(game.mainDiv.style.width, '100vw')
-    assert.deepEqual(game.mainDiv.style.backgroundColor, 'black')
-    assert.deepEqual(game.mainDiv.style.top, '0px')
-    assert.deepEqual(game.mainDiv.style.left, '0px')
     const $mainDiv = document.getElementById('spacetime')
     assert.deepEqual($mainDiv, game.mainDiv)
 })

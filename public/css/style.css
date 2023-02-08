@@ -47,6 +47,15 @@ a:hover, a:active {
    color: var(--light-gray);
 }
 
+#spacetime {
+   position: fixed;
+   width: 100vw;
+   height: 100vh;
+   background-color: black;
+   top: 0px;
+   left: 0px;
+}
+
 .top-10 {
    padding-top: 10px;
 }

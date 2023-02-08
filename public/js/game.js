@@ -51,12 +51,6 @@ export const game = {
     initializeMainDiv() {
         this.mainDiv = document.createElement('div')
         this.mainDiv.id = 'spacetime'
-        this.mainDiv.style.position = 'fixed'
-        this.mainDiv.style.width = '100vw'
-        this.mainDiv.style.height = '100vh'
-        this.mainDiv.style.backgroundColor = 'black'
-        this.mainDiv.style.top = '0'
-        this.mainDiv.style.left = '0'
         this.parentElement.appendChild(this.mainDiv)
     },
 
