@@ -12,9 +12,7 @@ test('Should prepare game and assign main data', () => {
 
     assert.deepEqual(game.level, 0)
     assert.deepEqual(game.score, 0)
-    assert.deepEqual(game.highscore, 0)
     assert.deepEqual(game.seconds, 0)
-    assert.deepEqual(game.highscoreAchieved, false)
     assert.deepEqual(game.scoreForAsteroids, [0, 100, 50, 20])
     assert.deepEqual(game.scoreForSaucers, [0, 1000, 200])
     assert.deepEqual(game.scoreForNewLife, 10000)
@@ -46,14 +44,6 @@ test('Should assign data for canvasScore', () => {
     assert.deepEqual(game.canvasScore.className, 'score')
     const $canvasScore = document.querySelector('.score')
     assert.deepEqual($canvasScore, game.canvasScore)
-})
-
-
-test('Should assign data for canvasHighscore', () => {
-    assert.deepEqual(game.canvasHighscore.constructor.name, 'HTMLDivElement')
-    assert.deepEqual(game.canvasHighscore.className, 'high-score')
-    const $canvasHighscore = document.querySelector('.high-score')
-    assert.deepEqual($canvasHighscore, game.canvasHighscore)
 })
 
 
