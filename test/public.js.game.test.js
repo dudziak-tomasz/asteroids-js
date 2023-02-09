@@ -11,16 +11,14 @@ test('Should prepare game and assign main data', () => {
     game.createGame(document.body)
 
     assert.deepEqual(game.level, 0)
-    assert.deepEqual(game.score, 0)
     assert.deepEqual(game.seconds, 0)
-    assert.deepEqual(game.scoreForAsteroids, [0, 100, 50, 20])
-    assert.deepEqual(game.scoreForSaucers, [0, 1000, 200])
-    assert.deepEqual(game.scoreForNewLife, 10000)
+    assert.deepEqual(game.pointsForAsteroids, [0, 100, 50, 20])
+    assert.deepEqual(game.pointsForSaucers, [0, 1000, 200])
+    assert.deepEqual(game.pointsForNewLife, 10000)
     assert.deepEqual(game.lives, [])
     assert.deepEqual(game.numberOfLives, 3)
     assert.deepEqual(game.pause, false)
     assert.deepEqual(game.timeBetweenLevels, 3000)
-    assert.deepEqual(game.timeBlinkScore, 1000)
     assert.deepEqual(game.timeBetweenSaucers, 15)
     assert.deepEqual(game.probabilityCreateSaucerInit, 0.3)
     assert.deepEqual(game.probabilityCreateSaucer, 0.3)
@@ -39,11 +37,15 @@ test('Should assign data for mainDiv', () => {
 })
 
 
-test('Should assign data for canvasScore', () => {
-    assert.deepEqual(game.canvasScore.constructor.name, 'HTMLDivElement')
-    assert.deepEqual(game.canvasScore.className, 'score')
-    const $canvasScore = document.querySelector('.score')
-    assert.deepEqual($canvasScore, game.canvasScore)
+test('Should assign data for canvasScoreAndLives', () => {
+    assert.deepEqual(game.canvasScoreAndLives.constructor.name, 'HTMLDivElement')
+    assert.deepEqual(game.canvasScoreAndLives.className, 'score-and-lives')
+    const $canvasScoreAndLives = document.querySelector('.score-and-lives')
+    assert.deepEqual($canvasScoreAndLives, game.canvasScoreAndLives)
+
+    assert.deepEqual(game.canvasLives.constructor.name, 'HTMLDivElement')
+    const $canvases = game.canvasScoreAndLives.querySelectorAll('div')
+    assert.deepEqual($canvases.length, 2)
 })
 
 
