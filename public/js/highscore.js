@@ -32,7 +32,9 @@ export const highscore = {
         this.refresh()
     },
 
-    setAndRefresh() {
+    setAndRefresh(highscore) {
+        if (highscore !== undefined) this.highscore = highscore
+
         if (api.user) api.user.highscore = this.highscore
         else localStorage.setItem('highScore', this.highscore)
 

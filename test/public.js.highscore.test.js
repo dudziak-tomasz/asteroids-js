@@ -43,8 +43,7 @@ test('Should save highscore in localStorage', () => {
     // Prepare mock
     api.user = undefined
 
-    highscore.highscore = 1000
-    highscore.setAndRefresh()
+    highscore.setAndRefresh(1000)
 
     assert.deepEqual(localStorage.getItem('highScore'), 1000)
 })
@@ -54,8 +53,7 @@ test('Should save highscore in api', () => {
     // Prepare mock
     api.user = { username: 'user1'}
 
-    highscore.highscore = 1000
-    highscore.setAndRefresh()
+    highscore.setAndRefresh(1000)
 
     assert.deepEqual(api.user.highscore, 1000)
 })
