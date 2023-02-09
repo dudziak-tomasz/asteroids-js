@@ -442,10 +442,10 @@ button:disabled {
    text-align: left;
 }
 
-.score, .score-blink {
+.score-and-lives {
    top: 10px;
    left: 10px;
-   width: 10%;
+   min-width: 10%;
    color: var(--gray);
    text-align: right;
    font-family: var(--font-game);
@@ -523,7 +523,7 @@ button:disabled {
       font-size: 100%;
    }
   
-   .score, .score-blink {
+   .score-and-lives {
       font-size: 125%;
    }
    
@@ -597,7 +597,7 @@ button:disabled {
       width: auto;
    }
 
-   .score, .score-blink {
+   .score-and-lives {
       font-size: 100%;
    }
    
@@ -613,7 +613,7 @@ button:disabled {
       font-size: 75%;
    }
 
-   .score, .score-blink {
+   .score-and-lives {
       font-size: 75%;
    }
    
