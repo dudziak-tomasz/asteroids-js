@@ -6,20 +6,19 @@ import { controls } from './controls.js'
 import { leaderboard } from './leaderboard.js'
 import { alert } from './alert.js'
 import { highscore } from './highscore.js'
+import { score } from './score.js'
 
 export const game = {
 
     level: 0,
-    score: 0,
     seconds: 0,
-    scoreForAsteroids: [0, 100, 50, 20],
-    scoreForSaucers: [0, 1000, 200],
-    scoreForNewLife: 10000, 
+    pointsForAsteroids: [0, 100, 50, 20],
+    pointsForSaucers: [0, 1000, 200],
+    pointsForNewLife: 10000, 
     lives: [],
     numberOfLives: 3,
     pause: false,
     timeBetweenLevels: 3000,
-    timeBlinkScore: 1000,
     timeBetweenSaucers: 15,
     probabilityCreateSaucerInit: 0.3,
     probabilityCreateSaucer: 0.3,
@@ -34,7 +33,7 @@ export const game = {
         this.parentElement = parentElement
 
         this.initializeMainDiv()
-        this.initializeCanvasScore()
+        this.initializeCanvasScoreAndLives()
 
         highscore.initialize(this.mainDiv)
         alert.initialize(this.mainDiv)
@@ -54,20 +53,25 @@ export const game = {
         this.parentElement.appendChild(this.mainDiv)
     },
 
-    initializeCanvasScore() {
-        this.canvasScore = document.createElement('div')
-        this.canvasScore.className = 'score'
-        this.mainDiv.appendChild(this.canvasScore)    
-        this.refreshScore()
+    initializeCanvasScoreAndLives() {
+        this.canvasScoreAndLives = document.createElement('div')
+        this.canvasScoreAndLives.className = 'score-and-lives'
+
+        score.initialize(this.canvasScoreAndLives)
+        
+        this.canvasLives = document.createElement('div')
+        this.canvasScoreAndLives.appendChild(this.canvasLives)
+
+        this.mainDiv.appendChild(this.canvasScoreAndLives)
     },
 
     initializeCustomEvents () {
         this.mainDiv.addEventListener('asteroidhit', (e) => {
-            this.addPoints(this.scoreForAsteroids[e.detail.size])
+            score.addPoints(this.pointsForAsteroids[e.detail.size])
         })
 
         this.mainDiv.addEventListener('saucerhit', (e) => {
-            this.addPoints(this.scoreForSaucers[e.detail.size])
+            score.addPoints(this.pointsForSaucers[e.detail.size])
         })
 
         this.mainDiv.addEventListener('spaceshiphit', () => {
@@ -171,12 +175,13 @@ export const game = {
         leaderboard.hide()
 
         this.level = 0
-        this.score = 0
         this.seconds = 0
         this.probabilityCreateSaucer = this.probabilityCreateSaucerInit
 
+        score.setAndRefresh(0)
+
         this.initializeLives()
-        this.refreshScore()
+        this.refreshLives()
 
         highscore.achieved = false
         highscore.getAndRefresh()
@@ -212,7 +217,7 @@ export const game = {
         alert.hide() 
 
         this.lives.shift().canvas.remove()
-        this.refreshScore()
+        this.refreshLives()
         Spacetime.createSpaceship()    
     },
 
@@ -233,8 +238,8 @@ export const game = {
     generateSaucer() {
         if (!Spacetime.spaceship || Spacetime.saucer || this.pause || this.isLevelStarting || this.score < this.typeOfSaucer[0]) return
 
-        if (this.score < this.typeOfSaucer[1]) this.createSaucer(2)
-        else if (this.score < this.typeOfSaucer[2]) Math.random() < 0.5 ? this.createSaucer(1) : this.createSaucer(2)
+        if (score.score < this.typeOfSaucer[1]) this.createSaucer(2)
+        else if (score.score < this.typeOfSaucer[2]) Math.random() < 0.5 ? this.createSaucer(1) : this.createSaucer(2)
         else this.createSaucer(1)
     },
 
@@ -244,19 +249,10 @@ export const game = {
 
     extraLife() {
         this.addLives()
-        this.blinkScore()
+        this.refreshLives()
+        score.blink()
 
         this.probabilityCreateSaucer += (1 - this.probabilityCreateSaucer) / 5
-    },
-
-    addPoints(points) {
-        const newScore = this.score + points
-        if (Math.trunc(this.score / this.scoreForNewLife) < Math.trunc(newScore / this.scoreForNewLife)) {
-            this.extraLife()
-            chat.updateScore(newScore)
-        }
-        this.score = newScore
-        this.refreshScore()
     },
 
     initializeLives() {
@@ -264,32 +260,15 @@ export const game = {
     },
 
     addLives() {
-        const color = getComputedStyle(this.canvasScore).getPropertyValue('--gray') || 'white'
+        const color = getComputedStyle(this.canvasScoreAndLives).getPropertyValue('--gray') || 'white'
         this.lives.push(new Spaceship({ size: 0.6, position: 'static', color }))
     },
 
-    refreshScore() {
-        this.canvasScore.innerHTML = `${this.score}<br>`
+    refreshLives() {
+        this.canvasLives.innerHTML = ''
         for (let i = 0; i < this.lives.length; i++) {
-            this.canvasScore.appendChild(this.lives[i].canvas)
+            this.canvasLives.appendChild(this.lives[i].canvas)
         }
-
-        if (this.score <= highscore.highscore) return 
-
-        highscore.highscore = this.score
-        highscore.setAndRefresh()
-
-        if (highscore.achieved) return 
-
-        this.blinkScore()
-        highscore.achieved = true    
-    },
-
-    blinkScore() {
-        this.canvasScore.className = 'score-blink'
-        setTimeout(() => {
-            this.canvasScore.className = 'score'
-        }, this.timeBlinkScore)
     },
 
     switchPause() {
