@@ -30,4 +30,8 @@ export const leaderboard = {
         this.canvas.className = 'leaderboard-hidden'
     },
 
+    refresh() {
+        this.show()
+    },
+
 }

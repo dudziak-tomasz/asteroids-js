@@ -182,7 +182,7 @@ export class Spacetime {
         this.asteroids.delete(asteroid.id)
     }
 
-    static removeAllAsteroid() {
+    static restart() {
         this.asteroids.forEach(asteroid => this.removeAsteroid(asteroid))
     }
 

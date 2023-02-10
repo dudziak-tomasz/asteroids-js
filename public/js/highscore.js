@@ -45,4 +45,9 @@ export const highscore = {
         this.canvas.innerHTML = `${this.highscore} ${api.user ? api.user.username.toUpperCase() : ''}`
     },
 
+    restart() {
+        this.achieved = false
+        this.getAndRefresh()
+    },
+
 }

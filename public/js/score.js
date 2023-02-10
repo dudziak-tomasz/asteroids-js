@@ -45,4 +45,8 @@ export const score = {
         this.refresh()
     },
 
+    restart() {
+        this.setAndRefresh(0)
+    }
+
 }

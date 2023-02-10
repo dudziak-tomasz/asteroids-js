@@ -32,19 +32,18 @@ export const game = {
 
         this.initializeMainDiv()
         this.initializeCanvasScoreAndLives()
+        this.initializeCustomEvents()
+        this.initializeSpacetime()
+        this.initializeAudio()
 
         score.initialize(this.canvasScoreAndLives)
         lives.initialize(this.canvasScoreAndLives)
         highscore.initialize(this.mainDiv)
         alert.initialize(this.mainDiv)
         leaderboard.initialize(this.mainDiv)
-
-        this.initializeCustomEvents()
-        this.initializeSpacetime()
-        this.initializeAudio()
-        this.initializeGame()
-
         controls.initialize()
+
+        this.initializeGame()
     },
 
     initializeMainDiv() {
@@ -88,12 +87,12 @@ export const game = {
 
         this.mainDiv.addEventListener('boxclose', () => {
             this.openBoxes--
-            if (this.openBoxes === 0 && game.pause) this.switchPause()
+            if (this.openBoxes === 0 && this.pause) this.switchPause()
         })
 
         this.mainDiv.addEventListener('username', () => {
             const isLeaderboardVisible = this.pressFireTo === 'startgame'
-            if (isLeaderboardVisible) leaderboard.show()
+            if (isLeaderboardVisible) leaderboard.refresh()
         })
 
     },
@@ -165,22 +164,18 @@ export const game = {
 
     startGame() {
         this.pressFireTo = 'fire'
-        alert.hide()
-        leaderboard.hide()
-
         this.level = 0
         this.seconds = 0
         this.probabilityCreateSaucer = this.probabilityCreateSaucerInitial
 
-        score.setAndRefresh(0)
+        alert.hide()
+        leaderboard.hide()
+        score.restart()
         lives.restart()
-        highscore.achieved = false
-        highscore.getAndRefresh()
+        highscore.restart()
+        Spacetime.restart()
 
         this.playAudio()
-
-        Spacetime.removeAllAsteroid()
-
         this.startLevel()
 
         chat.loginChatServer()
@@ -244,12 +239,12 @@ export const game = {
     switchPause() {
         if (!Spacetime.spaceship) return
 
-        if (game.pause === false) {
-            game.pause = true
+        if (this.pause === false) {
+            this.pause = true
             Spacetime.stop()
             this.stopAudio()
         } else if (this.openBoxes === 0) {
-            game.pause = false
+            this.pause = false
             Spacetime.start()
             this.playAudio()
             this.checkControls()    
