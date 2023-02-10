@@ -7,20 +7,18 @@ import { leaderboard } from './leaderboard.js'
 import { alert } from './alert.js'
 import { highscore } from './highscore.js'
 import { score } from './score.js'
+import { lives } from './lives.js'
 
 export const game = {
-
     level: 0,
     seconds: 0,
     pointsForAsteroids: [0, 100, 50, 20],
     pointsForSaucers: [0, 1000, 200],
     pointsForNewLife: 10000, 
-    lives: [],
-    numberOfLives: 3,
     pause: false,
     timeBetweenLevels: 3000,
     timeBetweenSaucers: 15,
-    probabilityCreateSaucerInit: 0.3,
+    probabilityCreateSaucerInitial: 0.3,
     probabilityCreateSaucer: 0.3,
     typeOfSaucer: [2000, 10000, 40000],   // 0 < no saucer - 2000 < large saucer - 10000 < random size saucer < 40000 < small saucer
     isLevelStarting: false,
@@ -35,6 +33,8 @@ export const game = {
         this.initializeMainDiv()
         this.initializeCanvasScoreAndLives()
 
+        score.initialize(this.canvasScoreAndLives)
+        lives.initialize(this.canvasScoreAndLives)
         highscore.initialize(this.mainDiv)
         alert.initialize(this.mainDiv)
         leaderboard.initialize(this.mainDiv)
@@ -56,12 +56,6 @@ export const game = {
     initializeCanvasScoreAndLives() {
         this.canvasScoreAndLives = document.createElement('div')
         this.canvasScoreAndLives.className = 'score-and-lives'
-
-        score.initialize(this.canvasScoreAndLives)
-        
-        this.canvasLives = document.createElement('div')
-        this.canvasScoreAndLives.appendChild(this.canvasLives)
-
         this.mainDiv.appendChild(this.canvasScoreAndLives)
     },
 
@@ -176,13 +170,10 @@ export const game = {
 
         this.level = 0
         this.seconds = 0
-        this.probabilityCreateSaucer = this.probabilityCreateSaucerInit
+        this.probabilityCreateSaucer = this.probabilityCreateSaucerInitial
 
         score.setAndRefresh(0)
-
-        this.initializeLives()
-        this.refreshLives()
-
+        lives.restart()
         highscore.achieved = false
         highscore.getAndRefresh()
 
@@ -197,8 +188,7 @@ export const game = {
     },
 
     startLevel() {
-        const noSpaceshipAndNoExtraLives = !Spacetime.spaceship && this.lives.length === 0
-        if ( noSpaceshipAndNoExtraLives ) return
+        if (!Spacetime.spaceship && !lives.isLife()) return
 
         this.level++
         alert.show(`LEVEL ${this.level}`)    
@@ -215,14 +205,12 @@ export const game = {
     startSpaceship() {
         this.pressFireTo = 'fire'
         alert.hide() 
-
-        this.lives.shift().canvas.remove()
-        this.refreshLives()
+        lives.remove()
         Spacetime.createSpaceship()    
     },
 
     newSpaceship() {
-        if (this.lives.length === 0) return this.gameOver()
+        if (!lives.isLife()) return this.gameOver()
         if (this.isLevelStarting) return
 
         alert.show('PRESS FIRE TO PLAY')
@@ -236,7 +224,7 @@ export const game = {
     },
 
     generateSaucer() {
-        if (!Spacetime.spaceship || Spacetime.saucer || this.pause || this.isLevelStarting || this.score < this.typeOfSaucer[0]) return
+        if (!Spacetime.spaceship || Spacetime.saucer || this.pause || this.isLevelStarting || score.score < this.typeOfSaucer[0]) return
 
         if (score.score < this.typeOfSaucer[1]) this.createSaucer(2)
         else if (score.score < this.typeOfSaucer[2]) Math.random() < 0.5 ? this.createSaucer(1) : this.createSaucer(2)
@@ -248,27 +236,9 @@ export const game = {
     },
 
     extraLife() {
-        this.addLives()
-        this.refreshLives()
+        lives.add()
         score.blink()
-
         this.probabilityCreateSaucer += (1 - this.probabilityCreateSaucer) / 5
-    },
-
-    initializeLives() {
-        for (let i = 0; i < this.numberOfLives; i++) this.addLives()
-    },
-
-    addLives() {
-        const color = getComputedStyle(this.canvasScoreAndLives).getPropertyValue('--gray') || 'white'
-        this.lives.push(new Spaceship({ size: 0.6, position: 'static', color }))
-    },
-
-    refreshLives() {
-        this.canvasLives.innerHTML = ''
-        for (let i = 0; i < this.lives.length; i++) {
-            this.canvasLives.appendChild(this.lives[i].canvas)
-        }
     },
 
     switchPause() {
