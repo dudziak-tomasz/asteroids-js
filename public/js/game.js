@@ -1,5 +1,4 @@
 import { Spacetime } from './spacetime.js'
-import { Spaceship } from './spaceship.js'
 import { api } from './api.js'
 import { chat } from './chat.js'
 import { controls } from './controls.js'
@@ -11,16 +10,18 @@ import { lives } from './lives.js'
 
 export const game = {
     level: 0,
-    seconds: 0,
+    timeBetweenLevels: 3000,
     pointsForAsteroids: [0, 100, 50, 20],
     pointsForSaucers: [0, 1000, 200],
     pointsForNewLife: 10000, 
     pause: false,
-    timeBetweenLevels: 3000,
-    timeBetweenSaucers: 15,
+    seconds: 0,
+    secondsBetweenSaucers: 15,
     probabilityCreateSaucerInitial: 0.3,
     probabilityCreateSaucer: 0.3,
-    typeOfSaucer: [2000, 10000, 40000],   // 0 < no saucer - 2000 < large saucer - 10000 < random size saucer < 40000 < small saucer
+    noSaucerPoints: 2000,
+    largeSaucerPoints: 10000,
+    randomSaucerPoints: 40000,
     isLevelStarting: false,
     pressFireTo: 'fire',
     audioTrack: 'background2.mp3',
@@ -77,7 +78,7 @@ export const game = {
 
         this.mainDiv.addEventListener('onesecond', () => {
             this.seconds++
-            if (this.seconds % this.timeBetweenSaucers === 0) this.generateSaucer()
+            if (this.seconds % this.secondsBetweenSaucers === 0) this.generateSaucer()
         })
 
         this.mainDiv.addEventListener('boxopen', () => {
@@ -119,6 +120,7 @@ export const game = {
 
     getAudioTrack() {
         const track = localStorage.getItem('audioTrack')
+
         if (track) this.audioTrack = track
         else this.setAudioTrack()
 
@@ -134,6 +136,7 @@ export const game = {
 
     getAudioVolume() {
         const volume = localStorage.getItem('musicVolume')
+
         if (volume) this.audioVolume = parseFloat(volume)
         else this.setAudioVolume()
 
@@ -219,20 +222,28 @@ export const game = {
     },
 
     generateSaucer() {
-        if (!Spacetime.spaceship || Spacetime.saucer || this.pause || this.isLevelStarting || score.score < this.typeOfSaucer[0]) return
+        if (!Spacetime.spaceship || Spacetime.saucer) return
+        if (this.pause || this.isLevelStarting) return
+        if (Math.random() > this.probabilityCreateSaucer) return
 
-        if (score.score < this.typeOfSaucer[1]) this.createSaucer(2)
-        else if (score.score < this.typeOfSaucer[2]) Math.random() < 0.5 ? this.createSaucer(1) : this.createSaucer(2)
-        else this.createSaucer(1)
-    },
+        const small = 1, large = 2
 
-    createSaucer(size) {
-        if (Math.random() < this.probabilityCreateSaucer) Spacetime.createSaucer(size)
+        if (score.score < this.noSaucerPoints) return    
+        else if (score.score < this.largeSaucerPoints) 
+            Spacetime.createSaucer(large)
+        else if (score.score < this.randomSaucerPoints) 
+            Spacetime.createSaucer(Math.random() < 0.5 ? large : small)
+        else 
+            Spacetime.createSaucer(small)
     },
 
     extraLife() {
         lives.add()
         score.blink()
+        this.increaseProbabilityCreateSaucer()
+    },
+
+    increaseProbabilityCreateSaucer() {
         this.probabilityCreateSaucer += (1 - this.probabilityCreateSaucer) / 5
     },
 
