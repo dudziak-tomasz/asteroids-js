@@ -112,3 +112,10 @@ test('Should add custom events listeners', () => {
     highscore.parentElement.dispatchEvent(new CustomEvent('username'))
     assert.deepEqual(listener, true)
 })
+
+
+test('Should restart object', () => {
+    highscore.achieved = true
+    highscore.restart()
+    assert.deepEqual(highscore.achieved, false)
+})

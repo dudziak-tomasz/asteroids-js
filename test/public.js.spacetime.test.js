@@ -139,7 +139,7 @@ test('Should remove all asteroids', () => {
     canvas.innerHTML = ''
     Spacetime.createSpacetime(canvas)
     Spacetime.createAsteroids(10)
-    Spacetime.removeAllAsteroid()
+    Spacetime.restart()
     assert.deepEqual(Spacetime.asteroids.size, 0)
     const asteroids = document.querySelectorAll('[id^="asteroid"]')
     assert.deepEqual(asteroids.length, 0)

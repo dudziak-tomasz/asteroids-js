@@ -111,3 +111,12 @@ test('Should call game.extraLife() and chat.updateScore() after passing 10000 po
     assert.deepEqual(extraLifeMock, true)
     assert.deepEqual(updateScoreMock, 20090)
 })
+
+
+test('Should set score = 0 and refresh canvas', () => {
+    score.restart()
+    assert.deepEqual(score.score, 0)
+    assert.deepEqual(score.canvas.innerHTML, '0')
+})
+
+
