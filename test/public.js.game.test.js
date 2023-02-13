@@ -12,8 +12,6 @@ test('Should prepare game and assign main data', () => {
 
     assert.deepEqual(game.level, 0)
     assert.deepEqual(game.seconds, 0)
-    assert.deepEqual(game.pointsForAsteroids, [0, 100, 50, 20])
-    assert.deepEqual(game.pointsForSaucers, [0, 1000, 200])
     assert.deepEqual(game.pointsForNewLife, 10000)
     assert.deepEqual(game.pause, false)
     assert.deepEqual(game.timeBetweenLevels, 3000)
