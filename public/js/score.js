@@ -1,15 +1,36 @@
 import { game } from './game.js'
-import { chat } from './chat.js'
 import { highscore } from './highscore.js'
 
 export const score = {
     score: 0,
     timeBlink: 1000,
+    pointsForAsteroids: [0, 100, 50, 20],
+    pointsForSaucers: [0, 1000, 200],
 
     initialize(parentElement) {
         this.canvas = document.createElement('div')
         parentElement.appendChild(this.canvas)
+        this.initializeCustomEvents()
         this.refresh()
+    },
+
+    initializeCustomEvents () {
+        game.mainDiv.addEventListener('asteroidhit', (e) => {
+            const points = this.pointsForAsteroids[e.detail.size]
+            this.addPoints(points)
+        })
+
+        game.mainDiv.addEventListener('saucerhit', (e) => {
+            const points = this.pointsForSaucers[e.detail.size]
+            this.addPoints(points)
+        })
+    },
+
+    blink() {
+        this.canvas.classList.add('score-blink')
+        setTimeout(() => {
+            this.canvas.classList.remove('score-blink')
+        }, this.timeBlink)
     },
 
     refresh() {
@@ -24,20 +45,13 @@ export const score = {
         highscore.achieved = true    
     },
 
-    blink() {
-        this.canvas.classList.add('score-blink')
-        setTimeout(() => {
-            this.canvas.classList.remove('score-blink')
-        }, this.timeBlink)
-    },
-
     addPoints(points) {
-        const newScore = this.score + points
-        if (Math.trunc(this.score / game.pointsForNewLife) < Math.trunc(newScore / game.pointsForNewLife)) {
+        const oldScore = this.score
+        this.score += points
+        if (Math.trunc(oldScore / game.pointsForNewLife) < Math.trunc(this.score / game.pointsForNewLife)) {
             game.extraLife()
-            chat.updateScore(newScore)
         }
-        this.setAndRefresh(newScore)
+        this.refresh()
     },
 
     setAndRefresh(score = 0) {
@@ -48,5 +62,4 @@ export const score = {
     restart() {
         this.setAndRefresh(0)
     }
-
 }

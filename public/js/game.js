@@ -11,8 +11,6 @@ import { lives } from './lives.js'
 export const game = {
     level: 0,
     timeBetweenLevels: 3000,
-    pointsForAsteroids: [0, 100, 50, 20],
-    pointsForSaucers: [0, 1000, 200],
     pointsForNewLife: 10000, 
     pause: false,
     seconds: 0,
@@ -60,21 +58,8 @@ export const game = {
     },
 
     initializeCustomEvents () {
-        this.mainDiv.addEventListener('asteroidhit', (e) => {
-            score.addPoints(this.pointsForAsteroids[e.detail.size])
-        })
-
-        this.mainDiv.addEventListener('saucerhit', (e) => {
-            score.addPoints(this.pointsForSaucers[e.detail.size])
-        })
-
-        this.mainDiv.addEventListener('spaceshiphit', () => {
-            this.newSpaceship()
-        })
-
-        this.mainDiv.addEventListener('noasteroids', () => {
-            this.startLevel()
-        })
+        this.mainDiv.addEventListener('spaceshiphit', () => this.newSpaceship())
+        this.mainDiv.addEventListener('noasteroids', () => this.startLevel())
 
         this.mainDiv.addEventListener('onesecond', () => {
             this.seconds++
@@ -95,7 +80,6 @@ export const game = {
             const isLeaderboardVisible = this.pressFireTo === 'startgame'
             if (isLeaderboardVisible) leaderboard.refresh()
         })
-
     },
 
     initializeSpacetime() {
@@ -240,6 +224,7 @@ export const game = {
     extraLife() {
         lives.add()
         score.blink()
+        chat.updateScore(score.score)
         this.increaseProbabilityCreateSaucer()
     },
 
