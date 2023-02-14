@@ -6,9 +6,6 @@ import './__mocks__/mock.spacetime.js'
 
 import { lives } from '../public/js/lives.js'
 
-// Prepare mocks
-global.getComputedStyle = window.getComputedStyle
-
 
 test('Should set default data', () => {
     assert.deepEqual(lives.lives, [])

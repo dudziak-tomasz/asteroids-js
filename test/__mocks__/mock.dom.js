@@ -7,6 +7,7 @@ global.dom = dom
 global.window = dom.window
 global.document = dom.window.document
 global.CustomEvent = dom.window.CustomEvent
+global.getComputedStyle = dom.window.getComputedStyle
 
 global.screen = {
     availWidth: 1920,
