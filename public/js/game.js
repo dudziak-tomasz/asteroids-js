@@ -58,7 +58,7 @@ export const game = {
     },
 
     initializeCustomEvents () {
-        this.mainDiv.addEventListener('spaceshiphit', () => this.newSpaceship())
+        this.mainDiv.addEventListener('spaceshiphit', () => this.pressFireToPlayNewSpaceship())
         this.mainDiv.addEventListener('noasteroids', () => this.startLevel())
 
         this.mainDiv.addEventListener('onesecond', () => {
@@ -180,7 +180,7 @@ export const game = {
             alert.hide()
             this.isLevelStarting = false
             Spacetime.createAsteroids(this.level + 1)
-            if (!Spacetime.spaceship) this.newSpaceship()
+            if (!Spacetime.spaceship) this.pressFireToPlayNewSpaceship()
         }, this.timeBetweenLevels)
     },
 
@@ -191,7 +191,7 @@ export const game = {
         Spacetime.createSpaceship()    
     },
 
-    newSpaceship() {
+    pressFireToPlayNewSpaceship() {
         if (!lives.isLife()) return this.gameOver()
         if (this.isLevelStarting) return
 
