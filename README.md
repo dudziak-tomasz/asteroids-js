@@ -30,6 +30,8 @@ SSL secured server for REST API running on target domain: December 7, 2022
 
 Real-time communication between online users in game chat: December 29, 2022
 
+Testing of all modules and code refactoring completed: February 15, 2023
+
 ---
 
 ## REQUIRMENTS
@@ -127,10 +129,3 @@ Game background music:
 [One Cosmos | Royalty Free Sci-Fi Background Music (No Copyright)](https://www.youtube.com/watch?v=25LEeXuHclc)
 
 [Space Ambient Music Background | Universe Background | No Copyright](https://www.youtube.com/watch?v=2m6m3lTHOe4)
-
----
-
-## TODOS
-
-- Some new ideas for the game: more saucers after reaching 100,000 points; the ability to play with two players
-- Use neural networks to make alien saucer learn to fire accurately
